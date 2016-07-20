@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'gisred'
             keyPassword 'Abril2016'
-            storeFile file('C:/Users/cramiret/AndroidStudioProjects/storeKeyGisred.jks')
+            storeFile file('C:/Users/cramiret/Documents/GitHub/android_gisred/storeKeyGisred.jks')
             storePassword 'Abril2016'
         }
     }

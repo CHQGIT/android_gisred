@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottomBarItemOne"
+        android:icon="@drawable/ic_check_grey600_24dp"
+        android:title="Confirmar" />
+    <item
+        android:id="@+id/bottomBarItemTwo"
+        android:icon="@drawable/ic_close_grey600_24dp"
+        android:title="Cancelar" />
+    <item
+        android:id="@+id/bottomBarItemThree"
+        android:icon="@drawable/ic_flip_to_front_grey600_24dp"
+        android:title="Diálogo" />
+    <item
+        android:id="@+id/bottomBarItemFour"
+        android:icon="@drawable/ic_map_marker_grey600_24dp"
+        android:title="Ubicación" />
+</menu>

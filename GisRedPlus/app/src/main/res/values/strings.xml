@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">GISRED</string>
+
+    <!-- Dominio Default -->
+    <string name="domainDef">vialactea</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_user">Nombre de usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Iniciar sesión</string>
+    <string name="action_sign_in_short">Inicia sesión</string>
+    <string name="error_invalid_email">El usuario es inválido</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Éste campo es requerido</string>
+    <string name="permission_rationale">"Contacte administración si necesita credenciales."</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">Toque para continuar</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="selecciona_una_opcion">Selecciona una opción</string>
+    <string name="title_activity_main2">Main Activity</string>
+    <string name="action_logout">Cerrar Sesión</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_layers">Capas</string>
+    <string name="action_maps">Mapas</string>
+
+    <!-- Servicios para dynamicLayer-->
+    <string name="url_EquiposLinea">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
+    <string name="url_token">http://gisred.chilquinta.cl:5555/arcgis/tokens/</string>
+    <string name="url_TRAMOS">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Tramos_006/MapServer</string>
+    <string name="url_EquiposPTO">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_pto_006/MapServer</string>
+    <string name="url_Nodos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Nodos_006/MapServer</string>
+    <string name="url_Luminarias">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Luminarias/MapServer</string>
+    <string name="url_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/ClientesV2/MapServer</string>
+    <string name="url_Concesiones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Concesiones006/MapServer</string>
+    <string name="url_medidores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
+    <string name="url_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
+    <string name="url_Stx">http://gisred.chilquinta.cl:5555/arcgis/rest/services/STx/STx/MapServer</string>
+    <!-- Mapabase -->
+    <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
+    <!-- Urls Values Spinners Dialogs -->
+    <string name="url_tipos_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/MapServer</string>
+    <string name="url_cnr_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/MapServer/</string>
+    <!-- Servicios para featureLayer-->
+    <string name="srv_Postes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/1</string>
+    <string name="srv_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/2</string>
+    <string name="srv_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/0</string>
+    <string name="srv_ClientesCnr">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/FeatureServer/0</string>
+    <string name="srv_Union_012">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
+    <!-- LogAccesos Feature Layer -->
+    <string name="srv_LogAccess">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
+
+    <string name="btnBuscarMap">Buscar</string>
+
+</resources>

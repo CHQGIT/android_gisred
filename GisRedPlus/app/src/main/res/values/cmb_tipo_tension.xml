@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_tension">
+        <item>MT</item>
+        <item>MT/BT</item>
+        <item>MT/AP</item>
+        <item>MT/BT/AP</item>
+        <item>BT</item>
+        <item>BT/AP</item>
+        <item>AP</item>
+    </string-array>
+</resources>

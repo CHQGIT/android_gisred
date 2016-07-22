@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES"));
     ArrayList<String> arrayWidgets = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES_TECNO", "INGRESO_CLIENTES_CNR"));
 
-    Bundle bundleSpinner = null;
-
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
         credenciales.setUserAccount(usuario, password);
@@ -95,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
         sEmpresa = bundle.getString("empresa");
-        bundleSpinner = bundle.getBundle("options");
 
         setCredenciales(usuario, password);
 
@@ -113,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                     oBundle.putString("password", password);
                     oBundle.putString("modulo", datos[position].getTitulo());
                     oBundle.putStringArrayList("widgets", arrayWidgets);
-                    oBundle.putBundle("options", bundleSpinner);
                     oIntent.putExtras(oBundle);
                     startActivity(oIntent);
                 } else {

@@ -119,7 +119,7 @@ public class MapsActivity extends AppCompatActivity {
     public String[] arrayEmpalme = {};
     public String[] arrayTecMedidor = {};
     public String[] arrayTipoCnr = {};
-    public String[] arrayTipoFase = {"A", "B", "C", "ABC"};
+    public String[] arrayTipoFase = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -208,17 +208,6 @@ public class MapsActivity extends AppCompatActivity {
         passw = bundle.getString("password");
         modulo = bundle.getString("modulo");
         empresa = bundle.getString("empresa");
-
-        Bundle spinnerBundle = bundle.getBundle("options");
-        if (spinnerBundle != null) {
-            arrayTipoPoste = spinnerBundle.getStringArray("tipoPoste");
-            arrayTension = spinnerBundle.getStringArray("tipoTension");
-            arrayTipoEdif = spinnerBundle.getStringArray("tipoEdif");
-            arrayMedidor = spinnerBundle.getStringArray("tipoMedidor");
-            arrayEmpalme = spinnerBundle.getStringArray("tipoEmpalme");
-            arrayTecMedidor = spinnerBundle.getStringArray("tecMedidor");
-            arrayTipoCnr = spinnerBundle.getStringArray("tipoCnr");
-        }
 
         //Set Credenciales
         setCredenciales(usuar, passw);
@@ -319,6 +308,15 @@ public class MapsActivity extends AppCompatActivity {
         if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
 
         if (modulo.replace(" ", "_").equals(modIngreso)) {
+
+            arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
+            arrayTension = getResources().getStringArray(R.array.tipo_tension);
+            arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
+            arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
+            arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
+            arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
+            arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+            arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
             dialogCrear = new Dialog(MapsActivity.this);
 

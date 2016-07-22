@@ -34,9 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public String usuario, password, domain;
     UserCredentials credenciales;
-    private int[] listSpinners = {1, 4, 5, 6, 7, 10, 11};
-    Bundle bundleSpinner = null;
-    int contValuesSpinner;
     Bundle bundle;
 
     private ProgressDialog progress;
@@ -152,7 +149,6 @@ public class LoginActivity extends AppCompatActivity {
             ArrayList arrayModulos = new ArrayList();
             ArrayList arrayEmpresas = new ArrayList();
             String userDominio = new String();
-            boolean isIngClientes = false;
 
             if (results != null) {
                 int size = (int) results.featureCount();
@@ -182,10 +178,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         arrayModulos.add(empModule + "@" + feature.getAttributeValue("modulo"));
                         userDominio = (String) feature.getAttributeValue("usuario");
-
-                        if (((String) feature.getAttributeValue("modulo")).contains("CLIENTES")) {
-                            isIngClientes = true;
-                        }
                     }
                 }
 
@@ -215,133 +207,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());
 
-                if (isIngClientes) {
-                    getSpinnerValues(listSpinners);
-                } else {
-                    progress.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), EmpActivity.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
+                progress.dismiss();
+                Intent intent = new Intent(getApplicationContext(), EmpActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
 
             } else {
                 progress.dismiss();
                 Toast.makeText(getApplicationContext(), "Login Incorrecto", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void getSpinnerValues(int[] values) {
-        bundleSpinner = new Bundle();
-        contValuesSpinner = values.length;
-
-        if (progress != null) progress.dismiss();
-        progress = ProgressDialog.show(LoginActivity.this, "",
-                "Espere por favor... Cargando opciones adicionales.");
-
-        for (int value : values) {
-            String op = "";
-
-            switch (value) {
-                case 1:
-                    op="tipoCnr";
-                    break;
-                case 4:
-                    op="tipoPoste";
-                    break;
-                case 5:
-                    op="tipoTension";
-                    break;
-                case 6:
-                    op="tipoEdif";
-                    break;
-                case 7:
-                    op="tipoMedidor";
-                    break;
-                case 10:
-                    op="tipoEmpalme";
-                    break;
-                case 11:
-                    op="tecMedidor";
-                    break;
-            }
-
-            SpinnerQuerytask qTask = new SpinnerQuerytask();
-            qTask.execute("" + value, op);
-        }
-    }
-
-    private class SpinnerQuerytask extends AsyncTask<String, Void, FeatureResult> {
-
-        String sOpcion = "";
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected FeatureResult doInBackground(String... params) {
-
-            QueryParameters myParameters = new QueryParameters();
-            myParameters.setWhere("1 = 1");
-            myParameters.setReturnGeometry(false);
-            String[] outfields = new String[]{"*"};
-            myParameters.setOutFields(outfields);
-
-            FeatureResult results;
-            try {
-                if (credenciales.getPassword().isEmpty()) return null;
-                int resUrl = (Integer.valueOf(params[0]) >= 4) ? R.string.url_tipos_spinner : R.string.url_cnr_spinner;
-                String url = getResources().getString(resUrl) + "/" + params[0];
-                QueryTask queryTask = new QueryTask(url , credenciales);
-                results = queryTask.execute(myParameters);
-
-                sOpcion = params[1];
-
-                return results;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(FeatureResult results) {
-            super.onPostExecute(results);
-
-            if (results != null) {
-                int size = (int) results.featureCount();
-                String[] strings = new String[size];
-                int cont = 0;
-
-                for (Object element : results) {
-                    //progress.incrementProgressBy(size / 100);
-                    if (element instanceof Feature) {
-                        Feature feature = (Feature) element;
-
-                        for (Map.Entry<String, Object> entry : feature.getAttributes().entrySet()) {
-
-                            if (entry.getValue().getClass().equals(String.class)) {
-                                strings[cont] = entry.getValue().toString();
-                            }
-                        }
-                    }
-                    cont++;
-                }
-
-                bundleSpinner.putStringArray(sOpcion, strings);
-            }
-
-            if (contValuesSpinner--<=1) {
-                progress.dismiss();
-
-                bundle.putBundle("options", bundleSpinner);
-                Intent intent = new Intent(getApplicationContext(), EmpActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
             }
         }
     }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_edificacion">
+        <item>ACTUALIZACION</item>
+        <item>CASA</item>
+        <item>EDIFICIO</item>
+        <item>CONDOMINIO</item>
+        <item>GALERIA COMERCIAL</item>
+        <item>INDUSTRIA</item>
+        <item>EDIFICIO CORPORATIVO</item>
+        <item>LOCAL COMERCIAL</item>
+        <item>PARQUES</item>
+        <item>ESTADIO</item>
+        <item>ESTACIONAMIENTO</item>
+        <item>SITIO ERIAZO</item>
+        <item>SITIO AGRICOLA</item>
+        <item>MALL</item>
+        <item>CEMENTERIO</item>
+        <item>HIPODROMO</item>
+        <item>PISCINA</item>
+        <item>ESTACION DE METRO</item>
+        <item>CENTRO RECREATIVO</item>
+        <item>CONGRESO</item>
+        <item>AREA VERDE</item>
+        <item>MEDIDOR</item>
+        <item>PLAZA</item>
+        <item>KIOSCO</item>
+        <item>STRIPCENTER</item>
+        <item>MERCADO</item>
+        <item>LOCAL CORPORATIVO</item>
+        <item>ALUMBRADO PUBLICO</item>
+    </string-array>
+</resources>

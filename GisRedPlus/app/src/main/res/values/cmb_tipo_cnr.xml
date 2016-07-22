@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_cnr">
+        <item>A Normalizar</item>
+        <item>Tecnicamente Normal</item>
+        <item>CNR</item>
+        <item>Visita fin de semana</item>
+        <item>Direccion no ubicada</item>
+        <item>A Certificar</item>
+        <item>Deshabitado</item>
+        <item>No Permite</item>
+        <item>Casa de Veraneo</item>
+        <item>Riesgo PRYMA</item>
+    </string-array>
+</resources>

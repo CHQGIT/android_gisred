@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_empalme">
+        <item>A-6</item>
+        <item>A-9</item>
+        <item>A-18</item>
+        <item>A-27</item>
+        <item>A-48</item>
+        <item>A-75</item>
+        <item>A-100</item>
+        <item>A-150</item>
+        <item>S-6</item>
+        <item>S-9</item>
+        <item>S-18</item>
+        <item>S-27</item>
+        <item>S-48</item>
+        <item>S-75</item>
+        <item>S-100</item>
+        <item>S-150</item>
+        <item>S-225</item>
+        <item>S-350</item>
+    </string-array>
+</resources>

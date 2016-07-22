@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_medidor">
+        <item>MONOFASICO</item>
+        <item>TRIFASICO</item>
+        <item>TRIFASICO (IDM)</item>
+        <item>TRIFASICO (2IDM)</item>
+    </string-array>
+</resources>

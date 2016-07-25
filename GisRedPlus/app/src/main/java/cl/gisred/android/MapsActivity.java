@@ -286,11 +286,27 @@ public class MapsActivity extends AppCompatActivity {
             }
         });
 
+        btnGps.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getApplicationContext(), "Función Gps", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
         final FloatingActionButton btnVerData = (FloatingActionButton) findViewById(R.id.action_ver_data);
         btnVerData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toogleData(v);
+            }
+        });
+
+        btnVerData.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getApplicationContext(), "Ver Datos", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
@@ -342,6 +358,14 @@ public class MapsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     toogleCapas(v);
+                }
+            });
+
+            fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
 
@@ -1136,11 +1160,7 @@ public class MapsActivity extends AppCompatActivity {
                     bCallOut = true;
                     nIndentify = 1; //1 = valor para calle
                     oLySelectAsoc = LyAsocCalle;
-                    /*myMapView.removeLayer(0);
-                    addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
-                    myMapView.addLayer(LyMapabase, 0);*/
-                    myMapView.zoomToScale(oUbicacion, 700.0f);
-                    Log.w("[MapsActivity]", "HIDE DIALOG CALLE");
+                    //myMapView.zoomToScale(oUbicacion, 700.0f);
                     setValueToAsoc(getLayoutContenedor(v));
                 }
             });
@@ -1159,10 +1179,7 @@ public class MapsActivity extends AppCompatActivity {
                 /*myMapView.removeLayer(0);
                 addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
                 myMapView.addLayer(LyMapabase, 0);*/
-
                 //myMapView.zoomToScale(oUbicacion, 700.0f);
-
-                Log.w("[MapsActivity]", "HIDE DIALOG DIREC");
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1727,10 +1744,12 @@ public class MapsActivity extends AppCompatActivity {
 
                         if (R.layout.dialog_poste == idResLayoutSelect) {
                             LyPOSTES.setVisible(true);
-                            myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
+                            if (LyPOSTES.getMinScale() < myMapView.getScale())
+                                myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
                         } else if (R.layout.dialog_direccion == idResLayoutSelect) {
                             LyDIRECCIONES.setVisible(true);
-                            myMapView.zoomToScale(oPoint, LyDIRECCIONES.getMinScale() * 0.9);
+                            if (LyDIRECCIONES.getMinScale() < myMapView.getScale())
+                                myMapView.zoomToScale(oPoint, LyDIRECCIONES.getMinScale() * 0.9);
                         } else if (R.layout.dialog_cliente == idResLayoutSelect || R.layout.dialog_cliente_cnr == idResLayoutSelect) {
                             LyPOSTES.setVisible(true);
                             LyDIRECCIONES.setVisible(true);
@@ -1739,7 +1758,8 @@ public class MapsActivity extends AppCompatActivity {
                             if (idResLayoutSelect == R.layout.dialog_cliente_cnr)
                                 LyREDBT.setVisible(true);
 
-                            myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
+                            if (LyPOSTES.getMinScale() < myMapView.getScale())
+                                myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
                         }
                     }
                 } else {

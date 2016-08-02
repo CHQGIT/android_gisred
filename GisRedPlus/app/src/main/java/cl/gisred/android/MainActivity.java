@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private MenuClass[] datos;
     private ListView lstOpciones;
     ArrayList<String> aModulos;
+    ArrayList<String> aWidgets;
     private String sEmpresa;
     private Bundle bundle;
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         aModulos = bundle.getStringArrayList("modulos");
+        aWidgets = bundle.getStringArrayList("widgets");
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
         sEmpresa = bundle.getString("empresa");
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     oBundle.putString("usuario", usuario);
                     oBundle.putString("password", password);
                     oBundle.putString("modulo", datos[position].getTitulo());
-                    oBundle.putStringArrayList("widgets", arrayWidgets);
+                    oBundle.putStringArrayList("widgets", aWidgets);
                     oIntent.putExtras(oBundle);
                     startActivity(oIntent);
                 } else {

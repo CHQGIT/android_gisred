@@ -2280,7 +2280,7 @@ public class MapsActivity extends AppCompatActivity {
             } else {
                 if (loc.hasSpeed()){
                     int speed = (int) ((loc.getSpeed() * 3600) / 1000);
-                    if (speed > 10) {
+                    if (speed > 10 && speed < 150) {
                         myMapView.centerAt(p, true);
                         if (speed > 120) {
                             Toast.makeText(getApplicationContext(), String.format("Velocidad max superada: %s Km/h", speed),

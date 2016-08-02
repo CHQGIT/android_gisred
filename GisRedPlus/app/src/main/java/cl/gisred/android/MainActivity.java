@@ -30,12 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private ListView lstOpciones;
     ArrayList<String> aModulos;
     private String sEmpresa;
+    private Bundle bundle;
 
     String usuario, password;
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "INSPECCION"));
     ArrayList<String> arrayWidgets = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES_TECNO", "INGRESO_CLIENTES_CNR"));
 
     public void setCredenciales(String usuario , String password) {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         lstOpciones = (ListView)findViewById(R.id.LstOpciones);
 
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         aModulos = bundle.getStringArrayList("modulos");
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
@@ -103,8 +104,16 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (view.isEnabled()){
-                    Intent oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                    Intent oIntent;
                     Bundle oBundle = new Bundle();
+
+                    if (datos[position].getTitulo().equalsIgnoreCase("INSPECCION")){
+                        oIntent = new Intent(MainActivity.this, FormActivity.class);
+                        oBundle.putBundle("menu", bundle);
+                    }
+                    else
+                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);
                     oBundle.putString("password", password);
@@ -150,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_standard : R.mipmap.ic_menu_standard_g);
             } else if (dato.getTitulo().contains("CLIENTES")) {
                 dato.setDescripcion("Visualización e ingreso clientes en terreno");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("INSPECCION")) {
+                dato.setDescripcion("Visualización e ingreso de inspecciones");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
             return dato;

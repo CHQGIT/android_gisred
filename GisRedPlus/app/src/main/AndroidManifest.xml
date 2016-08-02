@@ -47,10 +47,20 @@
             android:screenOrientation="sensor"
             android:parentActivityName=".EmpActivity"/>
         <activity
+            android:name=".FormActivity"
+            android:label="Menú Formularios"
+            android:screenOrientation="sensor"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".MapsActivity"
             android:label="Mapa GISRED"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".InspActivity"
+            android:label="Mapa GISRED"
+            android:screenOrientation="locked"
+            android:parentActivityName=".FormActivity" />
     </application>
 
 </manifest>

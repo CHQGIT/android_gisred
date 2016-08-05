@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Variables de acceso
     ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "INSPECCION"));
-    ArrayList<String> arrayWidgets = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES_TECNO", "INGRESO_CLIENTES_CNR"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             lstOpciones.setAdapter(adaptador);
         }
         else {
-            Toast.makeText(MainActivity.this, "No hay datos, verifique contraseña", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "No hay datos, verifique credenciales", Toast.LENGTH_LONG).show();
             Intent oIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(oIntent);
         }
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (datos[position].getTitulo().equalsIgnoreCase("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
-                        oBundle.putBundle("menu", bundle);
+                        oBundle.putStringArrayList("modulos", aModulos);
                     }
                     else
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);

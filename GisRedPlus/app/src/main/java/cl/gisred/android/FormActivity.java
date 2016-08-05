@@ -30,32 +30,32 @@ public class FormActivity extends AppCompatActivity {
     private ListView lstOpciones;
     ArrayList<String> aForms;
     private String sEmpresa;
+    private Bundle bundle;
 
     String usuario, password;
     UserCredentials credenciales;
 
     // Variables de acceso
     ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP"));
-    ArrayList<String> arrayWidgets = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES_TECNO", "INGRESO_CLIENTES_CNR", "INSPECCION_MASIVA"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
         credenciales.setUserAccount(usuario, password);
     }
 
-    public void getWidgets()
+    public void getForms()
     {
         if (arrayForms != null && arrayForms.size() > 0) {
 
             datos = new MenuClass[arrayForms.size()];
             int cont = 0;
 
-            for (Object modulo : arrayForms) {
+            for (Object form : arrayForms) {
 
                 try {
-                    String sModulo = (String) modulo;
-                    String sComplexModulo = sEmpresa + "@" + sModulo;
-                    MenuClass oMenu = new MenuClass(sModulo.replace("_", " "), aForms.contains(sComplexModulo));
+                    String sForm = (String) form;
+                    String sComplexModulo = sEmpresa + "@" + sForm;
+                    MenuClass oMenu = new MenuClass(sForm.replace("_", " "), aForms.contains(sComplexModulo));
                     datos[cont] = oMenu;
                     cont++;
                 }
@@ -72,7 +72,7 @@ public class FormActivity extends AppCompatActivity {
             lstOpciones.setAdapter(adaptador);
         }
         else {
-            Toast.makeText(FormActivity.this, "No hay datos, verifique contraseña", Toast.LENGTH_LONG).show();
+            Toast.makeText(FormActivity.this, "No hay datos, verifique credenciales", Toast.LENGTH_LONG).show();
             Intent oIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(oIntent);
         }
@@ -88,31 +88,26 @@ public class FormActivity extends AppCompatActivity {
 
         lstOpciones = (ListView)findViewById(R.id.LstOpciones);
 
-        Bundle oMenuBundle = getIntent().getExtras().getBundle("menu");
-        aForms = oMenuBundle.getStringArrayList("modulos");
-        usuario = oMenuBundle.getString("usuarioLogin");
-        password = oMenuBundle.getString("passwordLogin");
-        sEmpresa = oMenuBundle.getString("empresa");
+        bundle = getIntent().getExtras();
+        aForms = bundle.getStringArrayList("widgets");
+        usuario = bundle.getString("usuario");
+        password = bundle.getString("password");
+        sEmpresa = bundle.getString("empresa");
 
         setCredenciales(usuario, password);
 
-
+        getForms();
 
         lstOpciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (view.isEnabled()){
-                    Intent oIntent = new Intent(FormActivity.this, InspActivity.class);
+                        Intent oIntent = new Intent(FormActivity.this, InspActivity.class);
 
-                    Bundle oBundle = new Bundle();
-                    oBundle.putString("empresa", sEmpresa);
-                    oBundle.putString("usuario", usuario);
-                    oBundle.putString("password", password);
-                    oBundle.putString("modulo", datos[position].getTitulo());
-                    oBundle.putStringArrayList("widgets", arrayWidgets);
-                    oIntent.putExtras(oBundle);
-                    startActivity(oIntent);
+                        bundle.putString("form", datos[position].getTitulo());
+                        oIntent.putExtras(bundle);
+                        startActivity(oIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "No tiene permisos para éste formulario", Toast.LENGTH_SHORT).show();
                 }
@@ -146,14 +141,11 @@ public class FormActivity extends AppCompatActivity {
         }
 
         private MenuClass getDataByModule(MenuClass dato) {
-            if (dato.getTitulo().contains("STANDARD")) {
-                dato.setDescripcion("Módulo de visualización standard");
+            if (dato.getTitulo().contains("MASIVA")) {
+                dato.setDescripcion("Formulario de inspección masiva");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_standard : R.mipmap.ic_menu_standard_g);
-            } else if (dato.getTitulo().contains("CLIENTES")) {
-                dato.setDescripcion("Visualización e ingreso clientes en terreno");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
-            } else if (dato.getTitulo().contains("INSPECCION")) {
-                dato.setDescripcion("Visualización e ingreso de inspecciones");
+            } else if (dato.getTitulo().contains("AP")) {
+                dato.setDescripcion("Formulario de inspección AP");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
             return dato;

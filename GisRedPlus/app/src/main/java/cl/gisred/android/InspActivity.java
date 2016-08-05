@@ -142,9 +142,11 @@ public class InspActivity extends AppCompatActivity {
 
     //Constantes
     private static final String modIngreso = "INGRESO_CLIENTES";
+    private static final String modInspeccion = "INSPECCION";
 
     //Sets
     ArrayList<String> arrayWidgets;
+    ArrayList<String> arrayModulos;
     private int choices;
     ProgressDialog progress;
 
@@ -176,6 +178,7 @@ public class InspActivity extends AppCompatActivity {
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
+    FloatingActionsMenu menuInspeccionActions;
     FloatingActionButton fabShowDialog;
     FloatingActionButton fabVerCapas;
 
@@ -194,7 +197,7 @@ public class InspActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "Licencia standard válida", Toast.LENGTH_SHORT).show();
         }
 
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_insp);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.apptool);
         setSupportActionBar(toolbar);
@@ -313,6 +316,7 @@ public class InspActivity extends AppCompatActivity {
         drawNo = new ShapeDrawable(new OvalShape());
         drawNo.getPaint().setColor(getResources().getColor(R.color.black_overlay));
 
+        menuInspeccionActions = (FloatingActionsMenu) findViewById(R.id.inspection_actions);
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
         if (fabShowDialog != null) fabShowDialog.setVisibility(View.GONE);
@@ -320,92 +324,116 @@ public class InspActivity extends AppCompatActivity {
         fabVerCapas = (FloatingActionButton) findViewById(R.id.action_ver_capa);
         if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
 
-        if (modulo.replace(" ", "_").equals(modIngreso)) {
-
-            arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
-            arrayTension = getResources().getStringArray(R.array.tipo_tension);
-            arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
-            arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
-            arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
-            arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
-            arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
-            arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
-
-            dialogCrear = new Dialog(InspActivity.this);
-
-            fabShowDialog.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    bMapTap = false;
-                    bCallOut = false;
-                    myMapView.getCallout().hide();
-                    //TODO Restringir datos dialog
-                    if (oUbicacion != null) {
-                        btnUbicacion.setColorFilter(Color.BLACK);
-                        setEnabledDialog(true);
-                    }
-                    dialogCrear.show();
-                    if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
-                        myMapView.removeLayer(mSeleccionLayer);
-                }
-            });
-
-            fabVerCapas.setVisibility(View.VISIBLE);
-            fabVerCapas.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toogleCapas(v);
-                }
-            });
-
-            fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
+        if (modulo.replace(" ", "_").equals(modInspeccion)) {
 
             arrayWidgets = bundle.getStringArrayList("widgets");
+            arrayModulos = bundle.getStringArrayList("modulos");
 
-            final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
-            final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
-            final FloatingActionButton actionC = (FloatingActionButton) findViewById(R.id.action_c);
-            final FloatingActionButton actionD = (FloatingActionButton) findViewById(R.id.action_d);
+            FloatingActionButton oFabForm = (FloatingActionButton) findViewById(R.id.action_form);
+            oFabForm.setIconDrawable(drawOk);
+            oFabForm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //abrirFormInsp(v);
+                }
+            });
 
-            setOpcion(actionA, null);
-            setOpcion(actionB, null);
-            setOpcion(actionC, modIngreso + "_TECNO");
-            setOpcion(actionD, modIngreso + "_CNR");
+            FloatingActionButton oFabView = (FloatingActionButton) findViewById(R.id.action_view);
+            oFabView.setIconDrawable(drawOk);
+            oFabView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //abrirEsquema(v);
+                }
+            });
 
-            setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
-            setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
-            setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
-            setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
-            setLayersURL(din_urlTramos, "TRAMOS");
-            setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
-            setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
+            if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
 
-            addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
-            addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
-            addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
+                arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
+                arrayTension = getResources().getStringArray(R.array.tipo_tension);
+                arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
+                arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
+                arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
+                arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
+                arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
-            myMapView.addLayer(LyAddPoste, 18);
-            myMapView.addLayer(LyAddDireccion, 19);
-            myMapView.addLayer(LyAddCliente, 20);
-            myMapView.addLayer(LyAddUnion, 21);
-            myMapView.addLayer(LyAsocTramo, 22);
-            myMapView.addLayer(LyAsocCalle, 23);
-            myMapView.addLayer(LyAddClienteCnr, 24);
+                dialogCrear = new Dialog(InspActivity.this);
 
-            setLayerAddToggle(false);
+                fabShowDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bMapTap = false;
+                        bCallOut = false;
+                        myMapView.getCallout().hide();
+                        //TODO Restringir datos dialog
+                        if (oUbicacion != null) {
+                            btnUbicacion.setColorFilter(Color.BLACK);
+                            setEnabledDialog(true);
+                        }
+                        dialogCrear.show();
+                        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+                            myMapView.removeLayer(mSeleccionLayer);
+                    }
+                });
+
+                fabVerCapas.setVisibility(View.VISIBLE);
+                fabVerCapas.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toogleCapas(v);
+                    }
+                });
+
+                fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+                final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
+                final FloatingActionButton actionC = (FloatingActionButton) findViewById(R.id.action_c);
+                final FloatingActionButton actionD = (FloatingActionButton) findViewById(R.id.action_d);
+
+                setOpcion(actionA, null);
+                setOpcion(actionB, null);
+                setOpcion(actionC, modIngreso + "_TECNO");
+                setOpcion(actionD, modIngreso + "_CNR");
+
+                setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
+                setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
+                setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
+                setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
+                setLayersURL(din_urlTramos, "TRAMOS");
+                setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
+                setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
+
+                addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
+                addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
+
+                myMapView.addLayer(LyAddPoste, 18);
+                myMapView.addLayer(LyAddDireccion, 19);
+                myMapView.addLayer(LyAddCliente, 20);
+                myMapView.addLayer(LyAddUnion, 21);
+                myMapView.addLayer(LyAsocTramo, 22);
+                myMapView.addLayer(LyAsocCalle, 23);
+                myMapView.addLayer(LyAddClienteCnr, 24);
+
+                setLayerAddToggle(false);
+            } else {
+                menuMultipleActions.setVisibility(View.GONE);
+            }
 
         } else {
-            menuMultipleActions.setVisibility(View.GONE);
+            menuInspeccionActions.setVisibility(View.GONE);
         }
     }
 
@@ -465,7 +493,7 @@ public class InspActivity extends AppCompatActivity {
         if (o != null) {
             if (widget != null) {
                 FloatingActionButton oFab = (FloatingActionButton) o;
-                if (arrayWidgets.contains(widget)) {
+                if (arrayWidgets.contains(empresa + "@" + widget)) {
                     oFab.setIconDrawable(drawOk);
                     oFab.setOnClickListener(new View.OnClickListener() {
                         @Override

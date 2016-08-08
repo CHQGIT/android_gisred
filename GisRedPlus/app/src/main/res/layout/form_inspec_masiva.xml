@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="false">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <LinearLayout android:id="@+id/llDatosInsp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS DEL EMPALME"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtNumMedidor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Número Medidor"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Marca"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtTipo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tipo"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtLectura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Lectura"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtFase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fase"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <cl.gisred.android.classes.GisEditText
+                        android:id="@+id/txtPoste"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Poste Conexión" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnPoste"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_name"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtRotulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Rótulo"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtSellos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Sellos"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtIcp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ICP (A)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtSe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="S/E (kVA)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtFechaEjec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fecha Ejecución"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtHoraIni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Hora Inicio"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtHoraFin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Hora Término"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtEjecutor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ejecutor"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtTtcc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="TT/CC Instalados"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF1n"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F1 - N (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF2n"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F2 - N (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF3n"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F3 - N (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF1F2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F1 - F2 (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF2F3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F2 - F3 (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltF1F3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje F1 - F3 (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtVoltNeutro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Voltaje Neutro y tierra de protección (V)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="MANTENCIONES O INSPECCIONES"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nota_verificaciones"
+                android:textStyle="italic"
+                android:textSize="10sp"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_margin="4dp"/>
+
+            <CheckBox android:id="@+id/chkVerif1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/verif_1"
+                android:checked="true"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/verif_2"
+                android:checked="true"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/verif_3"
+                android:checked="true"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/verif_4"
+                android:checked="true"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS DEL FIRMANTE"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtNomInst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombre instalador autorizado y/o propietario"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtRut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Rut"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <include android:id="@+id/actionDialog"
+            layout="@layout/botonera_form" />
+
+    </LinearLayout>
+
+</ScrollView>

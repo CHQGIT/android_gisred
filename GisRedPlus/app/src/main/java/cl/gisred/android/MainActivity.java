@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
     private MenuClass[] datos;
     private ListView lstOpciones;
     ArrayList<String> aModulos;
+    ArrayList<String> aWidgets;
     private String sEmpresa;
+    private Bundle bundle;
 
     String usuario, password;
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES"));
-    ArrayList<String> arrayWidgets = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES_TECNO", "INGRESO_CLIENTES_CNR"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "INSPECCION"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             lstOpciones.setAdapter(adaptador);
         }
         else {
-            Toast.makeText(MainActivity.this, "No hay datos, verifique contraseña", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "No hay datos, verifique credenciales", Toast.LENGTH_LONG).show();
             Intent oIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(oIntent);
         }
@@ -88,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
         lstOpciones = (ListView)findViewById(R.id.LstOpciones);
 
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         aModulos = bundle.getStringArrayList("modulos");
+        aWidgets = bundle.getStringArrayList("widgets");
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
         sEmpresa = bundle.getString("empresa");
@@ -103,13 +105,21 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (view.isEnabled()){
-                    Intent oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                    Intent oIntent;
                     Bundle oBundle = new Bundle();
+
+                    if (datos[position].getTitulo().equalsIgnoreCase("INSPECCION")){
+                        oIntent = new Intent(MainActivity.this, FormActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    }
+                    else
+                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);
                     oBundle.putString("password", password);
                     oBundle.putString("modulo", datos[position].getTitulo());
-                    oBundle.putStringArrayList("widgets", arrayWidgets);
+                    oBundle.putStringArrayList("widgets", aWidgets);
                     oIntent.putExtras(oBundle);
                     startActivity(oIntent);
                 } else {
@@ -150,6 +160,9 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_standard : R.mipmap.ic_menu_standard_g);
             } else if (dato.getTitulo().contains("CLIENTES")) {
                 dato.setDescripcion("Visualización e ingreso clientes en terreno");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("INSPECCION")) {
+                dato.setDescripcion("Visualización e ingreso de inspecciones");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
             return dato;

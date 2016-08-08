@@ -53,4 +53,11 @@
 
     <string name="btnBuscarMap">Buscar</string>
 
+    <!-- Inspecciones -->
+    <string name="nota_verificaciones">Si en esta lista de verificaciones hay alguna desmarcada, la empresa distribuidora no conectará el empalme a sus redes, comunicará al cliente que no se podrá conectar hasta que subsanen las observaciones e informará del hecho al SEC.</string>
+    <string name="verif_1">Instalación cliente cuenta con la camara de registro y su tierra servicio</string>
+    <string name="verif_2">Instalación cliente cuenta con la camara de registro y su tierra protección</string>
+    <string name="verif_3">Tablero cliente cuenta con diferencial</string>
+    <string name="verif_4">Tablero cliente cuenta con protección automática</string>
+
 </resources>

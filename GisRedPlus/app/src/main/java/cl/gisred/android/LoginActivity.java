@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private String sImei;
     private String sFecha;
 
+    private String sError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,11 +104,12 @@ public class LoginActivity extends AppCompatActivity {
     public void Consulta_permisos_usuario()
     {
         try {
+            sError = "Ocurrió un problema al ingresar";
             AsyncQueryTask queryTask = new AsyncQueryTask();
             queryTask.execute(usuario);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(LoginActivity.this, "Ocurrió un problema al ingresar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, sError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -134,12 +137,14 @@ public class LoginActivity extends AppCompatActivity {
                 QueryTask queryTask = new QueryTask("http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/MapServer/2", credenciales);
                 results = queryTask.execute(myParameters);
 
-                if (results != null && results.featureCount() == 0) results = null;
+                if (results != null && results.featureCount() == 0)
+                    sError = "Usuario ingresado no tiene permiso móvil";
 
                 return results;
 
             } catch (Exception e) {
                 e.printStackTrace();
+                sError = "Credenciales inválidas en dominio " + domain;
                 return null;
             }
         }
@@ -148,9 +153,10 @@ public class LoginActivity extends AppCompatActivity {
 
             ArrayList arrayModulos = new ArrayList();
             ArrayList arrayEmpresas = new ArrayList();
+            ArrayList arrayWidgets = new ArrayList();
             String userDominio = new String();
 
-            if (results != null) {
+            if (results != null && results.featureCount() > 0) {
                 int size = (int) results.featureCount();
 
                 SharedPreferences prefs = getSharedPreferences("GisRedPrefs",Context.MODE_PRIVATE);
@@ -178,6 +184,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         arrayModulos.add(empModule + "@" + feature.getAttributeValue("modulo"));
                         userDominio = (String) feature.getAttributeValue("usuario");
+
+                        arrayWidgets.add(empModule + "@" + feature.getAttributeValue("widget"));
                     }
                 }
 
@@ -192,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                 bundle.putString("passwordLogin", password);
                 bundle.putStringArrayList("modulos", arrayModulos);
                 bundle.putStringArrayList("empresas", arrayEmpresas);
+                bundle.putStringArrayList("widgets", arrayWidgets);
 
                 Map<String, Object> attributes = new HashMap<>();
 
@@ -214,7 +223,7 @@ public class LoginActivity extends AppCompatActivity {
 
             } else {
                 progress.dismiss();
-                Toast.makeText(getApplicationContext(), "Login Incorrecto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), sError, Toast.LENGTH_SHORT).show();
             }
         }
     }

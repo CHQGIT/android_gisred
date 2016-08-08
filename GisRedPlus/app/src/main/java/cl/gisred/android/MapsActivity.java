@@ -468,7 +468,7 @@ public class MapsActivity extends AppCompatActivity {
         if (o != null) {
             if (widget != null) {
                 FloatingActionButton oFab = (FloatingActionButton) o;
-                if (arrayWidgets.contains(widget)) {
+                if (arrayWidgets.contains(empresa + "@" + widget)) {
                     oFab.setIconDrawable(drawOk);
                     oFab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1838,7 +1838,7 @@ public class MapsActivity extends AppCompatActivity {
                                 .getError();
                         if (securityEx.getCode() == EsriSecurityException.AUTHENTICATION_FAILED)
                             Toast.makeText(myMapView.getContext(),
-                                    "Ocurrió un problema con la autenticación! Intente volver al Login!",
+                                    "Su cuenta tiene permisos limitados, contacte con el administrador para solicitar permisos faltantes",
                                     Toast.LENGTH_SHORT).show();
                         else if (securityEx.getCode() == EsriSecurityException.TOKEN_INVALID)
                             Toast.makeText(myMapView.getContext(),
@@ -2280,7 +2280,7 @@ public class MapsActivity extends AppCompatActivity {
             } else {
                 if (loc.hasSpeed()){
                     int speed = (int) ((loc.getSpeed() * 3600) / 1000);
-                    if (speed > 10) {
+                    if (speed > 10 && speed < 150) {
                         myMapView.centerAt(p, true);
                         if (speed > 120) {
                             Toast.makeText(getApplicationContext(), String.format("Velocidad max superada: %s Km/h", speed),

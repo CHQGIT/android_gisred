@@ -16,7 +16,8 @@
         android:orientation="horizontal"
         android:layout_below="@id/appbar">
 
-        <TextView  android:id="@+id/LblEtiqueta"
+        <TextView
+            android:id="@+id/LblEtiqueta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"

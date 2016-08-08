@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -361,7 +362,7 @@ public class InspActivity extends AppCompatActivity {
             oFabView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //abrirEsquema(v);
+                    abrirEsquema(v);
                 }
             });
 
@@ -832,6 +833,22 @@ public class InspActivity extends AppCompatActivity {
         });
 
         return null;
+    }
+
+    private void abrirEsquema(View view) {
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.drawable.esquema_conexion);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).
+                setPositiveButton("CERRAR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).
+                setView(image);
+
+        builder.create().show();
     }
 
     private void abrirFormInsp(View view) {

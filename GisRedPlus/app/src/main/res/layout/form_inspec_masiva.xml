@@ -364,6 +364,9 @@
 
         </LinearLayout>
 
+        <include android:id="@+id/actionDialog"
+            layout="@layout/botonera_form" />
+
     </LinearLayout>
 
 </ScrollView>

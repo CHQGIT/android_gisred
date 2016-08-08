@@ -20,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -175,11 +176,13 @@ public class InspActivity extends AppCompatActivity {
     private Graphic[] addsUnion = {};
 
     Dialog dialogCrear;
+    Dialog formCrear;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
     FloatingActionsMenu menuInspeccionActions;
     FloatingActionButton fabShowDialog;
+    FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
@@ -318,8 +321,12 @@ public class InspActivity extends AppCompatActivity {
 
         menuInspeccionActions = (FloatingActionsMenu) findViewById(R.id.inspection_actions);
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
         if (fabShowDialog != null) fabShowDialog.setVisibility(View.GONE);
+
+        fabShowForm = (FloatingActionButton) findViewById(R.id.action_show_form);
+        if (fabShowForm != null) fabShowForm.setVisibility(View.GONE);
 
         fabVerCapas = (FloatingActionButton) findViewById(R.id.action_ver_capa);
         if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
@@ -329,12 +336,23 @@ public class InspActivity extends AppCompatActivity {
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
 
+            formCrear = new Dialog(InspActivity.this);
+            fabShowForm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //bMapTap = false;
+                    //bCallOut = false;
+                    //myMapView.getCallout().hide();
+                    formCrear.show();
+                }
+            });
+
             FloatingActionButton oFabForm = (FloatingActionButton) findViewById(R.id.action_form);
             oFabForm.setIconDrawable(drawOk);
             oFabForm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //abrirFormInsp(v);
+                    abrirFormInsp(v);
                 }
             });
 
@@ -684,6 +702,21 @@ public class InspActivity extends AppCompatActivity {
         }
     }
 
+    private void cerrarFormCrear(boolean bSave, View v){
+        if (bSave) {
+            if (!validarForm(v)) {
+                DialogoConfirmacion oDialog = new DialogoConfirmacion();
+                oDialog.show(getFragmentManager(), "tagAlert");
+                return;
+            }
+        }
+
+        menuMultipleActions.setVisibility(View.VISIBLE);
+        menuInspeccionActions.setVisibility(View.VISIBLE);
+        fabShowForm.setVisibility(View.GONE);
+        formCrear.dismiss();
+    }
+
     private void cerrarDialogCrear(boolean bSave, @Nullable View viewDialog) {
         final AtomicReference<String> resp = new AtomicReference<>("");
 
@@ -782,6 +815,7 @@ public class InspActivity extends AppCompatActivity {
         if (bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(false);
         menuMultipleActions.setVisibility(View.VISIBLE);
+        menuInspeccionActions.setVisibility(View.VISIBLE);
         fabShowDialog.setVisibility(View.GONE);
         dialogCrear.dismiss();
         if (oLyAddGraphs != null) oLyAddGraphs.setVisible(true);
@@ -800,11 +834,29 @@ public class InspActivity extends AppCompatActivity {
         return null;
     }
 
+    private void abrirFormInsp(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        menuMultipleActions.collapse();
+        menuMultipleActions.setVisibility(View.GONE);
+
+        menuInspeccionActions.collapse();
+        menuInspeccionActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+    }
+
     private void abrirDialogCrear(View view) {
 
         FloatingActionButton fabTemp = (FloatingActionButton) view;
         menuMultipleActions.collapse();
         menuMultipleActions.setVisibility(View.GONE);
+
+        menuInspeccionActions.collapse();
+        menuInspeccionActions.setVisibility(View.GONE);
         fabShowDialog.setVisibility(View.VISIBLE);
 
         switch (view.getId()) {
@@ -824,6 +876,10 @@ public class InspActivity extends AppCompatActivity {
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(true);
+    }
+
+    private boolean validarForm(View view) {
+        return false;
     }
 
     private boolean validarVista(View view) {
@@ -1065,6 +1121,46 @@ public class InspActivity extends AppCompatActivity {
         }
 
         return s;
+    }
+
+    public void setActionsForm(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (int) ((widthSize * 3) / 4);
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(true, v);
+            }
+        });
+
+        arrayTouchs = new ArrayList<>();
+        //setEnabledDialog(false);
+
+        formCrear.show();
     }
 
     public void setActionsDialog(final int idRes, String sNombre) {

@@ -81,6 +81,18 @@
             fab:fab_colorNormal="@color/colorPrimaryDark"
             fab:fab_colorPressed="@color/colorAccent"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_show_form"
+            android:elevation="8dp"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:fab_size="mini"
+            app:fab_icon="@drawable/ic_flip_to_front_white_24dp"
+            fab:fab_colorNormal="@color/colorPrimaryDark"
+            fab:fab_colorPressed="@color/colorAccent"/>
+
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/inspection_actions"
             android:layout_width="wrap_content"

@@ -62,6 +62,7 @@
                 <EditText android:id="@+id/txtLectura"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:tag="txt_lectura"
                     android:hint="Lectura"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -73,6 +74,7 @@
                 <EditText android:id="@+id/txtFase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:tag="txt_fase"
                     android:hint="Fase"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -91,6 +93,7 @@
                         android:id="@+id/txtPoste"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:tag="txt_poste"
                         android:hint="Poste Conexión" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -361,6 +364,47 @@
                     android:hint="Rut"/>
 
             </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Firma"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:minWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_brush_black_48dp"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

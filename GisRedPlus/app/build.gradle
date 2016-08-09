@@ -43,6 +43,7 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.roughike:bottom-bar:1.3.3'
     compile 'com.google.android.gms:play-services-appindexing:9.2.1'
+    compile files('libs/customviews.jar')
 }
 
 repositories {

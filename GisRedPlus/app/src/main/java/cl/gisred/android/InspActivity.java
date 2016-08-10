@@ -1,5 +1,6 @@
 package cl.gisred.android;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,6 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -35,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.coatedmoose.customviews.SignatureView;
 import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
@@ -185,6 +188,9 @@ public class InspActivity extends AppCompatActivity {
     FloatingActionButton fabShowDialog;
     FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
+
+    //var inspeccion
+    public ImageView imgFirma;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -907,6 +913,55 @@ public class InspActivity extends AppCompatActivity {
         return (recorrerDialog(vAction) == 0);
     }
 
+    public static class DialogoFirma extends DialogFragment {
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(getActivity());
+
+            builder.setTitle("Firma")
+                    .setView(R.layout.form_firma)
+                    .setCancelable(false)
+                    .setNeutralButton("Limpiar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            SignatureView signView = (SignatureView) getDialog().findViewById(R.id.signatureView);
+                            signView.clearSignature();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            dialogInterface.cancel();
+                        }
+                    })
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //guardar firma
+
+                            //setear imagen
+
+                            SignatureView signView = (SignatureView) getDialog().findViewById(R.id.signatureView);
+                            int countByte = signView.getImage().getByteCount();
+
+                            ImageView imgFirma = ((InspActivity) ((AlertDialog) dialog).getOwnerActivity()).imgFirma;
+
+                            if (imgFirma != null) {
+                                imgFirma.setImageBitmap(signView.getImage());
+                            }
+
+                            //cerrar dialogo
+                            dialog.cancel();
+                        }
+                    });
+
+            return builder.create();
+        }
+    }
+
     public static class DialogoConfirmacion extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -1171,6 +1226,17 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cerrarFormCrear(true, v);
+            }
+        });
+
+        imgFirma = (ImageView) v.findViewById(R.id.imgFirma);
+
+        ImageButton btnFirma = (ImageButton) v.findViewById(R.id.btnFirma);
+        btnFirma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogoFirma oDialog = new DialogoFirma();
+                oDialog.show(getFragmentManager(), "tagFirma");
             }
         });
 

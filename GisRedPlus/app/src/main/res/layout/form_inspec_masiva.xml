@@ -385,7 +385,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <ImageView android:id="@+id/imgFirma"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minHeight="150dp"
@@ -395,7 +395,7 @@
                         android:cropToPadding="true"
                         style="@style/myImageView"/>
 
-                    <ImageButton
+                    <ImageButton android:id="@+id/btnFirma"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

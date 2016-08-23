@@ -48,7 +48,7 @@
             android:parentActivityName=".EmpActivity"/>
         <activity
             android:name=".FormActivity"
-            android:label="Menú Formularios"
+            android:label="Menú Protocolos"
             android:screenOrientation="sensor"
             android:parentActivityName=".MainActivity"/>
         <activity

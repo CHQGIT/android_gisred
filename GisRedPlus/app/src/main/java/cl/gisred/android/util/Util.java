@@ -127,7 +127,6 @@ public class Util {
 
                 } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
                     Spinner oSpinner = (Spinner) view;
-                    //oSpinner.isSelected();
                     String sValue = oSpinner.getSelectedItem().toString();
 
                     if (oSpinner.getId() == R.id.spinnerTipoPoste)

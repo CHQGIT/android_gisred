@@ -294,20 +294,10 @@
                 android:textSize="18sp"
                 android:layout_marginTop="16dp"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/nota_verificaciones"
-                android:textStyle="italic"
-                android:textSize="10sp"
-                android:textColor="@android:color/holo_red_dark"
-                android:layout_margin="4dp"/>
-
             <CheckBox android:id="@+id/chkVerif1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/verif_1"
-                android:checked="true"
                 android:elegantTextHeight="true"
                 android:layout_marginTop="10dp" />
 
@@ -315,7 +305,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/verif_2"
-                android:checked="true"
                 android:elegantTextHeight="true"
                 android:layout_marginTop="10dp" />
 
@@ -323,7 +312,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/verif_3"
-                android:checked="true"
                 android:elegantTextHeight="true"
                 android:layout_marginTop="10dp" />
 
@@ -331,7 +319,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/verif_4"
-                android:checked="true"
                 android:elegantTextHeight="true"
                 android:layout_marginTop="10dp" />
 
@@ -390,17 +377,197 @@
                         android:layout_height="wrap_content"
                         android:minHeight="150dp"
                         android:minWidth="200dp"
+                        android:maxWidth="200dp"
                         android:layout_weight="3"
                         android:padding="1dp"
                         android:cropToPadding="true"
                         style="@style/myImageView"/>
 
                     <ImageButton android:id="@+id/btnFirma"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/ic_brush_black_48dp"
                         android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ANEXO FOTOGRAFICO"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Conexionado del medidor"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="300dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Caja de conexión"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="300dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tablero general"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="300dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

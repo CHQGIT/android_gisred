@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "INSPECCION"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent oIntent;
                     Bundle oBundle = new Bundle();
 
-                    if (datos[position].getTitulo().equalsIgnoreCase("INSPECCION")){
+                    if (datos[position].getTitulo().contains("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     }

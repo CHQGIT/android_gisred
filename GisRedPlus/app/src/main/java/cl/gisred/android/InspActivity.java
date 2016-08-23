@@ -8,15 +8,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -30,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -76,6 +81,9 @@ import com.esri.core.tasks.query.QueryTask;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -83,6 +91,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
 import cl.gisred.android.entity.CalloutTvClass;
+import cl.gisred.android.util.HtmlUtils;
+import cl.gisred.android.util.PhotoUtils;
 import cl.gisred.android.util.Util;
 
 public class InspActivity extends AppCompatActivity {
@@ -147,7 +157,7 @@ public class InspActivity extends AppCompatActivity {
 
     //Constantes
     private static final String modIngreso = "INGRESO_CLIENTES";
-    private static final String modInspeccion = "INSPECCION";
+    private static final String modInspeccion = "PROTOCOLO_INSPECCION";
 
     //Sets
     ArrayList<String> arrayWidgets;
@@ -191,6 +201,12 @@ public class InspActivity extends AppCompatActivity {
 
     //var inspeccion
     public ImageView imgFirma;
+    public ImageView imgTemp;
+    public ImageView imgPhoto1;
+    public ImageView imgPhoto2;
+    public ImageView imgPhoto3;
+    private Uri mImageUri;
+    private static final int ACTIVITY_SELECT_IMAGE = 1020, ACTIVITY_SELECT_FROM_CAMERA = 1040, ACTIVITY_SHARE = 1030;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -465,11 +481,16 @@ public class InspActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (mImageUri != null)
+            outState.putString("Uri", mImageUri.toString());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("Uri")) {
+            mImageUri = Uri.parse(savedInstanceState.getString("Uri"));
+        }
     }
 
     @Override
@@ -563,6 +584,22 @@ public class InspActivity extends AppCompatActivity {
             touch.setEnabled(bEnable);
         }
 
+    }
+
+    private int recorrerForm(View v) {
+        int contRequeridos = 0;
+
+        for (View view : v.getTouchables()) {
+
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                EditText oText = (EditText) view;
+                if (oText.getText().toString().trim().isEmpty())
+                    contRequeridos++;
+            } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
+            }
+        }
+
+        return contRequeridos;
     }
 
     private int recorrerDialog(View v) {
@@ -859,6 +896,12 @@ public class InspActivity extends AppCompatActivity {
 
     private void abrirFormInsp(View view) {
 
+        try {
+            HtmlUtils.createPathInspeccion(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         FloatingActionButton fabTemp = (FloatingActionButton) view;
         menuMultipleActions.collapse();
         menuMultipleActions.setVisibility(View.GONE);
@@ -902,7 +945,34 @@ public class InspActivity extends AppCompatActivity {
     }
 
     private boolean validarForm(View view) {
-        return false;
+
+        View vAction = getLayoutValidate(view);
+        int iReq = recorrerForm(vAction);
+
+        //TEST
+        Resources res = getResources();
+        InputStream in_s = res.openRawResource(R.raw.index);
+        try {
+            byte[] b = new byte[in_s.available()];
+            in_s.read(b);
+            String sHtml = new String(b);
+            HtmlUtils oHtml = new HtmlUtils(getApplicationContext(), sHtml);
+
+            oHtml.setValueById("foto_1", "img", "foto1.jpg");
+            oHtml.setValueById("txt_lectura", "txt", "170486");
+            oHtml.setValueById("foto_2", "img", "foto2.jpg");
+            oHtml.setValueById("foto_3", "img", "foto3.jpg");
+            oHtml.setValueById("firm_prop", "img", "firma.jpg");
+            String sHtmlFinal = oHtml.getHtmlFinal();
+
+            //guardar en disco
+            oHtml.createHtml(sHtmlFinal);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //FIN TEST
+        return (iReq == 0);
     }
 
     private boolean validarVista(View view) {
@@ -940,17 +1010,23 @@ public class InspActivity extends AppCompatActivity {
                     })
                     .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            //guardar firma
-
-                            //setear imagen
-
                             SignatureView signView = (SignatureView) getDialog().findViewById(R.id.signatureView);
                             int countByte = signView.getImage().getByteCount();
 
+                            //guardar firma
+                            try {
+                                PhotoUtils.createFirma(signView.getImage(), getActivity().getBaseContext());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            //setear imagen
                             ImageView imgFirma = ((InspActivity) ((AlertDialog) dialog).getOwnerActivity()).imgFirma;
 
                             if (imgFirma != null) {
+                                imgFirma.setAdjustViewBounds(true);
                                 imgFirma.setImageBitmap(signView.getImage());
+                                imgFirma.setCropToPadding(true);
                             }
 
                             //cerrar dialogo
@@ -1230,6 +1306,9 @@ public class InspActivity extends AppCompatActivity {
         });
 
         imgFirma = (ImageView) v.findViewById(R.id.imgFirma);
+        imgPhoto1 = (ImageView) v.findViewById(R.id.imgPhoto1);
+        imgPhoto2 = (ImageView) v.findViewById(R.id.imgPhoto2);
+        imgPhoto3 = (ImageView) v.findViewById(R.id.imgPhoto3);
 
         ImageButton btnFirma = (ImageButton) v.findViewById(R.id.btnFirma);
         btnFirma.setOnClickListener(new View.OnClickListener() {
@@ -1240,10 +1319,85 @@ public class InspActivity extends AppCompatActivity {
             }
         });
 
+        ImageButton btnPhoto1 = (ImageButton) v.findViewById(R.id.btnPhoto1);
+        btnPhoto1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto1;
+                tomarFoto("foto1");
+            }
+        });
+
+        ImageButton btnPhoto2 = (ImageButton) v.findViewById(R.id.btnPhoto2);
+        btnPhoto2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto2;
+                tomarFoto("foto2");
+            }
+        });
+
+        ImageButton btnPhoto3 = (ImageButton) v.findViewById(R.id.btnPhoto3);
+        btnPhoto3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto3;
+                tomarFoto("foto3");
+            }
+        });
+
+        ImageButton btnFile1 = (ImageButton) v.findViewById(R.id.btnFile1);
+        btnFile1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto1;
+                imageGallery();
+            }
+        });
+
+        ImageButton btnFile2 = (ImageButton) v.findViewById(R.id.btnFile2);
+        btnFile2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto2;
+                imageGallery();
+            }
+        });
+
+        ImageButton btnFile3 = (ImageButton) v.findViewById(R.id.btnFile3);
+        btnFile3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTemp = imgPhoto3;
+                imageGallery();
+            }
+        });
+
         arrayTouchs = new ArrayList<>();
         //setEnabledDialog(false);
 
         formCrear.show();
+    }
+
+    private void imageGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, ACTIVITY_SELECT_IMAGE);
+    }
+
+    private void tomarFoto(String name){
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        File photo = null;
+        try {
+            // place where to store camera taken picture
+            photo = PhotoUtils.createFile(name, "jpg", InspActivity.this);
+            photo.delete();
+        } catch (Exception e) {
+            Log.v(getClass().getSimpleName(), "Can't create file to take picture!");
+        }
+        mImageUri = Uri.fromFile(photo);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        startActivityForResult(intent, ACTIVITY_SELECT_FROM_CAMERA);
     }
 
     public void setActionsDialog(final int idRes, String sNombre) {
@@ -2463,6 +2617,30 @@ public class InspActivity extends AppCompatActivity {
                 });
         alertGps = builder.create();
         alertGps.show();
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            PhotoUtils photoUtils = new PhotoUtils(getApplicationContext());
+            imgTemp.setAdjustViewBounds(true);
+            imgTemp.setCropToPadding(true);
+
+            if (requestCode == ACTIVITY_SELECT_IMAGE) {
+                mImageUri = data.getData();
+                Log.w("onActivityResult", "URI: " + mImageUri.getPath());
+                imgTemp.setImageBitmap(photoUtils.getImage(mImageUri));
+
+            } else if (requestCode == ACTIVITY_SELECT_FROM_CAMERA) {
+                Log.w("onActivityResult", "URI: " + mImageUri.getPath());
+                Bitmap oBitmap = photoUtils.getImage(mImageUri);
+                Log.w("onActivityResult", String.format("W: %s H: %s", oBitmap.getWidth(), oBitmap.getHeight()));
+                imgTemp.setImageBitmap(oBitmap);
+            }
+        }
     }
 
     private class MyLocationListener implements LocationListener {

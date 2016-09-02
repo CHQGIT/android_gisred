@@ -2,6 +2,8 @@ package cl.gisred.android.util;
 
 import android.bluetooth.BluetoothClass;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
@@ -31,6 +33,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cl.gisred.android.R;
@@ -529,5 +532,19 @@ public class Util {
         } else {
             return Character.toUpperCase(first) + s.substring(1);
         }
+    }
+
+    public static boolean isPackageExisted(String targetPackage, Context mContext){
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+
+        pm = mContext.getPackageManager();
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if(packageInfo.packageName.equals(targetPackage))
+                return true;
+        }
+
+        return false;
     }
 }

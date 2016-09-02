@@ -2,15 +2,18 @@ package cl.gisred.android;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.location.Location;
@@ -26,6 +29,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +40,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.coatedmoose.customviews.SignatureView;
@@ -84,7 +91,10 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -92,6 +102,7 @@ import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.HtmlUtils;
+import cl.gisred.android.util.Pdf;
 import cl.gisred.android.util.PhotoUtils;
 import cl.gisred.android.util.Util;
 
@@ -191,6 +202,8 @@ public class InspActivity extends AppCompatActivity {
 
     Dialog dialogCrear;
     Dialog formCrear;
+    Dialog dialogCur;
+    boolean bInspRotulo = true;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
@@ -206,7 +219,12 @@ public class InspActivity extends AppCompatActivity {
     public ImageView imgPhoto2;
     public ImageView imgPhoto3;
     private Uri mImageUri;
+    private String sImgUri;
     private static final int ACTIVITY_SELECT_IMAGE = 1020, ACTIVITY_SELECT_FROM_CAMERA = 1040, ACTIVITY_SHARE = 1030;
+    private SimpleDateFormat dateFormatter;
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
+    private EditText txtHora;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -303,7 +321,7 @@ public class InspActivity extends AppCompatActivity {
         btnGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO TEST THIS
+
                 LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     alertNoGps();
@@ -355,6 +373,7 @@ public class InspActivity extends AppCompatActivity {
         if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
 
         if (modulo.replace(" ", "_").equals(modInspeccion)) {
+            dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
@@ -586,6 +605,21 @@ public class InspActivity extends AppCompatActivity {
 
     }
 
+    private boolean valImage(View image, int res) {
+        ImageView valImg = (ImageView) image.findViewById(res);
+        if (valImg != null) {
+            try {
+                int tam = ((BitmapDrawable) valImg.getDrawable()).getBitmap().getByteCount();
+                if (tam > 0) return true;
+                else return false;
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     private int recorrerForm(View v) {
         int contRequeridos = 0;
 
@@ -598,6 +632,12 @@ public class InspActivity extends AppCompatActivity {
             } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
             }
         }
+
+        contRequeridos += (valImage(v, R.id.imgFirma)) ? 0 : 1;
+
+        contRequeridos += (valImage(v, R.id.imgPhoto1)) ? 0 : 1;
+        contRequeridos += (valImage(v, R.id.imgPhoto2)) ? 0 : 1;
+        contRequeridos += (valImage(v, R.id.imgPhoto3)) ? 0 : 1;
 
         return contRequeridos;
     }
@@ -752,6 +792,69 @@ public class InspActivity extends AppCompatActivity {
                 DialogoConfirmacion oDialog = new DialogoConfirmacion();
                 oDialog.show(getFragmentManager(), "tagAlert");
                 return;
+            } else {
+                Resources res = getResources();
+                InputStream in_s = res.openRawResource(R.raw.index);
+                try {
+                    View vAction = getLayoutValidate(v);
+                    byte[] b = new byte[in_s.available()];
+                    in_s.read(b);
+                    String sHtml = new String(b);
+                    HtmlUtils oHtml = new HtmlUtils(getApplicationContext(), sHtml);
+
+                    String sValueNumMed = "null";
+
+                    for (View view : vAction.getTouchables()) {
+
+                        if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                            EditText oText = (EditText) view;
+                            if (!oText.getText().toString().trim().isEmpty()){
+                                oHtml.setValueById(HtmlUtils.getMapvalue(oText.getId()), "txt", oText.getText().toString());
+                                if (oText.getId() == R.id.txtNumMedidor)
+                                    sValueNumMed = oText.getText().toString();
+                            }
+                        } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
+                            CheckBox oCheck = (CheckBox) view;
+                            String sCheck = HtmlUtils.getMapvalue(oCheck.getId());
+                            sCheck += oCheck.isChecked() ? "si" : "no";
+                            oHtml.setValueById(sCheck, "chk", "");
+                        }
+                    }
+
+                    oHtml.setTitleHtml(sValueNumMed, Calendar.getInstance().getTime().toLocaleString());
+
+                    String sHtmlFinal = oHtml.getHtmlFinal();
+
+                    //guardar en disco
+                    oHtml.createHtml(sHtmlFinal);
+
+                    //PDF de prueba
+                    /*InputStream inTemp = res.openRawResource(R.raw.index_temp);
+                    byte[] bTemp = new byte[inTemp.available()];
+                    inTemp.read(bTemp);
+                    String sHtmlTemp = new String(bTemp);
+                    Pdf oPdf = new Pdf(sHtmlTemp);
+                    oPdf.create(sHtmlTemp, oHtml.getPath());*/
+
+
+                    //VIA CHROME scheme
+                    if (Util.isPackageExisted("com.android.chrome", this)) {
+                        Log.w("isPackageExisted", "true");
+                        String url = oHtml.getPathHtml();
+
+                        Uri uri = Uri.parse("googlechrome://navigate?url=" + url);
+                        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(this, "Debe instalar Chrome, solo preview disponible", Toast.LENGTH_LONG).show();
+                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(oHtml.getPathHtml()));
+                        startActivity(myIntent);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -949,29 +1052,7 @@ public class InspActivity extends AppCompatActivity {
         View vAction = getLayoutValidate(view);
         int iReq = recorrerForm(vAction);
 
-        //TEST
-        Resources res = getResources();
-        InputStream in_s = res.openRawResource(R.raw.index);
-        try {
-            byte[] b = new byte[in_s.available()];
-            in_s.read(b);
-            String sHtml = new String(b);
-            HtmlUtils oHtml = new HtmlUtils(getApplicationContext(), sHtml);
-
-            oHtml.setValueById("foto_1", "img", "foto1.jpg");
-            oHtml.setValueById("txt_lectura", "txt", "170486");
-            oHtml.setValueById("foto_2", "img", "foto2.jpg");
-            oHtml.setValueById("foto_3", "img", "foto3.jpg");
-            oHtml.setValueById("firm_prop", "img", "firma.jpg");
-            String sHtmlFinal = oHtml.getHtmlFinal();
-
-            //guardar en disco
-            oHtml.createHtml(sHtmlFinal);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //FIN TEST
+        Log.w("validaForm", "falta: " + iReq);
         return (iReq == 0);
     }
 
@@ -993,7 +1074,7 @@ public class InspActivity extends AppCompatActivity {
 
             builder.setTitle("Firma")
                     .setView(R.layout.form_firma)
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .setNeutralButton("Limpiar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -1011,7 +1092,6 @@ public class InspActivity extends AppCompatActivity {
                     .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             SignatureView signView = (SignatureView) getDialog().findViewById(R.id.signatureView);
-                            int countByte = signView.getImage().getByteCount();
 
                             //guardar firma
                             try {
@@ -1289,6 +1369,90 @@ public class InspActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
+        final GisEditText txtPoste = (GisEditText) v.findViewById(R.id.txtPoste);
+        final EditText txtRotulo = (EditText) v.findViewById(R.id.txtRotulo);
+
+        txtPoste.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (bInspRotulo) {
+                    txtRotulo.setText(charSequence);
+                    if (!txtRotulo.hasFocus()) txtRotulo.requestFocus();
+                    bInspRotulo = false;
+                    txtPoste.setText(String.format("%s", txtPoste.getIdObjeto()));
+                } else
+                    bInspRotulo = true;
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
+                Log.w("[InspActivity]", "HIDE FORM POSTE and Zoom");
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        final EditText txtFecha = (EditText) v.findViewById(R.id.txtFechaEjec);
+        txtFecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog.show();
+            }
+        });
+
+        Calendar newCalendar = Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                txtFecha.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final EditText txtHoraIni = (EditText) v.findViewById(R.id.txtHoraIni);
+        txtHoraIni.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timePickerDialog.show();
+                txtHora = txtHoraIni;
+            }
+        });
+
+        final EditText txtHoraFin = (EditText) v.findViewById(R.id.txtHoraFin);
+        txtHoraFin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timePickerDialog.show();
+                txtHora = txtHoraFin;
+            }
+        });
+
+        timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                txtHora.setText(String.format("%s:%s", selectedHour, selectedMinute));
+            }
+        }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), false);
+
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1351,7 +1515,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto1;
-                imageGallery();
+                imageGallery("foto1");
             }
         });
 
@@ -1360,7 +1524,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto2;
-                imageGallery();
+                imageGallery("foto2");
             }
         });
 
@@ -1369,7 +1533,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto3;
-                imageGallery();
+                imageGallery("foto3");
             }
         });
 
@@ -1377,9 +1541,11 @@ public class InspActivity extends AppCompatActivity {
         //setEnabledDialog(false);
 
         formCrear.show();
+        dialogCur = formCrear;
     }
 
-    private void imageGallery() {
+    private void imageGallery(String name) {
+        sImgUri = name;
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, ACTIVITY_SELECT_IMAGE);
@@ -1446,6 +1612,7 @@ public class InspActivity extends AppCompatActivity {
         setEnabledDialog(false);
 
         dialogCrear.show();
+        dialogCur = dialogCrear;
     }
 
     private void setSpinnerDialog(int idLayout, View v) {
@@ -1534,10 +1701,6 @@ public class InspActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddDireccion;
                 oLyExistAsoc = LyDIRECCIONES;
-                /*myMapView.removeLayer(0);
-                addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
-                myMapView.addLayer(LyMapabase, 0);*/
-                //myMapView.zoomToScale(oUbicacion, 700.0f);
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1551,7 +1714,7 @@ public class InspActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddPoste;
                 oLyExistAsoc = LyPOSTES;
-                Log.w("[MapsActivity]", "HIDE DIALOG POSTE");
+                Log.w("[InspActivity]", "HIDE DIALOG POSTE");
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1566,7 +1729,7 @@ public class InspActivity extends AppCompatActivity {
                     bCallOut = true;
                     nIndentify = 2; //2 = valor para tramo
                     oLySelectAsoc = LyAsocTramo;
-                    Log.w("[MapsActivity]", "HIDE DIALOG TRAMO");
+                    Log.w("[InspActivity]", "HIDE DIALOG TRAMO");
                     setValueToAsoc(getLayoutContenedor(v));
                 }
             });
@@ -2041,15 +2204,16 @@ public class InspActivity extends AppCompatActivity {
                                     tv.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                             oTxtAsoc.setText(((GisTextView) v).getHint());
                                             oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                            oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                             oTxtAsoc.setPoint(myMapView.getCallout().getCoordinates());
                                             bCallOut = false;
                                             bMapTap = false;
                                             myMapView.getCallout().hide();
                                             oLySelectAsoc.clearSelection();
-                                            dialogCrear.show();
+                                            //dialogCrear.show();
+                                            dialogCur.show();
                                             if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                                                 myMapView.removeLayer(mSeleccionLayer);
 
@@ -2527,16 +2691,16 @@ public class InspActivity extends AppCompatActivity {
                             tv.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                     oTxtAsoc.setText(((GisTextView) v).getHint());
                                     oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                    oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                    oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                     oTxtAsoc.setPoint(myMapView.getCallout().getCoordinates());
                                     bCallOut = false;
                                     bMapTap = false;
                                     myMapView.getCallout().hide();
                                     oLySelectAsoc.clearSelection();
-                                    dialogCrear.show();
+                                    //dialogCrear.show();
+                                    dialogCur.show();
                                     if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                                         myMapView.removeLayer(mSeleccionLayer);
 
@@ -2632,11 +2796,15 @@ public class InspActivity extends AppCompatActivity {
             if (requestCode == ACTIVITY_SELECT_IMAGE) {
                 mImageUri = data.getData();
                 Log.w("onActivityResult", "URI: " + mImageUri.getPath());
-                imgTemp.setImageBitmap(photoUtils.getImage(mImageUri));
-
+                imgTemp.setImageBitmap(photoUtils.getImage(mImageUri, 250));
+                try {
+                    photoUtils.copyFromGallery(mImageUri, sImgUri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (requestCode == ACTIVITY_SELECT_FROM_CAMERA) {
                 Log.w("onActivityResult", "URI: " + mImageUri.getPath());
-                Bitmap oBitmap = photoUtils.getImage(mImageUri);
+                Bitmap oBitmap = photoUtils.getImage(mImageUri, 250);
                 Log.w("onActivityResult", String.format("W: %s H: %s", oBitmap.getWidth(), oBitmap.getHeight()));
                 imgTemp.setImageBitmap(oBitmap);
             }

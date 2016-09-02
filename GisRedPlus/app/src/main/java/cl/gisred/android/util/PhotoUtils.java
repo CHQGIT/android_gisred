@@ -75,7 +75,31 @@ public class PhotoUtils {
         }
     }
 
-    public Bitmap getImage(Uri uri) {
+    public void copyFromGallery(Uri uri, String name) {
+        try
+        {
+            Bitmap oBitmap = null;
+            oBitmap = getImage(uri, 300);
+
+            File oFile = PhotoUtils.createFile(name, "jpg", mContext);
+            oFile.createNewFile();
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            oBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            FileOutputStream fout = new FileOutputStream(oFile);
+
+            fout.write(bitmapdata);
+            fout.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+        }
+    }
+
+    public Bitmap getImage(Uri uri, int scale) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         InputStream is = null;
@@ -83,7 +107,6 @@ public class PhotoUtils {
             is = mContext.getContentResolver().openInputStream(uri);
             BitmapFactory.decodeStream(is, null, options);
             is.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -91,7 +114,7 @@ public class PhotoUtils {
             e.printStackTrace();
         }
         this.generalOptions = options;
-        return scaleImage(options, uri, 250);
+        return scaleImage(options, uri, scale);
     }
 
     public static int nearest2pow(int value) {
@@ -124,7 +147,10 @@ public class PhotoUtils {
             InputStream is;
             is = mContext.getContentResolver().openInputStream(uri);
             bitmap = BitmapFactory.decodeStream(is, null, options);
-            if (sample > 1) bitmap = Bitmap.createScaledBitmap(bitmap, dstWidth, dstHeight, true);
+            // Parche funcional para evitar escalado
+            if (targetWidth != 300){
+                if (sample > 1) bitmap = Bitmap.createScaledBitmap(bitmap, dstWidth, dstHeight, true);
+            }
             is.close();
         } catch (OutOfMemoryError e) {
             e.printStackTrace();

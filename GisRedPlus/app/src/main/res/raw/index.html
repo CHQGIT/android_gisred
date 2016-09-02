@@ -1,17 +1,24 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Formulario de inspecciones</title>
+<meta charset="utf-8" />
+<title></title>
 
-<link rel="stylesheet" type="text/css" href="css.css">
+<link rel="stylesheet" type="text/css" href="css.css" />
+
+<script type="text/javascript">
+function generatePDF(){
+    window.print("pdf.pdf")
+}
+
+</script>
 </head>
 
-<body>
+<body onload="generatePDF();">
 <div class="container">
 <header>
-	<div><strong>PROTOCOLO UNICO INSPECCION, MANTENIMIENTO,PERDIDAS,CONSTRUCCION Y PUESTA EN SERVICIO <br>
-EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
+	<div><h4>PROTOCOLO UNICO INSPECCION, MANTENIMIENTO,PERDIDAS,CONSTRUCCION Y PUESTA EN SERVICIO <br/>
+EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</h4></div>
 </header>
 
 <div class="cont1">
@@ -22,71 +29,72 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
        <td colspan="4"><b>DATOS DEL EMPALME</b></td>      
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Numero Medidor</b></td>
-      <td colspan="3" id="num_medidor"></td>
+      <td width="25%" align="left"><b>Numero Medidor</b></td>
+      <td colspan="3" id="txt_num_medidor"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Marca y Tipo</b></td>
-      <td width="30%" id="txt_marca"></td>
-       <td colspan="2" id="txt_tipo"></td>
+      <td width="25%" align="left"><b>Marca</b></td>
+      <td width="25%" id="txt_marca"></td>
+      <td width="25%" align="left"><b>Tipo</b></td>
+      <td width="25%" id="txt_tipo"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Lectura</b></td>
-       <td width="30%" id="txt_lectura"></td>
-       <td width="20%" align="left"><b>Fase</b></td>
-       <td width="30%" id="txt_fase">&nbsp;</td>
+      <td width="25%" align="left"><b>Lectura</b></td>
+       <td width="25%%" id="txt_lectura"></td>
+       <td width="25%" align="left"><b>Fase</b></td>
+       <td width="25%%" id="txt_fase"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Poste Conexión</b></td>
-      <td width="131" id="txt_poste"></td>
-       <td width="20%" align="left"><b>Rótulo</b></td>
-       <td width="171" id="txt_rotulo"></td>
+      <td width="25%" align="left"><b>Poste Conexión</b></td>
+      <td width="25%" id="txt_poste"></td>
+       <td width="25%" align="left"><b>Rótulo</b></td>
+       <td width="25%" id="txt_rotulo"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Sellos</b></td>
+      <td width="25%" align="left"><b>Sellos</b></td>
       <td colspan="3" id="txt_sellos"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>ICP (A)</b></td>
-      <td width="131" id="txt_icp"></td>
-      <td width="20%" align="left"><b>S/E (kVA</b>)</td>
-      <td width="171" id="txt_se"></td>
+      <td width="25%" align="left"><b>ICP (A)</b></td>
+      <td width="25%" id="txt_icp"></td>
+      <td width="25%" align="left"><b>S/E (kVA</b>)</td>
+      <td width="25%" id="txt_se"></td>
     </tr>
      <tr>
-      <td width="20%" align="left"><b>Fecha Ejecución</b></td>
-      <td colspan="3" id="txt_fecha">19-08-2016</td>
+      <td width="25%" align="left"><b>Fecha Ejecución</b></td>
+      <td colspan="3" id="txt_fecha"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Hora Inicio</b></td>
-      <td width="131" id="txt_hora_ini"></td>
-      <td width="20%" align="left"><b>Hora Término</b></td>
-      <td width="171" id="txt_hora_fin"></td>
+      <td width="25%" align="left"><b>Hora Inicio</b></td>
+      <td width="25%" id="txt_hora_ini"></td>
+      <td width="25%" align="left"><b>Hora Término</b></td>
+      <td width="25%" id="txt_hora_fin"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Ejecutor</b></td>
-      <td colspan="3" id="txt_exe">PRUEBA</td>
+      <td width="25%" align="left"><b>Ejecutor</b></td>
+      <td colspan="3" id="txt_exe"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>TT/CC Instalados</b></td>
+      <td width="25%" align="left"><b>TT/CC Instalados</b></td>
       <td colspan="3" id="txt_ttcc"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Voltaje F1 - N (V)</b></td>
-      <td width="131" id="txt_volt_f1fn"></td>
-      <td width="20%" align="left"><b>Voltaje F1 - F2 (V)</b></td>
-      <td width="171" id="txt_volt_f1f2"></td>
+      <td width="25%" align="left"><b>Voltaje F1 - N (V)</b></td>
+      <td width="25%" id="txt_volt_f1fn"></td>
+      <td width="25%" align="left"><b>Voltaje F1 - F2 (V)</b></td>
+      <td width="25%" id="txt_volt_f1f2"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Voltaje F2 - N (V)</b></td>
-      <td width="131" id="txt_volt_f2fn"></td>
-      <td width="20%" align="left"><b>Voltaje F2 - F3 (V)</b></td>
-      <td width="171" id="txt_volt_f2f3"></td>
+      <td width="25%" align="left"><b>Voltaje F2 - N (V)</b></td>
+      <td width="25%" id="txt_volt_f2fn"></td>
+      <td width="25%" align="left"><b>Voltaje F2 - F3 (V)</b></td>
+      <td width="25%" id="txt_volt_f2f3"></td>
     </tr>
     <tr>
-      <td width="20%" align="left"><b>Voltaje F3 - N (V)</b></td>
-      <td width="131" id="txt_volt_f3fn"></td>
-      <td width="20%" align="left"><b>Voltaje F1 - F3 (V)</b></td>
-      <td width="171" id="txt_volt_f1f3"></td>
+      <td width="25%" align="left"><b>Voltaje F3 - N (V)</b></td>
+      <td width="25%" id="txt_volt_f3fn"></td>
+      <td width="25%" align="left"><b>Voltaje F1 - F3 (V)</b></td>
+      <td width="25%" id="txt_volt_f1f3"></td>
     </tr>
     <tr>
       <td colspan="2" align="left"><b>Voltaje Neutro y tierra de protección (V)</b></td>
@@ -460,12 +468,7 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
 </table>
 </div>
 </div>
-
-
-<div class="esquema_conexion">
-  <img src="esquema_conexion.jpg" width="100%" height="100%" alt=""/> </div>
-  	<div id="txt_anexo"><strong>EN ANEXO, COMO EVIDENCIA, SE ADJUNTAN FOTOGRAFÍAS DEL 						CONEXIONADO FINAL DEL: MEDIDOR, CAJA DE CONEXIÓN Y TABLERO GENERAL (INSTALACIÓN INTERIOR)</strong></div>
-
+    <p class="breaker"></p>
 <div class="cont3">
 	<div class="cont3Left" id="Cont3Left">
     	<table width="452" class="_tablas">
@@ -480,7 +483,7 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
                 </tr>
                 <tr>
                 	<td width="70%"><font size="3">Instalación Cliente cuenta con la camara de registro y su tierra servicio</font></td>
-                    <td width="15%">X</td>
+                    <td width="15%"></td>
                     <td width="15%"></td>
                 </tr>
                 <tr>
@@ -491,7 +494,7 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
                  <tr>
                 	<td width="70%"><font size="3">Tablero Cliente cuenta con diferencial</font></td>
                     <td width="15%"></td>
-                    <td width="15%"><b>X</b></td>
+                    <td width="15%"></td>
                 </tr>
                  <tr>
                 	<td width="70%"><font size="3">Tablero cliente cuenta con protección automática</font></td>
@@ -540,14 +543,12 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
                 </tr>
                 <tr>
                 	<td colspan="3" align="justify"><font size="3"><FONT COLOR="#FF0004">Nota: <br> Si en esta lista de verificaciones se marca un "NO", la empresa distribuidora no conectará el empalme a sus redes, comunicará al cliente que no se podrá conectar hasta que se subsanen las o bservaciones e informará del hecho a SEC.</FONT></font></td>
-                  
                 </tr>
              </tbody>
          </table>
     </div>
 </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 <div class="cont4">
 	<table width="100%" class="_tablas">
     	<tbody>
@@ -555,7 +556,7 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
                 <td width="35%" id="nom_prop"></td>
                 <td width="15%" id="reg_prop"></td>
                 <td width="15%" id="rut_prop"></td>
-                <td width="35%"><img id="firm_prop" src="" class="photo_anexo"></td>
+                <td width="35%"><img id="firm_prop" src="firma.jpg" class="photo_anexo"></td>
             </tr>
             
         	<tr height="40">            	
@@ -593,7 +594,7 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
         </tbody>
     </table>
 </div>
-<div id="txt_anexo_foto"><strong>ANEXO FOTOGRÁFICO (USO INTERNO)</strong></div>
+<!--<div id="txt_anexo_foto"><h4>ANEXO FOTOGRÁFICO (USO INTERNO)</h4></div>-->
 <div class="cont1">
 <table class="_tablas">
 	<tbody>
@@ -603,9 +604,9 @@ EMPALMES 3F -2F -1F AÉREOS - SUBTERRÁNEOS</strong></div>
             <td><b>EN ESTA SECCIÓN SE DEBE DEJAR EVIDENCIA DEL TABLERO GENERAL (INSTALACIÓN INTERIOR)</b></td>
         </tr>
         <tr height="300">
-        	<td><img id="foto_1" src="" class="photo_anexo"></td>
-        	<td><img id="foto_2" src="" class="photo_anexo"></td>
-        	<td><img id="foto_3" src="" class="photo_anexo"></td>
+        	<td><img id="foto_1" src="foto1.jpg" class="photo_anexo"></td>
+        	<td><img id="foto_2" src="foto2.jpg" class="photo_anexo"></td>
+        	<td><img id="foto_3" src="foto3.jpg" class="photo_anexo"></td>
         </tr>
     </tbody>
 </table>

@@ -29,6 +29,7 @@
                 <EditText android:id="@+id/txtNumMedidor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Número Medidor"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -40,6 +41,7 @@
                 <EditText android:id="@+id/txtMarca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Marca"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -51,6 +53,7 @@
                 <EditText android:id="@+id/txtTipo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Tipo"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -63,6 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:tag="txt_lectura"
+                    android:inputType="numberDecimal"
                     android:hint="Lectura"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -74,6 +78,7 @@
                 <EditText android:id="@+id/txtFase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:tag="txt_fase"
                     android:hint="Fase"/>
 
@@ -94,6 +99,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:tag="txt_poste"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
                         android:hint="Poste Conexión" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -117,6 +125,7 @@
                 <EditText android:id="@+id/txtRotulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Rótulo"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -128,6 +137,7 @@
                 <EditText android:id="@+id/txtSellos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Sellos"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -139,6 +149,7 @@
                 <EditText android:id="@+id/txtIcp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="ICP (A)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -150,6 +161,7 @@
                 <EditText android:id="@+id/txtSe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="S/E (kVA)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -161,6 +173,9 @@
                 <EditText android:id="@+id/txtFechaEjec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:editable="false"
                     android:hint="Fecha Ejecución"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -172,6 +187,9 @@
                 <EditText android:id="@+id/txtHoraIni"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:editable="false"
                     android:hint="Hora Inicio"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -183,6 +201,9 @@
                 <EditText android:id="@+id/txtHoraFin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:editable="false"
                     android:hint="Hora Término"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -194,6 +215,7 @@
                 <EditText android:id="@+id/txtEjecutor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Ejecutor"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -205,6 +227,7 @@
                 <EditText android:id="@+id/txtTtcc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="TT/CC Instalados"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -216,6 +239,7 @@
                 <EditText android:id="@+id/txtVoltF1n"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F1 - N (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -227,6 +251,7 @@
                 <EditText android:id="@+id/txtVoltF2n"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F2 - N (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -238,6 +263,7 @@
                 <EditText android:id="@+id/txtVoltF3n"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F3 - N (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -249,6 +275,7 @@
                 <EditText android:id="@+id/txtVoltF1F2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F1 - F2 (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -260,6 +287,7 @@
                 <EditText android:id="@+id/txtVoltF2F3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F2 - F3 (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -271,6 +299,7 @@
                 <EditText android:id="@+id/txtVoltF1F3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje F1 - F3 (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -282,6 +311,7 @@
                 <EditText android:id="@+id/txtVoltNeutro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Voltaje Neutro y tierra de protección (V)"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -337,6 +367,7 @@
                 <EditText android:id="@+id/txtNomInst"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
                     android:hint="Nombre instalador autorizado y/o propietario"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -348,6 +379,7 @@
                 <EditText android:id="@+id/txtRut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Rut"/>
 
             </android.support.design.widget.TextInputLayout>

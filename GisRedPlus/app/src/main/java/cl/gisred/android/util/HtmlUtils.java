@@ -24,6 +24,7 @@ public class HtmlUtils {
     static final String CHK = "chk";
     private int iSub = 0;
     private String htmlFinal;
+    private String path;
 
     public HtmlUtils(String sHtml) {
         mHtml = sHtml;
@@ -35,8 +36,41 @@ public class HtmlUtils {
         mHtml = sHtml;
         setHtmlFinal(mHtml);
 
+        setPath(String.format("%s/insp/", context.getExternalCacheDir().getAbsolutePath()));
         createStructure("css.css", R.raw.css);
         createStructure("esquema_conexion.jpg", R.raw.esquema_conexion);
+    }
+
+    public void setTitleHtml(String numMedidor, String dateTime) {
+        String sTag;
+        String sTagNew;
+        int iFin = 0;
+        int iIni = 0;
+        if (mHtml.contains("title")) {
+            int idx = mHtml.indexOf("title");
+            for (int i = idx; i < mHtml.length(); i++) {
+                iSub = i + 1;
+                String sChar = mHtml.substring(i, iSub);
+                if (sChar.contains(">")) {
+                    iFin = iSub;
+                    break;
+                }
+            }
+
+            for (int i = idx; i > 0; i--) {
+                iSub = i - 1;
+                String sChar = mHtml.substring(iSub, i);
+                if (sChar.contains("<")) {
+                    iIni = iSub;
+                    break;
+                }
+            }
+
+            sTag = mHtml.substring(iIni, iFin);
+            sTagNew = String.format("%sfi_%s_%s", sTag, numMedidor, dateTime);
+
+            setHtmlFinal(htmlFinal.replace(sTag, sTagNew));
+        }
     }
 
     public void setValueById(String sId, String sType, String sValue) {
@@ -163,5 +197,111 @@ public class HtmlUtils {
 
     public void setHtmlFinal(String htmlFinal) {
         this.htmlFinal = htmlFinal;
+    }
+
+    public static String getMapvalue(int res) {
+        String sValue;
+        switch (res) {
+            case R.id.txtNumMedidor:
+                sValue = "txt_num_medidor";
+                break;
+            case R.id.txtMarca:
+                sValue = "txt_marca";
+                break;
+            case R.id.txtTipo:
+                sValue = "txt_tipo";
+                break;
+            case R.id.txtLectura:
+                sValue = "txt_lectura";
+                break;
+            case R.id.txtFase:
+                sValue = "txt_fase";
+                break;
+            case R.id.txtPoste:
+                sValue = "txt_poste";
+                break;
+            case R.id.txtRotulo:
+                sValue = "txt_rotulo";
+                break;
+            case R.id.txtSellos:
+                sValue = "txt_sellos";
+                break;
+            case R.id.txtIcp:
+                sValue = "txt_icp";
+                break;
+            case R.id.txtSe:
+                sValue = "txt_se";
+                break;
+            case R.id.txtFechaEjec:
+                sValue = "txt_fecha";
+                break;
+            case R.id.txtHoraIni:
+                sValue = "txt_hora_ini";
+                break;
+            case R.id.txtHoraFin:
+                sValue = "txt_hora_fin";
+                break;
+            case R.id.txtEjecutor:
+                sValue = "txt_exe";
+                break;
+            case R.id.txtTtcc:
+                sValue = "txt_ttcc";
+                break;
+            case R.id.txtVoltF1n:
+                sValue = "txt_volt_f1fn";
+                break;
+            case R.id.txtVoltF1F2:
+                sValue = "txt_volt_f1f2";
+                break;
+            case R.id.txtVoltF2n:
+                sValue = "txt_volt_f2fn";
+                break;
+            case R.id.txtVoltF2F3:
+                sValue = "txt_volt_f2f3";
+                break;
+            case R.id.txtVoltF3n:
+                sValue = "txt_volt_f3fn";
+                break;
+            case R.id.txtVoltF1F3:
+                sValue = "txt_volt_f1f3";
+                break;
+            case R.id.txtVoltNeutro:
+                sValue = "txt_volt_neutro";
+                break;
+            case R.id.chkVerif1:
+                sValue = "chk_1_";
+                break;
+            case R.id.chkVerif2:
+                sValue = "chk_2_";
+                break;
+            case R.id.chkVerif3:
+                sValue = "chk_3_";
+                break;
+            case R.id.chkVerif4:
+                sValue = "chk_4_";
+                break;
+            case R.id.txtNomInst:
+                sValue = "nom_prop";
+                break;
+            case R.id.txtRut:
+                sValue = "rut_prop";
+                break;
+            default:
+                sValue = "";
+                break;
+        }
+        return sValue;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getPathHtml() {
+        return path.concat("index.html");
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

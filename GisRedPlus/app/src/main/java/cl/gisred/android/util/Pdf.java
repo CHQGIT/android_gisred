@@ -2,9 +2,20 @@ package cl.gisred.android.util;
 
 import android.util.Log;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.html.simpleparser.HTMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.tool.xml.html.HTMLUtils;
+
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 
 /**
@@ -18,39 +29,64 @@ public class Pdf {
         sHtml = mHtml;
     }
 
-    /*public boolean create (String htmlText, String absoluteFilePath) {
+    public boolean create (String htmlText, String absoluteFilePath) {
         try {
+            String k = htmlText;
+            /*k = "<html>\n" +
+                "<head>\n" +
+                "    <style>.col{padding:3px 20px 3px 20px}</style>\n" +
+                "</head>\n" +
+                "<body style=\"font-family:tahoma\">\n" +
+                "    <div style=\"background:rgb(230,230,230); padding:5px ;border:1px solid black;\">\n" +
+                "    <b style=\"color:rgb(51,153,255)\">Sample header</b>\n" +
+                "    </div>\n" +
+                "    <br />\n" +
+                "    <table border='0' style='border-collapse: collapse;'>\n" +
+                "    <tr>\n" +
+                "    <td class=\"col\">String 1</td>\n" +
+                "    <td class=\"col\">: 1234354545</td> \n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "    <td class=\"col\">String 2</td>\n" +
+                "    <td class=\"col\">: rere</td> \n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "    <td class=\"col\">String 3</td>\n" +
+                "    <td class=\"col\">: ureuiu</td> \n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "    <td class=\"col\">Date</td>\n" +
+                "    <td class=\"col\">: dfdfjkdjk</td> \n" +
+                "    </tr>\n" +
+                "    </table>\n" +
+                "    <br />\n" +
+                "    <br />\n" +
+                "    <br />\n" +
+                "    <hr />\n" +
+                "    <br />\n" +
+                "    Contact us\n" +
+                "</body>\n" +
+                "</html>";*/
+
             Document document = new Document(PageSize.LETTER);
-            PdfWriter pdfWriter = PdfWriter.getInstance
-                    (document, new FileOutputStream(absoluteFilePath));
+            OutputStream file = new FileOutputStream(absoluteFilePath + "index.pdf");
+            PdfWriter oPdfWriter = PdfWriter.getInstance(document, file);
             document.open();
-
-            // Fixing xhtml tag
-            Tidy tidy = new Tidy(); // obtain a new Tidy instance
-            tidy.setXHTML(true); // set desired config options using tidy setters
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            tidy.setCharEncoding(Configuration.UTF8);
-            tidy.parse(new ByteArrayInputStream(htmlText.getBytes(), output);
-            String preparedText = output.toString("UTF-8");
-
-            Log.i("CHECKING", "JTidy Out: " + preparedText);
-
-            InputStream inputStream = new ByteArrayInputStream(preparedText.getBytes());
-            XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document,
-                    inputStream, null, Charset.forName("UTF-8"), new MyFont());
-
+            //HTMLWorker htmlWorker = new HTMLWorker(document);
+            XMLWorkerHelper.getInstance().parseXHtml(oPdfWriter, document, new StringReader(k));
+            //htmlWorker.parse(new StringReader(k));
             document.close();
+            file.close();
             return true;
         } catch (Exception e) {
-            File file = new File(absoluteFilePath);
+            /*File file = new File(absoluteFilePath);
             if(file.exists()) {
                 boolean isDeleted = file.delete();
                 Log.i("CHECKING", "PDF isDeleted: " + isDeleted);
             }
-            LOGGER.error("Exception: " + e.getMessage());
+            Log.e("Exception: " + e.getMessage());*/
             e.printStackTrace();
             return false;
         }
-    }*/
-
+    }
 }

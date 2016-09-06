@@ -38,7 +38,7 @@ public class HtmlUtils {
 
         setPath(String.format("%s/insp/", context.getExternalCacheDir().getAbsolutePath()));
         createStructure("css.css", R.raw.css);
-        createStructure("esquema_conexion.jpg", R.raw.esquema_conexion);
+        //createStructure("esquema_conexion.jpg", R.raw.esquema_conexion);
     }
 
     public void setTitleHtml(String numMedidor, String dateTime) {

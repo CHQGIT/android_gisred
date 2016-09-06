@@ -11,7 +11,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -627,8 +629,18 @@ public class InspActivity extends AppCompatActivity {
 
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
-                if (oText.getText().toString().trim().isEmpty())
+
+                if (oText.getText().toString().trim().isEmpty()){
                     contRequeridos++;
+                    oText.setError("Campo obligatorio");
+                } else oText.setError(null);
+
+                if (oText.getId() == R.id.txtRut){
+                    if (!Util.validateRut(oText.getText().toString())) {
+                        contRequeridos++;
+                        oText.setError("Rut no válido");
+                    } else oText.setError(null);
+                }
             } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
             }
         }

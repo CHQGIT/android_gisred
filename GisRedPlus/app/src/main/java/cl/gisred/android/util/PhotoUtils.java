@@ -1,17 +1,24 @@
 package cl.gisred.android.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by cramiret on 16-08-2016.
@@ -75,27 +82,36 @@ public class PhotoUtils {
         }
     }
 
+    public static void copyFile(File src, File dst) throws IOException
+    {
+        FileChannel inChannel = new FileInputStream(src).getChannel();
+        FileChannel outChannel = new FileOutputStream(dst).getChannel();
+        try
+        {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        }
+        finally
+        {
+            if (inChannel != null)
+                inChannel.close();
+            if (outChannel != null)
+                outChannel.close();
+        }
+    }
+
     public void copyFromGallery(Uri uri, String name) {
         try
         {
-            Bitmap oBitmap = null;
-            oBitmap = getImage(uri, 300);
+            File oImage = new File(getRealPathFromURI_API19(mContext, uri));
 
             File oFile = PhotoUtils.createFile(name, "jpg", mContext);
             oFile.createNewFile();
 
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            oBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-            FileOutputStream fout = new FileOutputStream(oFile);
-
-            fout.write(bitmapdata);
-            fout.close();
+            copyFile(oImage, oFile);
         }
         catch (Exception ex)
         {
-            Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+            Log.e("Ficheros", "Error al escribir fichero a memoria interna: " +ex.getMessage());
         }
     }
 
@@ -161,4 +177,32 @@ public class PhotoUtils {
         return bitmap;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static String getRealPathFromURI_API19(Context context, Uri uri) {
+        String filePath = "";
+        if (uri.getHost().contains("com.android.providers.media")) {
+            // Image pick from recent
+            String wholeID = DocumentsContract.getDocumentId(uri);
+
+            // Split at colon, use second item in the array
+            String id = wholeID.split(":")[1];
+
+            String[] column = {MediaStore.Images.Media.DATA};
+
+            // where id is equal to
+            String sel = MediaStore.Images.Media._ID + "=?";
+
+            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    column, sel, new String[]{id}, null);
+
+            int columnIndex = cursor.getColumnIndex(column[0]);
+
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+            return filePath;
+        }
+        return filePath;
+    }
 }

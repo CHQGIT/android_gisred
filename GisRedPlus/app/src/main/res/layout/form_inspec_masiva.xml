@@ -379,8 +379,9 @@
                 <EditText android:id="@+id/txtRut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:digits="0123456789Kk"
                     android:inputType="textShortMessage"
-                    android:hint="Rut"/>
+                    android:hint="Rut (Sin puntos ni guión)"/>
 
             </android.support.design.widget.TextInputLayout>
 

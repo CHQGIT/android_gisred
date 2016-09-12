@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_marca">
+        <item>80</item>
+        <item>2113DCM</item>
+        <item>A102C</item>
+        <item>A1R</item>
+        <item>D2S4RH</item>
+        <item>DD862</item>
+        <item>DD862-4</item>
+        <item>DD862-5</item>
+        <item>DDS-71</item>
+        <item>E2Y6</item>
+        <item>F72</item>
+        <item>F72P</item>
+        <item>I16</item>
+        <item>I55XA</item>
+        <item>M5S1</item>
+        <item>MDE</item>
+        <item>MEP-PLC</item>
+        <item>MF31</item>
+        <item>MF33K</item>
+        <item>MF33KA</item>
+        <item>MF63</item>
+        <item>ML262XH</item>
+        <item>ML272</item>
+        <item>OA11M</item>
+        <item>OB91M</item>
+        <item>OB91MU</item>
+        <item>P30A</item>
+        <item>P30DA</item>
+        <item>P40A</item>
+        <item>RF</item>
+        <item>S3</item>
+        <item>S3B</item>
+        <item>S5N2</item>
+        <item>S62</item>
+        <item>SS4A2L</item>
+        <item>T7S1H</item>
+        <item>T8L</item>
+        <item>V64A</item>
+        <item>VM64A</item>
+        <item>ZMD310</item>
+    </string-array>
+</resources>
+
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="marca">
+        <item>ABB</item>
+        <item>COM</item>
+        <item>DEL</item>
+        <item>EKO</item>
+        <item>ELO</item>
+        <item>ELS</item>
+        <item>FAE</item>
+        <item>FEN</item>
+        <item>FOR</item>
+        <item>GEN</item>
+        <item>HUE</item>
+        <item>LAN</item>
+        <item>LEX</item>
+        <item>LIN</item>
+        <item>MIT</item>
+        <item>OSA</item>
+        <item>PLU</item>
+        <item>SAN</item>
+        <item>SCH</item>
+        <item>SEN</item>
+        <item>SIN</item>
+        <item>WES</item>
+    </string-array>
+</resources>

@@ -104,6 +104,7 @@ public class HtmlUtils {
             if (sType.equals(IMG)) {
                 sTagNew = replaceSrc(sTag, sValue);
             } else if (sType.equals(TXT)) {
+                if (sId.equals("rut_prop")) sValue = Util.formatRut(sValue);
                 sTagNew = sTag + sValue;
             } else {
                 sTagNew = sTag + "<b>X</b>";
@@ -205,16 +206,16 @@ public class HtmlUtils {
             case R.id.txtNumMedidor:
                 sValue = "txt_num_medidor";
                 break;
-            case R.id.txtMarca:
+            case R.id.spinnerMarca:
                 sValue = "txt_marca";
                 break;
-            case R.id.txtTipo:
+            case R.id.spinnerTipo:
                 sValue = "txt_tipo";
                 break;
             case R.id.txtLectura:
                 sValue = "txt_lectura";
                 break;
-            case R.id.txtFase:
+            case R.id.spinnerFase:
                 sValue = "txt_fase";
                 break;
             case R.id.txtPoste:
@@ -230,7 +231,7 @@ public class HtmlUtils {
                 sValue = "txt_icp";
                 break;
             case R.id.txtSe:
-                sValue = "txt_se";
+                sValue = "txt_se_kva";
                 break;
             case R.id.txtFechaEjec:
                 sValue = "txt_fecha";
@@ -243,9 +244,6 @@ public class HtmlUtils {
                 break;
             case R.id.txtEjecutor:
                 sValue = "txt_exe";
-                break;
-            case R.id.txtTtcc:
-                sValue = "txt_ttcc";
                 break;
             case R.id.txtVoltF1n:
                 sValue = "txt_volt_f1fn";

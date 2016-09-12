@@ -145,6 +145,8 @@ public class InspActivity extends AppCompatActivity {
     public String[] arrayTecMedidor = {};
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
+    public String[] arrayMarca = {};
+    public String[] arrayTipoMarca = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -377,6 +379,10 @@ public class InspActivity extends AppCompatActivity {
         if (modulo.replace(" ", "_").equals(modInspeccion)) {
             dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 
+            arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
+            arrayMarca = getResources().getStringArray(R.array.marca);
+            arrayTipoMarca = getResources().getStringArray(R.array.tipo_marca);
+
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
 
@@ -418,7 +424,6 @@ public class InspActivity extends AppCompatActivity {
                 arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
                 arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
                 arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
-                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
                 dialogCrear = new Dialog(InspActivity.this);
 
@@ -630,10 +635,13 @@ public class InspActivity extends AppCompatActivity {
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
 
-                if (oText.getText().toString().trim().isEmpty()){
-                    contRequeridos++;
-                    oText.setError("Campo obligatorio");
-                } else oText.setError(null);
+                TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+                if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
+                    if (oText.getText().toString().trim().isEmpty()){
+                        contRequeridos++;
+                        oText.setError("Campo obligatorio");
+                    } else oText.setError(null);
+                }
 
                 if (oText.getId() == R.id.txtRut){
                     if (!Util.validateRut(oText.getText().toString())) {
@@ -661,7 +669,7 @@ public class InspActivity extends AppCompatActivity {
 
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
-                TextInputLayout oTextInput = (TextInputLayout) oText.getParent();
+                TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
                 if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
                     if (oText.getText().toString().trim().isEmpty())
                         contRequeridos++;
@@ -830,6 +838,9 @@ public class InspActivity extends AppCompatActivity {
                             String sCheck = HtmlUtils.getMapvalue(oCheck.getId());
                             sCheck += oCheck.isChecked() ? "si" : "no";
                             oHtml.setValueById(sCheck, "chk", "");
+                        } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+                            Spinner oSpinner = (Spinner) view;
+                            oHtml.setValueById(HtmlUtils.getMapvalue(oSpinner.getId()), "txt", oSpinner.getSelectedItem().toString());
                         }
                     }
 
@@ -1368,6 +1379,7 @@ public class InspActivity extends AppCompatActivity {
         View v = inflater.inflate(idRes, null);
 
         final int topeWidth = 650;
+        ArrayAdapter<CharSequence> adapter;
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -1380,6 +1392,18 @@ public class InspActivity extends AppCompatActivity {
         formCrear.setTitle(sNombre);
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
+
+        Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFase);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
+        spTipoFase.setAdapter(adapter);
+
+        Spinner spTipoMarca = (Spinner) v.findViewById(R.id.spinnerTipo);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoMarca);
+        spTipoMarca.setAdapter(adapter);
+
+        Spinner spMarca = (Spinner) v.findViewById(R.id.spinnerMarca);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayMarca);
+        spMarca.setAdapter(adapter);
 
         final GisEditText txtPoste = (GisEditText) v.findViewById(R.id.txtPoste);
         final EditText txtRotulo = (EditText) v.findViewById(R.id.txtRotulo);
@@ -1464,6 +1488,9 @@ public class InspActivity extends AppCompatActivity {
                 txtHora.setText(String.format("%s:%s", selectedHour, selectedMinute));
             }
         }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), false);
+
+        final EditText txtEjecutor = (EditText) v.findViewById(R.id.txtEjecutor);
+        txtEjecutor.setText(Util.getUserWithoutDomain(usuar));
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {

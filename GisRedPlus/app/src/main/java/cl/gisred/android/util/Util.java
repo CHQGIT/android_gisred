@@ -1,5 +1,7 @@
 package cl.gisred.android.util;
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -10,6 +12,8 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +49,7 @@ import cl.gisred.android.entity.CalloutTvClass;
  */
 public class Util {
 
+    public static final int REQUEST_READ_PHONE_STATE = 1001;
     private Point oUbic = null;
 
     public Util(Point mPoint) {
@@ -479,9 +484,36 @@ public class Util {
         return sSerial;
     }
 
+    public static String getImei23(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            String sImei = "";
+
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+                int permissionCheck = ContextCompat.checkSelfPermission(activity.getApplicationContext(), Manifest.permission.READ_PHONE_STATE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    Log.w("permissionCheck", "permision request");
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+                    Log.w("permissionCheck", "permision ok");
+                    sImei = telephonyManager.getDeviceId();
+                    Log.w("permissionCheck", "sImei: " + sImei);
+                } else {
+                    //TODO
+                    Log.w("permissionCheck", "permision null");
+                }
+                return sImei;
+            } catch (Exception ex) {
+                Log.w("permissionCheck", "permision error: " +ex.getMessage());
+                return "null";
+            }
+
+        } else {
+            return getImei(activity.getApplicationContext());
+        }
+    }
+
     public static String getImei(Context c) {
-        TelephonyManager telephonyManager = (TelephonyManager) c
-                .getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager telephonyManager = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getDeviceId();
     }
 
@@ -577,5 +609,27 @@ public class Util {
         if (dgt == 10) r_dig = "k";
         if (dgt == 11) r_dig = "0";
         return r_dig.equalsIgnoreCase(dv_s);
+    }
+
+    public static String getUserWithoutDomain(String user) {
+        String[] sTemp = user.split("\\\\");
+        if (sTemp.length > 1) {
+            return sTemp[1];
+        } else return user;
+    }
+
+    public static String formatRut(String sValue) {
+        try {
+            String sDig = sValue.toUpperCase().substring(sValue.length() - 1);
+            String sNum = sValue.substring(0, sValue.length() - 1);
+
+
+
+            Log.w("formatRut", sNum + "-" + sDig);
+            return String.format("%s-%s", sNum, sDig);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return sValue;
+        }
     }
 }

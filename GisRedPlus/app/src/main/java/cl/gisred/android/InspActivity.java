@@ -11,9 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -104,7 +102,6 @@ import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.HtmlUtils;
-import cl.gisred.android.util.Pdf;
 import cl.gisred.android.util.PhotoUtils;
 import cl.gisred.android.util.Util;
 
@@ -147,6 +144,7 @@ public class InspActivity extends AppCompatActivity {
     public String[] arrayTipoFase = {};
     public String[] arrayMarca = {};
     public String[] arrayTipoMarca = {};
+    public String[] arrayFirmante = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -382,6 +380,7 @@ public class InspActivity extends AppCompatActivity {
             arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
             arrayMarca = getResources().getStringArray(R.array.marca);
             arrayTipoMarca = getResources().getStringArray(R.array.tipo_marca);
+            arrayFirmante = getResources().getStringArray(R.array.situacion_firmante);
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
@@ -1492,6 +1491,10 @@ public class InspActivity extends AppCompatActivity {
         final EditText txtEjecutor = (EditText) v.findViewById(R.id.txtEjecutor);
         txtEjecutor.setText(Util.getUserWithoutDomain(usuar));
 
+        Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFirmante);
+        spFirmante.setAdapter(adapter);
+
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2251,7 +2254,6 @@ public class InspActivity extends AppCompatActivity {
                                             bMapTap = false;
                                             myMapView.getCallout().hide();
                                             oLySelectAsoc.clearSelection();
-                                            //dialogCrear.show();
                                             dialogCur.show();
                                             if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                                                 myMapView.removeLayer(mSeleccionLayer);
@@ -2738,7 +2740,6 @@ public class InspActivity extends AppCompatActivity {
                                     bMapTap = false;
                                     myMapView.getCallout().hide();
                                     oLySelectAsoc.clearSelection();
-                                    //dialogCrear.show();
                                     dialogCur.show();
                                     if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                                         myMapView.removeLayer(mSeleccionLayer);

@@ -623,8 +623,6 @@ public class Util {
             String sDig = sValue.toUpperCase().substring(sValue.length() - 1);
             String sNum = sValue.substring(0, sValue.length() - 1);
 
-
-
             Log.w("formatRut", sNum + "-" + sDig);
             return String.format("%s-%s", sNum, sDig);
         } catch (Exception ex) {

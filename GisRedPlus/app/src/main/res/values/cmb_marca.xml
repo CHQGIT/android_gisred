@@ -23,5 +23,6 @@
         <item>SEN</item>
         <item>SIN</item>
         <item>WES</item>
+        <item>Otro</item>
     </string-array>
 </resources>

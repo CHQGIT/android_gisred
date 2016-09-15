@@ -278,6 +278,9 @@ public class HtmlUtils {
             case R.id.chkVerif4:
                 sValue = "chk_4_";
                 break;
+            case R.id.chkVerif5:
+                sValue = "chk_5_";
+                break;
             case R.id.txtNomInst:
                 sValue = "nom_prop";
                 break;

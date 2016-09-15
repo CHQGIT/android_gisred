@@ -176,7 +176,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:hint="S/E (kVA) *"/>
+                    android:hint="S/E (kVA)"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -354,6 +354,13 @@
                 android:elegantTextHeight="true"
                 android:layout_marginTop="10dp" />
 
+            <CheckBox android:id="@+id/chkVerif5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/verif_5"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -386,6 +393,22 @@
                     android:hint="Rut (Sin puntos ni guión) *"/>
 
             </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="ltr">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Situación firmante"/>
+
+                <Spinner android:id="@+id/spinnerFirmante"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+            </android.support.design.widget.CoordinatorLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

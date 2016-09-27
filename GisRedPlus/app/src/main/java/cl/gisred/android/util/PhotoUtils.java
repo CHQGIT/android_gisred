@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,6 +20,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by cramiret on 16-08-2016.
@@ -96,6 +101,31 @@ public class PhotoUtils {
                 inChannel.close();
             if (outChannel != null)
                 outChannel.close();
+        }
+    }
+
+    public void copyToGallery(Uri uri) {
+        try
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            String fecha = sdf.format(Calendar.getInstance().getTime());
+            String pathtoimage = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+
+            File oImage = new File(uri.getPath());
+
+            File tempDir = new File(pathtoimage);
+            if (!tempDir.exists()) {
+                tempDir.mkdir();
+            }
+
+            File oFile = new File(tempDir, String.format("%s.%s", fecha, "jpg"));
+            oFile.createNewFile();
+
+            copyFile(oImage, oFile);
+        }
+        catch (Exception ex)
+        {
+            Log.e("Ficheros", "Error al escribir fichero a memoria interna: " +ex.getMessage());
         }
     }
 

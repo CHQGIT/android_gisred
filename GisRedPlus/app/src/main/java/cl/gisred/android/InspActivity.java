@@ -639,14 +639,15 @@ public class InspActivity extends AppCompatActivity {
                     if (oText.getText().toString().trim().isEmpty()){
                         contRequeridos++;
                         oText.setError("Campo obligatorio");
-                    } else oText.setError(null);
-                }
-
-                if (oText.getId() == R.id.txtRut){
-                    if (!Util.validateRut(oText.getText().toString())) {
-                        contRequeridos++;
-                        oText.setError("Rut no válido");
-                    } else oText.setError(null);
+                    } else {
+                        oText.setError(null);
+                        if (oText.getId() == R.id.txtRut){
+                            if (!Util.validateRut(oText.getText().toString())) {
+                                contRequeridos++;
+                                oText.setError("Rut no válido");
+                            } else oText.setError(null);
+                        }
+                    }
                 }
             } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
             }
@@ -654,9 +655,10 @@ public class InspActivity extends AppCompatActivity {
 
         contRequeridos += (valImage(v, R.id.imgFirma)) ? 0 : 1;
 
-        contRequeridos += (valImage(v, R.id.imgPhoto1)) ? 0 : 1;
-        contRequeridos += (valImage(v, R.id.imgPhoto2)) ? 0 : 1;
-        contRequeridos += (valImage(v, R.id.imgPhoto3)) ? 0 : 1;
+        //23-09 Se elimina fotos como requisito
+        //contRequeridos += (valImage(v, R.id.imgPhoto1)) ? 0 : 1;
+        //contRequeridos += (valImage(v, R.id.imgPhoto2)) ? 0 : 1;
+        //contRequeridos += (valImage(v, R.id.imgPhoto3)) ? 0 : 1;
 
         return contRequeridos;
     }
@@ -840,10 +842,16 @@ public class InspActivity extends AppCompatActivity {
                         } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
                             Spinner oSpinner = (Spinner) view;
                             oHtml.setValueById(HtmlUtils.getMapvalue(oSpinner.getId()), "txt", oSpinner.getSelectedItem().toString());
+                        } else if (view.getClass().getGenericSuperclass().equals(ImageView.class)) {
+                            Log.w("ImageView", "OK");
                         }
                     }
 
-                    oHtml.setTitleHtml(sValueNumMed, Calendar.getInstance().getTime().toLocaleString());
+                    if (valImage(vAction, R.id.imgPhoto1)) oHtml.setValueById("foto_1", "img", "foto1.jpg");
+                    if (valImage(vAction, R.id.imgPhoto2)) oHtml.setValueById("foto_2", "img", "foto2.jpg");
+                    if (valImage(vAction, R.id.imgPhoto3)) oHtml.setValueById("foto_3", "img", "foto3.jpg");
+
+                    oHtml.setTitleHtml(sValueNumMed);
 
                     String sHtmlFinal = oHtml.getHtmlFinal();
 
@@ -1414,14 +1422,15 @@ public class InspActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (bInspRotulo) {
-                    txtRotulo.setText(charSequence);
-                    if (!txtRotulo.hasFocus()) txtRotulo.requestFocus();
-                    bInspRotulo = false;
-                    txtPoste.setText(String.format("%s", txtPoste.getIdObjeto()));
-                } else
-                    bInspRotulo = true;
-
+                if (i2 > 1) {
+                    if (bInspRotulo) {
+                        txtRotulo.setText(charSequence);
+                        if (!txtRotulo.hasFocus()) txtRotulo.requestFocus();
+                        bInspRotulo = false;
+                        txtPoste.setText(String.format("%s", txtPoste.getIdObjeto()));
+                    } else
+                        bInspRotulo = true;
+                }
             }
 
             @Override
@@ -1494,6 +1503,16 @@ public class InspActivity extends AppCompatActivity {
         Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFirmante);
         spFirmante.setAdapter(adapter);
+        spFirmante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                setRequerido(view, R.id.txtRut, i > 0);
+                setRequerido(view, R.id.txtNomInst, i > 0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -1584,6 +1603,23 @@ public class InspActivity extends AppCompatActivity {
 
         formCrear.show();
         dialogCur = formCrear;
+    }
+
+    private void setRequerido(View view, int idRequerido, boolean bool) {
+        if (bool) {
+            EditText oText = (EditText) getLayoutContenedor(view).findViewById(idRequerido);
+            TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+            if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
+                oTextInput.setHint(oTextInput.getHint().toString().replace("*",""));
+            }
+        } else {
+            EditText oText = (EditText) getLayoutContenedor(view).findViewById(idRequerido);
+            TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+            if (oTextInput.getHint() != null && !oTextInput.getHint().toString().contains("*")) {
+                oTextInput.setHint(oTextInput.getHint().toString().concat("*"));
+            }
+        }
+
     }
 
     private void imageGallery(String name) {
@@ -2844,6 +2880,7 @@ public class InspActivity extends AppCompatActivity {
                 }
             } else if (requestCode == ACTIVITY_SELECT_FROM_CAMERA) {
                 Log.w("onActivityResult", "URI: " + mImageUri.getPath());
+                photoUtils.copyToGallery(mImageUri);
                 Bitmap oBitmap = photoUtils.getImage(mImageUri, 250);
                 Log.w("onActivityResult", String.format("W: %s H: %s", oBitmap.getWidth(), oBitmap.getHeight()));
                 imgTemp.setImageBitmap(oBitmap);

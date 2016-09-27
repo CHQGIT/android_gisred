@@ -34,6 +34,18 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Producto *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,9 +125,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:tag="txt_poste"
-                        android:editable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
+                        android:inputType="number"
                         android:hint="Poste Conexión *" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -314,7 +324,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:hint="Voltaje Neutro y tierra de protección (V) *"/>
+                    android:hint="Voltaje Neutro y tierra de protección (V)"/>
 
             </android.support.design.widget.TextInputLayout>
 

@@ -136,4 +136,6 @@ header div {
     flex-wrap: wrap;
     flex-direction: row;
     width: 28em;
+    justify-content: center;
+    align-content: center;
 }

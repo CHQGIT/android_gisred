@@ -9,6 +9,8 @@ import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import cl.gisred.android.R;
 
@@ -38,15 +40,18 @@ public class HtmlUtils {
 
         setPath(String.format("%s/insp/", context.getExternalCacheDir().getAbsolutePath()));
         createStructure("css.css", R.raw.css);
-        //createStructure("esquema_conexion.jpg", R.raw.esquema_conexion);
+        createStructure("image_no.png", R.raw.image_no);
     }
 
-    public void setTitleHtml(String numMedidor, String dateTime) {
+    public void setTitleHtml(String numMedidor) {
         String sTag;
         String sTagNew;
         int iFin = 0;
         int iIni = 0;
         if (mHtml.contains("title")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            String fecha = sdf.format(Calendar.getInstance().getTime());
+
             int idx = mHtml.indexOf("title");
             for (int i = idx; i < mHtml.length(); i++) {
                 iSub = i + 1;
@@ -67,13 +72,14 @@ public class HtmlUtils {
             }
 
             sTag = mHtml.substring(iIni, iFin);
-            sTagNew = String.format("%sfi_%s_%s", sTag, numMedidor, dateTime);
+            sTagNew = String.format("%sfi_%s_%s", sTag, numMedidor, fecha);
 
             setHtmlFinal(htmlFinal.replace(sTag, sTagNew));
         }
     }
 
     public void setValueById(String sId, String sType, String sValue) {
+        if (sId == null) return;
         String sTag;
         String sTagNew;
         int iFin = 0;
@@ -206,6 +212,9 @@ public class HtmlUtils {
             case R.id.txtNumMedidor:
                 sValue = "txt_num_medidor";
                 break;
+            case R.id.txtProducto:
+                sValue = "txt_producto";
+                break;
             case R.id.spinnerMarca:
                 sValue = "txt_marca";
                 break;
@@ -288,7 +297,7 @@ public class HtmlUtils {
                 sValue = "rut_prop";
                 break;
             default:
-                sValue = "";
+                sValue = null;
                 break;
         }
         return sValue;

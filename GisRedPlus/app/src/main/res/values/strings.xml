@@ -50,6 +50,8 @@
     <string name="srv_Union_012">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
     <!-- LogAccesos Feature Layer -->
     <string name="srv_LogAccess">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
+    <!-- Lectores FeatureLayer -->
+    <string name="srv_Lectores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_movil_lectores/FeatureServer/0</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

@@ -62,6 +62,11 @@
             android:label="Mapa GISRED"
             android:screenOrientation="locked"
             android:parentActivityName=".FormActivity" />
+        <activity
+            android:name=".LectorActivity"
+            android:label="Mapa GISRED"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -2,16 +2,11 @@ package cl.gisred.android.util;
 
 import android.Manifest;
 import android.app.Activity;
-import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -20,15 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.esri.core.geometry.Envelope;
-import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polyline;
-import com.esri.core.geometry.Segment;
-import com.esri.core.geometry.Transformation2D;
-import com.esri.core.internal.geometry.ConversionType;
 import com.esri.core.map.Graphic;
-import com.esri.core.tasks.geocode.LocatorFieldInfo;
 import com.esri.core.tasks.identify.IdentifyResult;
 
 import java.net.InetAddress;

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     if (datos[position].getTitulo().contains("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("LECTORES")){
+                        oIntent = new Intent(MainActivity.this, LectorActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
                     }
                     else
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);
@@ -163,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             } else if (dato.getTitulo().contains("INSPECCION")) {
                 dato.setDescripcion("Visualización e ingreso de inspecciones");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("LECTORES")) {
+                dato.setDescripcion("Visualización e ingreso de lecturas");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
             return dato;

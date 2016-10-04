@@ -26,7 +26,7 @@ header div {
 	padding:5px;
 	text-align:center;
 	margin:25px;
-	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;
 }
 
 .cont1{
@@ -37,7 +37,7 @@ header div {
 	margin:25px;
 	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
 	align-content:center;
-	
+
 }
 .cont2{
 	border:solid;
@@ -47,27 +47,27 @@ header div {
 	margin:25px;
 	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
 	align-content:center;
-	
+
 }
 .cont3{
 	border:solid;
 	border-width:3px;
-	
+
 	text-align:center;
 	margin:25px;
 	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
 	align-content:center;
-	
+
 }
 .cont4{
 	border:solid;
 	border-width:2px;
-	
+
 	text-align:center;
 	margin:25px;
 	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
 	align-content:center;
-	
+
 }
 
 #Cont1Left{
@@ -90,11 +90,11 @@ header div {
 
 #Cont3Left{
 	float:left;
-	
+
 }
 #Cont3Right{
 	float:right;
-	
+
 }
 
 ._tablas{
@@ -132,10 +132,7 @@ header div {
 }
 
 .photo_anexo{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+
     width: 28em;
-    justify-content: center;
-    align-content: center;
+    
 }

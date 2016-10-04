@@ -71,7 +71,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void verifPermisos() {
-        // Here, thisActivity is the current activity
+
         if (ContextCompat.checkSelfPermission(SplashActivity.this,
                 Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -85,17 +85,14 @@ public class SplashActivity extends AppCompatActivity {
                 // sees the explanation, try again to request the permission.
 
             } else {
-
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(SplashActivity.this,
                         new String[]{Manifest.permission.READ_PHONE_STATE},
                         Util.REQUEST_READ_PHONE_STATE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
+        } else {
+            verifLogin();
         }
     }
 

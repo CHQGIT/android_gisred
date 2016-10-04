@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="estado_lectura">
+        <item>LECTURA VERIFICADA</item>
+        <item>DESHABITADO</item>
+        <item>Predio desaparecido</item>
+        <item>DIRECCIÓN NO UBICADA</item>
+        <item>MEDIDOR ILEGIBLE</item>
+        <item>SIN ACCESO AL MEDIDOR</item>
+        <item>MEDIDOR SIN SELLO</item>
+        <item>MED. INCENDIADO O DESTRUIDO</item>
+        <item>SOSPECHA DE FRAUDE</item>
+        <item>Medidor Detenido</item>
+        <item>INMUEBLE SIN SERVICIO Y SIN ME</item>
+        <item>LECTURA SOBRE TOPE</item>
+        <item>SERVICIO FUERA DE RUTA</item>
+        <item>CONEXIÓN DIRECTA</item>
+        <item>NO PERMITE LEER</item>
+        <item>Visor Caja de Empalme</item>
+        <item>Sin Acceso</item>
+        <item>MEDIDOR NO REGISTRA CONSUMOS</item>
+        <item>Lectura por Cliente</item>
+        <item>Medidor no existe</item>
+        <item>Medidor Desprendido</item>
+        <item>MEDIDOR DENTRO DE LA CASA</item>
+        <item>ACOMETIDA RETIRADA</item>
+        <item>Medidor Cambiado</item>
+        <item>casa de veraneo</item>
+        <item>Leido con Riesgo de Perro</item>
+        <item>ALUMBRADO PUBLICO MEDIDO</item>
+        <item>No Leido por Perro en Casa</item>
+        <item>NO LEIDO POR PERRO ABANDONADO</item>
+        <item>Visor Empañado</item>
+        <item>CASA DEMOLIDA</item>
+        <item>TOMA EXITOSA</item>
+        <item>CAJA EMP. NEGRA TAPÓN</item>
+        <item>Caja Emp. Trifásica con prob</item>
+        <item>CE ENERGIZADA</item>
+        <item>Lectura con Binoculares</item>
+        <item>MEDIDOR EN ALTURA</item>
+        <item>GIRAR MEDIDOR POR LECTURA</item>
+        <item>Tarifa no corresponde</item>
+        <item>LECTURA CON PÉRTIGA</item>
+        <item>MEDIDOR CIFRAS VARIADAS</item>
+        <item>Reloj fuera hora</item>
+        <item>Edificación c/ problemas</item>
+        <item>CLIENTE AGRESIVO</item>
+        <item>SERVICIO SIN ENERGÍA</item>
+        <item>DIRECCIÓN INCOMPLETA</item>
+        <item>IMPEDIMENTO MURO/REJA, S</item>
+        <item>DESFASE MECANICO - ADELANTADO</item>
+        <item>Desfase Software - Adelantado</item>
+        <item>LECTURA LOCAL NOCTURNO</item>
+        <item>Verificar constante medidor</item>
+        <item>Reloj Control Malo</item>
+        <item>Reseteador Malo</item>
+        <item>MED. DESFASADO DEL VISOR</item>
+        <item>Pantalla en Blanco</item>
+        <item>MEDIDOR ERROR SOFTWARE</item>
+        <item>DEMANDA FULL</item>
+        <item>SIN LLAVE PARA ACCEDER</item>
+        <item>EQUIPO SINCRONIZADO +/- 10 MIN</item>
+        <item>Desfase Mecanico - Atraso</item>
+        <item>DESFASE SOFTWARE - ATRASO</item>
+        <item>Demanda sin resetear</item>
+        <item>RIEGOLUZ</item>
+        <item>NO MEDIDO</item>
+        <item>CIERRE SISTÉMICO DE LECTURA</item>
+        <item>LECTURA AJUSTADA</item>
+        <item>LECTURA GE</item>
+    </string-array>
+</resources>

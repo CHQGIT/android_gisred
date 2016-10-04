@@ -653,7 +653,8 @@ public class InspActivity extends AppCompatActivity {
             }
         }
 
-        contRequeridos += (valImage(v, R.id.imgFirma)) ? 0 : 1;
+        //28-09 Se elimina firma como requisito
+        //contRequeridos += (valImage(v, R.id.imgFirma)) ? 0 : 1;
 
         //23-09 Se elimina fotos como requisito
         //contRequeridos += (valImage(v, R.id.imgPhoto1)) ? 0 : 1;

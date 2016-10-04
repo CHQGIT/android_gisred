@@ -15,7 +15,7 @@ android {
         applicationId "cl.gisred.android"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 8
+        versionCode 9
         versionName "0.8"
         signingConfig signingConfigs.config
     }
@@ -52,7 +52,6 @@ dependencies {
     compile 'com.esri.arcgis.android:arcgis-android:10.2.8'
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
     compile files('libs/customviews.jar')
 }
 

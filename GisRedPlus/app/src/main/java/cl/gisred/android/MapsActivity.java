@@ -522,7 +522,7 @@ public class MapsActivity extends AppCompatActivity {
 
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
-                TextInputLayout oTextInput = (TextInputLayout) oText.getParent();
+                TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
                 if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
                     if (oText.getText().toString().trim().isEmpty())
                         contRequeridos++;

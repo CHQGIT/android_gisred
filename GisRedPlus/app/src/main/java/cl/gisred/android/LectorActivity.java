@@ -388,6 +388,7 @@ public class LectorActivity extends AppCompatActivity {
                 arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
                 arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
                 arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
                 dialogCrear = new Dialog(LectorActivity.this);
 

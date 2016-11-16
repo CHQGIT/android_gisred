@@ -40,6 +40,7 @@
         <activity
             android:name=".EmpActivity"
             android:label="Menú Empresas"
+            android:configChanges="orientation"
             android:screenOrientation="sensor">
         </activity>
         <activity
@@ -50,7 +51,7 @@
         <activity
             android:name=".FormActivity"
             android:label="Menú Protocolos"
-            android:screenOrientation="sensor"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MapsActivity"
@@ -60,10 +61,15 @@
         <activity
             android:name=".InspActivity"
             android:label="Mapa GISRED"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:parentActivityName=".FormActivity" />
         <activity
             android:name=".LectorActivity"
+            android:label="Mapa GISRED"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".TelemedidaActivity"
             android:label="Mapa GISRED"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />

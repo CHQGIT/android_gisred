@@ -36,7 +36,7 @@ public class FormActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -103,11 +103,11 @@ public class FormActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (view.isEnabled()){
-                        Intent oIntent = new Intent(FormActivity.this, InspActivity.class);
+                    Intent oIntent = new Intent(FormActivity.this, InspActivity.class);
 
-                        bundle.putString("form", datos[position].getTitulo());
-                        oIntent.putExtras(bundle);
-                        startActivity(oIntent);
+                    bundle.putString("form", datos[position].getTitulo());
+                    oIntent.putExtras(bundle);
+                    startActivity(oIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "No tiene permisos para éste formulario", Toast.LENGTH_SHORT).show();
                 }
@@ -143,11 +143,15 @@ public class FormActivity extends AppCompatActivity {
         private MenuClass getDataByModule(MenuClass dato) {
             if (dato.getTitulo().contains("MASIVA")) {
                 dato.setDescripcion("Formulario de inspección masiva");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_standard : R.mipmap.ic_menu_standard_g);
+                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             } else if (dato.getTitulo().contains("AP")) {
                 dato.setDescripcion("Formulario de inspección AP");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("ESPECIALES")) {
+                dato.setDescripcion("Formulario de inspección de clientes especiales");
+                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
+            dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             return dato;
         }
     }

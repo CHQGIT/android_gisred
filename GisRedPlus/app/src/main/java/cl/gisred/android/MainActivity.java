@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -114,8 +114,13 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("LECTORES")){
                         oIntent = new Intent(MainActivity.this, LectorActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    }
-                    else
+                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
+                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    /*} else if (datos[position].getTitulo().contains("CATASTRO")){
+                        oIntent = new Intent(MainActivity.this, CatastroActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);*/
+                    } else
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);
 
                     oBundle.putString("empresa", sEmpresa);
@@ -166,10 +171,16 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             } else if (dato.getTitulo().contains("INSPECCION")) {
                 dato.setDescripcion("Visualización e ingreso de inspecciones");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             } else if (dato.getTitulo().contains("LECTORES")) {
                 dato.setDescripcion("Visualización e ingreso de lecturas");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_lectores : R.mipmap.ic_menu_ing_lectores_g);
+            } else if (dato.getTitulo().contains("TELEMEDIDA")) {
+                dato.setDescripcion("Visualización e ingreso de telemedidas");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("CATASTRO")) {
+                dato.setDescripcion("Visualización e ingreso de catastros AP");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             }
             return dato;
         }

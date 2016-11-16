@@ -29,5 +29,10 @@
         <item>MERCADO</item>
         <item>LOCAL CORPORATIVO</item>
         <item>ALUMBRADO PUBLICO</item>
+        <item>UNIVERSIDAD</item>
+        <item>COLEGIO</item>
+        <item>ANTENA</item>
+        <item>COPA DE AGUA</item>
+        <item>FUENTE DE PODER</item>
     </string-array>
 </resources>

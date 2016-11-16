@@ -453,6 +453,7 @@
 
                     <ImageButton android:id="@+id/btnFirma"
                         android:layout_width="80dp"
+                        android:maxWidth="80dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/ic_brush_black_48dp"
@@ -493,7 +494,7 @@
                     <ImageView android:id="@+id/imgPhoto1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minHeight="300dp"
+                        android:minHeight="150dp"
                         android:minWidth="200dp"
                         android:maxWidth="200dp"
                         android:layout_weight="3"
@@ -503,6 +504,7 @@
 
                     <LinearLayout
                         android:layout_width="80dp"
+                        android:maxWidth="80dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">
@@ -550,7 +552,7 @@
                     <ImageView android:id="@+id/imgPhoto2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minHeight="300dp"
+                        android:minHeight="150dp"
                         android:minWidth="200dp"
                         android:maxWidth="200dp"
                         android:layout_weight="3"
@@ -560,6 +562,7 @@
 
                     <LinearLayout
                         android:layout_width="80dp"
+                        android:maxWidth="80dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">
@@ -607,7 +610,7 @@
                     <ImageView android:id="@+id/imgPhoto3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minHeight="300dp"
+                        android:minHeight="150dp"
                         android:minWidth="200dp"
                         android:maxWidth="200dp"
                         android:layout_weight="3"
@@ -617,6 +620,7 @@
 
                     <LinearLayout
                         android:layout_width="80dp"
+                        android:maxWidth="80dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">

@@ -238,14 +238,14 @@ public class SplashActivity extends AppCompatActivity {
                 attributes.put("usuario", credenciales.getUserName());
                 attributes.put("fecha", sFecha);
                 attributes.put("pagina", "Mobile");
-                attributes.put("modulo", "GISRED 2.0");
+                attributes.put("modulo", "GISRED 2.0" + Util.getVersionPackage());
                 attributes.put("nom_equipo", sNomEquipo);
                 attributes.put("ip", sImei);
 
                 Graphic newFeature = new Graphic(null, null, attributes);
                 Graphic[] addsLogin = {newFeature};
 
-                oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());
+                oLayerAccess.applyEdits(addsLogin, null, null, callBackIngreso());
 
                 progress.dismiss();
                 Intent intent = new Intent(getApplicationContext(), EmpActivity.class);
@@ -260,7 +260,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private CallbackListener<FeatureEditResult[][]> callBackUnion() {
+    private CallbackListener<FeatureEditResult[][]> callBackIngreso() {
 
         runOnUiThread(new Runnable() {
 

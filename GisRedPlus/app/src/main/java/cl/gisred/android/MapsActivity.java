@@ -1,9 +1,11 @@
 package cl.gisred.android;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -12,9 +14,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -41,7 +46,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.esri.android.map.Callout;
 import com.esri.android.map.Layer;
 import com.esri.android.map.ags.ArcGISLayerInfo;
+import com.esri.android.map.event.OnLongPressListener;
+import com.esri.android.map.event.OnPanListener;
+import com.esri.android.map.event.OnPinchListener;
 import com.esri.android.map.event.OnSingleTapListener;
+import com.esri.android.map.event.OnZoomListener;
 import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Polyline;
@@ -216,7 +225,8 @@ public class MapsActivity extends AppCompatActivity {
         setMap(R.id.map, 0xffffff, 0xffffff, 10, 10, false, true);
         choices = 0;
 
-        initGeoposition();
+        if (Build.VERSION.SDK_INT >= 23) verifPermisos();
+        else initGeoposition();
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
         setLayersURL(this.getResources().getString(R.string.url_token), "TOKENSRV");
@@ -410,6 +420,28 @@ public class MapsActivity extends AppCompatActivity {
         } else {
             menuMultipleActions.setVisibility(View.GONE);
         }
+    }
+
+    private void verifPermisos() {
+        if (ContextCompat.checkSelfPermission(MapsActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(MapsActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        Util.REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            initGeoposition();
+        }
+
     }
 
     @Override
@@ -1445,25 +1477,23 @@ public class MapsActivity extends AppCompatActivity {
                     break;
                 case "ADDCLIENTE":
                     LyAddCliente = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddCliente.setDefinitionExpression("where ESTADO IS null");
+                    LyAddCliente.setDefinitionExpression("ESTADO IS null");
                     LyAddCliente.setMinScale(6000);
                     LyAddCliente.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTECNR":
                     LyAddClienteCnr = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddClienteCnr.setDefinitionExpression("where ESTADO IS null");
+                    LyAddClienteCnr.setDefinitionExpression("ESTADO IS null");
                     LyAddClienteCnr.setMinScale(6000);
                     LyAddClienteCnr.setVisible(visibilidad);
                     break;
                 case "ADDUNION":
                     LyAddUnion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddUnion.setDefinitionExpression("where ESTADO IS null");
                     LyAddUnion.setMinScale(4500);
                     LyAddUnion.setVisible(visibilidad);
                     break;
                 case "ASOCTRAMO":
                     LyAsocTramo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocTramo.setMinScale(6000);
                     LyAsocTramo.setVisible(visibilidad);
                     break;
@@ -1617,6 +1647,8 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     private void singleTapOnMap() {
+
+
         myMapView.setOnSingleTapListener(new OnSingleTapListener() {
             @Override
             public void onSingleTap(float x, float y) {
@@ -2306,6 +2338,34 @@ public class MapsActivity extends AppCompatActivity {
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Util.REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    initGeoposition();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Log.w("MapsActivity", "No hay permisos de ACCESS_FINE_LOCATION");
+                }
+                break;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }

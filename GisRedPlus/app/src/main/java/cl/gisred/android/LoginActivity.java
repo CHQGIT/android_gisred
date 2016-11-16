@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
                 attributes.put("usuario", credenciales.getUserName());
                 attributes.put("fecha", sFecha);
                 attributes.put("pagina", "Mobile");
-                attributes.put("modulo", "GISRED 2.0");
+                attributes.put("modulo", "GISRED 2.0" + Util.getVersionPackage());
                 attributes.put("nom_equipo", sNomEquipo);
                 attributes.put("ip", sImei);
 
@@ -275,6 +275,8 @@ public class LoginActivity extends AppCompatActivity {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
+        } else {
+            sImei = Util.getImei(getApplicationContext());
         }
     }
 

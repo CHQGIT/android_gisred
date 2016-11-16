@@ -1,5 +1,6 @@
 package cl.gisred.android;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,6 +10,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -17,10 +19,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -231,7 +236,8 @@ public class LectorActivity extends AppCompatActivity {
         setMap(R.id.map, 0xffffff, 0xffffff, 10, 10, false, true);
         choices = 0;
 
-        initGeoposition();
+        if (Build.VERSION.SDK_INT >= 23) verifPermisos();
+        else initGeoposition();
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
         setLayersURL(this.getResources().getString(R.string.url_token), "TOKENSRV");
@@ -466,6 +472,27 @@ public class LectorActivity extends AppCompatActivity {
 
         } else {
             menuLectorActions.setVisibility(View.GONE);
+        }
+    }
+
+    private void verifPermisos() {
+        if (ContextCompat.checkSelfPermission(LectorActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LectorActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(LectorActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        Util.REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            initGeoposition();
         }
     }
 
@@ -1743,13 +1770,13 @@ public class LectorActivity extends AppCompatActivity {
                     break;
                 case "ADDCLIENTE":
                     LyAddCliente = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddCliente.setDefinitionExpression("where ESTADO IS null");
+                    LyAddCliente.setDefinitionExpression("ESTADO IS null");
                     LyAddCliente.setMinScale(6000);
                     LyAddCliente.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTECNR":
                     LyAddClienteCnr = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddClienteCnr.setDefinitionExpression("where ESTADO IS null");
+                    LyAddClienteCnr.setDefinitionExpression("ESTADO IS null");
                     LyAddClienteCnr.setMinScale(6000);
                     LyAddClienteCnr.setVisible(visibilidad);
                     break;
@@ -2061,6 +2088,9 @@ public class LectorActivity extends AppCompatActivity {
                             if (idResLayoutSelect == R.layout.dialog_cliente_cnr)
                                 LyREDBT.setVisible(true);
 
+                            if (LyPOSTES.getMinScale() < myMapView.getScale())
+                                myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
+                        } else if (R.layout.form_lectores == idResLayoutSelect){
                             if (LyPOSTES.getMinScale() < myMapView.getScale())
                                 myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
                         }
@@ -2608,6 +2638,34 @@ public class LectorActivity extends AppCompatActivity {
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Util.REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    initGeoposition();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Log.w("LectorActivity", "No hay permisos de ACCESS_FINE_LOCATION");
+                }
+                break;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }

@@ -1,6 +1,8 @@
 package cl.gisred.android;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,6 +12,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,8 +30,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -91,6 +99,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -262,7 +271,8 @@ public class InspActivity extends AppCompatActivity {
         setMap(R.id.map, 0xffffff, 0xffffff, 10, 10, false, true);
         choices = 0;
 
-        initGeoposition();
+        if (Build.VERSION.SDK_INT >= 23) verifPermisos();
+        else initGeoposition();
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
         setLayersURL(this.getResources().getString(R.string.url_token), "TOKENSRV");
@@ -503,11 +513,57 @@ public class InspActivity extends AppCompatActivity {
         }
     }
 
+    private void verifPermisos() {
+        if (ContextCompat.checkSelfPermission(InspActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        Util.REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            initGeoposition();
+        }
+
+    }
+
+    private void verifCamara(String sFoto) {
+        if (ContextCompat.checkSelfPermission(InspActivity.this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.CAMERA)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.CAMERA},
+                        Util.REQUEST_CAMERA);
+            }
+        } else {
+            tomarFoto(sFoto);
+        }
+
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mImageUri != null)
             outState.putString("Uri", mImageUri.toString());
+        int req = getRequestedOrientation();
+        outState.putInt("req", req);
     }
 
     @Override
@@ -516,11 +572,11 @@ public class InspActivity extends AppCompatActivity {
         if (savedInstanceState.containsKey("Uri")) {
             mImageUri = Uri.parse(savedInstanceState.getString("Uri"));
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        if (savedInstanceState.containsKey("req")) {
+            int req = (int) savedInstanceState.get("req");
+            if (req == ActivityInfo.SCREEN_ORIENTATION_LOCKED)
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        }
     }
 
     @Override
@@ -1536,7 +1592,7 @@ public class InspActivity extends AppCompatActivity {
         imgPhoto2 = (ImageView) v.findViewById(R.id.imgPhoto2);
         imgPhoto3 = (ImageView) v.findViewById(R.id.imgPhoto3);
 
-        ImageButton btnFirma = (ImageButton) v.findViewById(R.id.btnFirma);
+        final ImageButton btnFirma = (ImageButton) v.findViewById(R.id.btnFirma);
         btnFirma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1545,12 +1601,46 @@ public class InspActivity extends AppCompatActivity {
             }
         });
 
+        imgFirma.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                crearDialogoImg((ImageView) v).show();
+                return false;
+            }
+        });
+
+        imgPhoto1.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                crearDialogoImg((ImageView) v).show();
+                return false;
+            }
+        });
+
+        imgPhoto2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                crearDialogoImg((ImageView) v).show();
+                return false;
+            }
+        });
+
+        imgPhoto3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                crearDialogoImg((ImageView) v).show();
+                return false;
+            }
+        });
+
         ImageButton btnPhoto1 = (ImageButton) v.findViewById(R.id.btnPhoto1);
         btnPhoto1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto1;
-                tomarFoto("foto1");
+                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto1");
+                else tomarFoto("foto1");
+
             }
         });
 
@@ -1559,7 +1649,8 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto2;
-                tomarFoto("foto2");
+                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto2");
+                else tomarFoto("foto2");
             }
         });
 
@@ -1568,7 +1659,8 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto3;
-                tomarFoto("foto3");
+                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto3");
+                else tomarFoto("foto3");
             }
         });
 
@@ -1604,6 +1696,41 @@ public class InspActivity extends AppCompatActivity {
 
         formCrear.show();
         dialogCur = formCrear;
+    }
+
+    private Dialog crearDialogoImg(final ImageView img){
+        AlertDialog.Builder builder = new AlertDialog.Builder(InspActivity.this);
+        builder.setCancelable(false);
+        builder.setMessage("¿Desea eliminar el contenido?");
+        builder.setPositiveButton("Aceptar",    new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                eliminarImg(img);
+
+            }
+        });
+
+        builder.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.cancel();
+            }
+        });
+
+        return builder.create();
+    }
+
+    private void eliminarImg(ImageView img) {
+
+        if (Build.VERSION.SDK_INT < 23) img.setAdjustViewBounds(true);
+        //img.setImageResource(android.R.color.transparent);
+        img.setImageDrawable(null);
+
+        Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
     }
 
     private void setRequerido(View view, int idRequerido, boolean bool) {
@@ -1642,6 +1769,7 @@ public class InspActivity extends AppCompatActivity {
         }
         mImageUri = Uri.fromFile(photo);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         startActivityForResult(intent, ACTIVITY_SELECT_FROM_CAMERA);
     }
 
@@ -2033,37 +2161,33 @@ public class InspActivity extends AppCompatActivity {
                     break;
                 case "ADDPOSTE":
                     LyAddPoste = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddPoste.setDefinitionExpression("where ESTADO IS null");
                     LyAddPoste.setMinScale(8000);
                     LyAddPoste.setVisible(visibilidad);
                     break;
                 case "ADDADDRESS":
                     LyAddDireccion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddDireccion.setDefinitionExpression("where ESTADO IS null");
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTE":
                     LyAddCliente = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddCliente.setDefinitionExpression("where ESTADO IS null");
+                    LyAddCliente.setDefinitionExpression("ESTADO IS null");
                     LyAddCliente.setMinScale(6000);
                     LyAddCliente.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTECNR":
                     LyAddClienteCnr = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddClienteCnr.setDefinitionExpression("where ESTADO IS null");
+                    LyAddClienteCnr.setDefinitionExpression("ESTADO IS null");
                     LyAddClienteCnr.setMinScale(6000);
                     LyAddClienteCnr.setVisible(visibilidad);
                     break;
                 case "ADDUNION":
                     LyAddUnion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddUnion.setDefinitionExpression("where ESTADO IS null");
                     LyAddUnion.setMinScale(4500);
                     LyAddUnion.setVisible(visibilidad);
                     break;
                 case "ASOCTRAMO":
                     LyAsocTramo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocTramo.setMinScale(6000);
                     LyAsocTramo.setVisible(visibilidad);
                     break;
@@ -2867,7 +2991,15 @@ public class InspActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             PhotoUtils photoUtils = new PhotoUtils(getApplicationContext());
-            imgTemp.setAdjustViewBounds(true);
+
+            //Cambio de orientacion imgTemp = null
+            if (imgTemp == null) {
+                Toast.makeText(getApplicationContext(), "Ocupe la misma orientación en que está usando GISRED", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            //Parche temporal cambios de ajuste
+            if (Build.VERSION.SDK_INT < 23) imgTemp.setAdjustViewBounds(true);
             imgTemp.setCropToPadding(true);
 
             if (requestCode == ACTIVITY_SELECT_IMAGE) {
@@ -2934,6 +3066,34 @@ public class InspActivity extends AppCompatActivity {
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Util.REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    initGeoposition();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Log.w("InspActivity", "No hay permisos de ACCESS_FINE_LOCATION");
+                }
+                break;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cl.gisred.android.BuildConfig;
 import cl.gisred.android.R;
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.entity.CalloutTvClass;
@@ -39,6 +41,8 @@ import cl.gisred.android.entity.CalloutTvClass;
 public class Util {
 
     public static final int REQUEST_READ_PHONE_STATE = 1001;
+    public static final int REQUEST_ACCESS_FINE_LOCATION = 1002;
+    public static final int REQUEST_CAMERA = 1003;
     private Point oUbic = null;
 
     public Util(Point mPoint) {
@@ -467,10 +471,8 @@ public class Util {
         return center;
     }
 
-    public static String getSerial(){
-        String sSerial = Build.SERIAL;
-
-        return sSerial;
+    public static String getVersionPackage(){
+        return String.format(" v%sc%s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
     }
 
     public static String getImei23(Activity activity) {
@@ -618,5 +620,180 @@ public class Util {
             ex.printStackTrace();
             return sValue;
         }
+    }
+
+    public static String getMapTelemedida(int res) {
+        String sValue;
+        switch (res) {
+            case R.id.txtNis:
+                sValue = "PRODUCTO";
+                break;
+            case R.id.txtNumOlca:
+                sValue = "NUMERO_OLCA";
+                break;
+            case R.id.txtNomCliente:
+                sValue = "NOMBRE_CLIENTE";
+                break;
+            case R.id.txtNumMedidor:
+                sValue = "NUMERO_MEDIDOR";
+                break;
+            case R.id.spinnerMarca:
+                sValue = "MARCA";
+                break;
+            case R.id.spinnerModelo:
+                sValue = "MODELO";
+                break;
+            case R.id.spinnerTipoEmpalme:
+                sValue = "TIPO_EMPALME";
+                break;
+            case R.id.txtPoste:
+                sValue = "ROTULO";
+                break;
+            case R.id.txtDireccion:
+                sValue = "DIRECCION";
+                break;
+            case R.id.estEmpalme:
+                sValue = "REV_EMPALME";
+                break;
+            case R.id.estCaja:
+                sValue = "REV_CAJA_MEDIDOR";
+                break;
+            case R.id.estMedidor:
+                sValue = "REV_MEDIDOR";
+                break;
+            case R.id.chkCCP:
+                sValue = "LOP_CORR_PARTIDA";
+                break;
+            case R.id.chkGEV:
+                sValue = "LOP_GIRO_VACIO";
+                break;
+            case R.id.txtPatronPc110:
+                sValue = "POT1PCPE1";
+                break;
+            case R.id.txtPatronPc210:
+                sValue = "POT1PCPE2";
+                break;
+            case R.id.txtPatronPc310:
+                sValue = "POT1PCPE3";
+                break;
+            case R.id.txtMedidorPc110:
+                sValue = "POT1PCME1";
+                break;
+            case R.id.txtMedidorPc210:
+                sValue = "POT1PCME2";
+                break;
+            case R.id.txtMedidorPc310:
+                sValue = "POT1PCME3";
+                break;
+            case R.id.txtPatronDc110:
+                sValue = "POT1DCPE1";
+                break;
+            case R.id.txtPatronDc210:
+                sValue = "POT1DCPE2";
+                break;
+            case R.id.txtPatronDc310:
+                sValue = "POT1DCPE3";
+                break;
+            case R.id.txtMedidorDc110:
+                sValue = "POT1DCME1";
+                break;
+            case R.id.txtMedidorDc210:
+                sValue = "POT1DCME2";
+                break;
+            case R.id.txtMedidorDc310:
+                sValue = "POT1DCME3";
+                break;
+            case R.id.txtPatronPc105:
+                sValue = "POT05PCPE1";
+                break;
+            case R.id.txtPatronPc205:
+                sValue = "POT05PCPE21";
+                break;
+            case R.id.txtPatronPc305:
+                sValue = "POT05PCPE3";
+                break;
+            case R.id.txtMedidorPc105:
+                sValue = "POT05PCME1";
+                break;
+            case R.id.txtMedidorPc205:
+                sValue = "POT05PCME2";
+                break;
+            case R.id.txtMedidorPc305:
+                sValue = "POT05PCME3";
+                break;
+            case R.id.txtPatronDc105:
+                sValue = "POT05DCPE1";
+                break;
+            case R.id.txtPatronDc205:
+                sValue = "POT05DCPE2";
+                break;
+            case R.id.txtPatronDc305:
+                sValue = "POT05DCPE3";
+                break;
+            case R.id.txtMedidorDc105:
+                sValue = "POT05DCME1";
+                break;
+            case R.id.txtMedidorDc205:
+                sValue = "POT05DCME2";
+                break;
+            case R.id.txtMedidorDc305:
+                sValue = "POT05DCME3";
+                break;
+            case R.id.txtPercPc110:
+                sValue = "POT1PCPTJ1";
+                break;
+            case R.id.txtPercPc210:
+                sValue = "POT1PCPTJ2";
+                break;
+            case R.id.txtPercPc310:
+                sValue = "POT1PCPTJ3";
+                break;
+            case R.id.txtPercDc110:
+                sValue = "POT1DCPTJ1";
+                break;
+            case R.id.txtPercDc210:
+                sValue = "POT1DCPTJ2";
+                break;
+            case R.id.txtPercDc310:
+                sValue = "POT1DCPTJ3";
+                break;
+            case R.id.txtPercPc105:
+                sValue = "POT05PCPTJ1";
+                break;
+            case R.id.txtPercPc205:
+                sValue = "POT05PCPTJ2";
+                break;
+            case R.id.txtPercPc305:
+                sValue = "POT05PCPTJ3";
+                break;
+            case R.id.txtPercDc105:
+                sValue = "POT05DCPTJ1";
+                break;
+            case R.id.txtPercDc205:
+                sValue = "POT05DCPTJ2";
+                break;
+            case R.id.txtPercDc305:
+                sValue = "POT05DCPTJ3";
+                break;
+            case R.id.chkVerif1:
+                sValue = "REV_CAMARA_REGISTRO";
+                break;
+            case R.id.chkVerif2:
+                sValue = "REV_TIERRA_SERVICIO";
+                break;
+            case R.id.chkVerif3:
+                sValue = "REV_TIERRA_PROTECCION";
+                break;
+            case R.id.chkVerif4:
+                sValue = "REV_DIFERENCIAL";
+                break;
+            case R.id.chkVerif5:
+                sValue = "REV_PROTECCION_AUTO";
+                break;
+            default:
+                sValue = null;
+                break;
+        }
+        return sValue;
     }
 }

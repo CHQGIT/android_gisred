@@ -823,7 +823,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
                                     @Override
                                     public void run() {
-                                        Toast.makeText(TelemedidaActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                        Util.showConfirmation(TelemedidaActivity.this, resp.get());
                                     }
                                 });
                             }
@@ -923,7 +923,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Toast.makeText(TelemedidaActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                            Util.showConfirmation(TelemedidaActivity.this, resp.get());
                                         }
                                     });
                                 }

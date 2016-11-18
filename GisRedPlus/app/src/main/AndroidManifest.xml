@@ -55,22 +55,27 @@
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MapsActivity"
-            android:label="Mapa GISRED"
+            android:label="Ingreso Clientes"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".InspActivity"
-            android:label="Mapa GISRED"
+            android:label="Inspecciones"
             android:screenOrientation="portrait"
             android:parentActivityName=".FormActivity" />
         <activity
             android:name=".LectorActivity"
-            android:label="Mapa GISRED"
+            android:label="Lectores"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".TelemedidaActivity"
-            android:label="Mapa GISRED"
+            android:label="Telemedidas"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".CatastroActivity"
+            android:label="Catastro AP"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
     </application>

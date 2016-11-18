@@ -809,7 +809,7 @@ public class CatastroActivity extends AppCompatActivity {
 
                                     @Override
                                     public void run() {
-                                        Toast.makeText(CatastroActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                        Util.showConfirmation(CatastroActivity.this, resp.get());
                                     }
                                 });
                             }
@@ -909,7 +909,7 @@ public class CatastroActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Toast.makeText(CatastroActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                            Util.showConfirmation(CatastroActivity.this, resp.get());
                                         }
                                     });
                                 }

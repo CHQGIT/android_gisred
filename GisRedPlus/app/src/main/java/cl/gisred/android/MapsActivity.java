@@ -745,7 +745,9 @@ public class MapsActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Toast.makeText(MapsActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+
+                                            Util.showConfirmation(MapsActivity.this, resp.get());
+
                                         }
                                     });
                                 }

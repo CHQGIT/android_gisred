@@ -1005,7 +1005,7 @@ public class InspActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Toast.makeText(InspActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                            Util.showConfirmation(InspActivity.this, resp.get());
                                         }
                                     });
                                 }

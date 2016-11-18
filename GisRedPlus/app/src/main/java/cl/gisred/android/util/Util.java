@@ -2,7 +2,9 @@ package cl.gisred.android.util;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -607,6 +609,19 @@ public class Util {
         if (sTemp.length > 1) {
             return sTemp[1];
         } else return user;
+    }
+
+    public static void showConfirmation(Context ctx, String txt) {
+        AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
+        alertDialog.setTitle("Confirmación");
+        alertDialog.setMessage(txt);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
     public static String formatRut(String sValue) {

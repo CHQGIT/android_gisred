@@ -616,6 +616,11 @@ public class LectorActivity extends AppCompatActivity {
                         oText.setError(null);
                     }
                 }
+
+            } // Validacion especial para estado lectores
+            else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+                Spinner oSpinner = (Spinner) view;
+                if (oSpinner.getSelectedItem().toString().isEmpty()) contRequeridos++;
             }
         }
 
@@ -783,9 +788,13 @@ public class LectorActivity extends AppCompatActivity {
                     if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                         EditText oText = (EditText) view;
 
-                        if (oText.getId() == R.id.txtProducto) {
+                        if (oText.getId() == R.id.txtNroMedidor) {
                             String oVal = (oText.getText().toString().isEmpty()) ? "0" : oText.getText().toString();
-                            objectMap.put("producto", oVal);
+                            objectMap.put("nro_medidor", oVal);
+                        }
+                        if (oText.getId() == R.id.txtLectura) {
+                            String oVal = (oText.getText().toString().isEmpty()) ? "0" : oText.getText().toString();
+                            objectMap.put("lectura_actual", oVal);
                         }
                         if (oText.getId() == R.id.txtPoste)
                             objectMap.put("poste", oText.getText().toString());
@@ -817,7 +826,7 @@ public class LectorActivity extends AppCompatActivity {
 
                                     @Override
                                     public void run() {
-                                        Toast.makeText(LectorActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                        Util.showConfirmation(LectorActivity.this, resp.get());
                                     }
                                 });
                             }
@@ -917,7 +926,7 @@ public class LectorActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Toast.makeText(LectorActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                            Util.showConfirmation(LectorActivity.this, resp.get());
                                         }
                                     });
                                 }

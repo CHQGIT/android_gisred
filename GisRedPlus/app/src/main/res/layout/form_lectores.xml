@@ -26,11 +26,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText android:id="@+id/txtProducto"
+                <EditText android:id="@+id/txtNroMedidor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Producto"/>
+                    android:hint="Número Medidor"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtLectura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Lectura Actual"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -42,7 +54,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Estado"/>
+                    android:text="Estado *"/>
 
                 <Spinner android:id="@+id/spinnerEstado"
                     android:layout_width="match_parent"

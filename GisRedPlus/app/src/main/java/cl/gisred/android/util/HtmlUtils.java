@@ -110,7 +110,7 @@ public class HtmlUtils {
             if (sType.equals(IMG)) {
                 sTagNew = replaceSrc(sTag, sValue);
             } else if (sType.equals(TXT)) {
-                if (sId.equals("rut_prop")) sValue = Util.formatRut(sValue);
+                if (sId.equals("rut")) sValue = Util.formatRut(sValue);
                 sTagNew = sTag + sValue;
             } else {
                 sTagNew = sTag + "<b>X</b>";
@@ -209,6 +209,9 @@ public class HtmlUtils {
     public static String getMapvalue(int res) {
         String sValue;
         switch (res) {
+            case R.id.txtSerieMedidor:
+                sValue = "txt_serie_medidor";
+                break;
             case R.id.txtNumMedidor:
                 sValue = "txt_num_medidor";
                 break;
@@ -254,6 +257,9 @@ public class HtmlUtils {
             case R.id.txtEjecutor:
                 sValue = "txt_exe";
                 break;
+            case R.id.txtVoltF1nF2:
+                sValue = "txt_volt_f1nf2";
+                break;
             case R.id.txtVoltF1n:
                 sValue = "txt_volt_f1fn";
                 break;
@@ -275,6 +281,9 @@ public class HtmlUtils {
             case R.id.txtVoltNeutro:
                 sValue = "txt_volt_neutro";
                 break;
+            case R.id.txtTsTp:
+                sValue = "txt_ts_tp";
+                break;
             case R.id.chkVerif1:
                 sValue = "chk_1_";
                 break;
@@ -291,10 +300,10 @@ public class HtmlUtils {
                 sValue = "chk_5_";
                 break;
             case R.id.txtNomInst:
-                sValue = "nom_prop";
+                sValue = "nombre";
                 break;
             case R.id.txtRut:
-                sValue = "rut_prop";
+                sValue = "rut";
                 break;
             default:
                 sValue = null;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_equipo">
+        <item>Medidor AP</item>
+        <item>Medidor AP + Equipo control</item>
+        <item>Medidor AP + Fotocelda</item>
+        <item>Control AP</item>
+        <item>Puente</item>
+    </string-array>
+</resources>

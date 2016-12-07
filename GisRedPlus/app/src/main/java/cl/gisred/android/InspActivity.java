@@ -394,6 +394,7 @@ public class InspActivity extends AppCompatActivity {
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
+            final String sForm = bundle.getString("form");
 
             formCrear = new Dialog(InspActivity.this);
             fabShowForm.setOnClickListener(new View.OnClickListener() {
@@ -411,7 +412,7 @@ public class InspActivity extends AppCompatActivity {
             oFabForm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    abrirFormInsp(v);
+                    abrirFormInsp(v, sForm);
                 }
             });
 
@@ -864,15 +865,20 @@ public class InspActivity extends AppCompatActivity {
         }
     }
 
-    private void cerrarFormCrear(boolean bSave, View v){
+    private void cerrarFormCrear(boolean bSave, View v, int idR){
         if (bSave) {
             if (!validarForm(v)) {
                 DialogoConfirmacion oDialog = new DialogoConfirmacion();
                 oDialog.show(getFragmentManager(), "tagAlert");
                 return;
             } else {
+                int idIndex;
+
+                if (idR == R.layout.form_inspec_ap) idIndex = R.raw.index_ap;
+                else idIndex = R.raw.index;
+
                 Resources res = getResources();
-                InputStream in_s = res.openRawResource(R.raw.index);
+                InputStream in_s = res.openRawResource(idIndex);
                 try {
                     View vAction = getLayoutValidate(v);
                     byte[] b = new byte[in_s.available()];
@@ -888,8 +894,14 @@ public class InspActivity extends AppCompatActivity {
                             EditText oText = (EditText) view;
                             if (!oText.getText().toString().trim().isEmpty()){
                                 oHtml.setValueById(HtmlUtils.getMapvalue(oText.getId()), "txt", oText.getText().toString());
-                                if (oText.getId() == R.id.txtNumMedidor)
-                                    sValueNumMed = oText.getText().toString();
+                                switch (oText.getId()) {
+                                    case R.id.txtNumMedidor:
+                                        sValueNumMed = oText.getText().toString();
+                                        break;
+                                    case R.id.txtSerieMedidor:
+                                        sValueNumMed = oText.getText().toString();
+                                        break;
+                                }
                             }
                         } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
                             CheckBox oCheck = (CheckBox) view;
@@ -1084,7 +1096,7 @@ public class InspActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void abrirFormInsp(View view) {
+    private void abrirFormInsp(View view, String form) {
 
         try {
             HtmlUtils.createPathInspeccion(getApplicationContext());
@@ -1100,7 +1112,14 @@ public class InspActivity extends AppCompatActivity {
         menuInspeccionActions.setVisibility(View.GONE);
         fabShowForm.setVisibility(View.VISIBLE);
 
-        setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
+        if (form.contains("MASIVA")) {
+            setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
+        } else if (form.contains("AP")) {
+            setActionsForm(R.layout.form_inspec_ap, fabTemp.getTitle());
+        } else if (form.contains("ESPECIALES")) {
+            setActionsForm(R.layout.form_inspec_clientes_esp, fabTemp.getTitle());
+        }
+        //setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
     }
@@ -1557,25 +1576,28 @@ public class InspActivity extends AppCompatActivity {
         final EditText txtEjecutor = (EditText) v.findViewById(R.id.txtEjecutor);
         txtEjecutor.setText(Util.getUserWithoutDomain(usuar));
 
-        Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFirmante);
-        spFirmante.setAdapter(adapter);
-        spFirmante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                setRequerido(view, R.id.txtRut, i > 0);
-                setRequerido(view, R.id.txtNomInst, i > 0);
-            }
+        if (idRes != R.layout.form_inspec_ap) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
-        });
+            Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
+            adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFirmante);
+            spFirmante.setAdapter(adapter);
+            spFirmante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    setRequerido(view, R.id.txtRut, i > 0);
+                    setRequerido(view, R.id.txtNomInst, i > 0);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) { }
+            });
+        }
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cerrarFormCrear(false, v);
+                cerrarFormCrear(false, v, 0);
             }
         });
 
@@ -1583,7 +1605,7 @@ public class InspActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cerrarFormCrear(true, v);
+                cerrarFormCrear(true, v, idRes);
             }
         });
 

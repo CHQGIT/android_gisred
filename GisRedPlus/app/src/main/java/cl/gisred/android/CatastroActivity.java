@@ -124,7 +124,14 @@ public class CatastroActivity extends AppCompatActivity {
     public String[] arrayTecMedidor = {};
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
-    public String[] arrayEstado = {};
+    public String[] arrayTipoEquipo = {};
+    public String[] arrayTipoCaja = {};
+    public String[] arrayTipoConex = {};
+    public String[] arrayEstadoMedidor = {};
+    public String[] arrayPropiedad = {};
+    public String[] arrayAccesoLectura = {};
+    public String[] arrayTipoIrregularidad = {};
+    public String[] arrayResultadoCatastro = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -346,8 +353,14 @@ public class CatastroActivity extends AppCompatActivity {
             addLayersToMap(credenciales, "FEATURE", "ADDCATASTRO", srv_catastro, null, true);
             myMapView.addLayer(LyAddCatastro, 18);
 
-            arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
-            arrayEstado = getResources().getStringArray(R.array.estado_lectura);
+            arrayTipoEquipo = getResources().getStringArray(R.array.tipo_equipo);
+            arrayTipoCaja = getResources().getStringArray(R.array.tipo_caja);
+            arrayTipoConex = getResources().getStringArray(R.array.tipo_conexion);
+            arrayEstadoMedidor = getResources().getStringArray(R.array.estado_medidor);
+            arrayPropiedad = getResources().getStringArray(R.array.propiedad);
+            arrayAccesoLectura = getResources().getStringArray(R.array.acceso_lectura);
+            arrayTipoIrregularidad = getResources().getStringArray(R.array.tipo_irregularidad);
+            arrayResultadoCatastro = getResources().getStringArray(R.array.resultado_catastro);
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
@@ -1287,7 +1300,7 @@ public class CatastroActivity extends AppCompatActivity {
         idResLayoutSelect = idRes;
 
         Spinner spEstado = (Spinner) v.findViewById(R.id.spinnerEstado);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstado);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstadoMedidor);
         spEstado.setAdapter(adapter);
 
         Spinner spTipoEdif = (Spinner) v.findViewById(R.id.spinnerTipoEdific);

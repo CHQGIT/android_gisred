@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="acceso_lectura">
+        <item>Sin problemas</item>
+        <item>Sin acceso</item>
+        <item>No se accede por Pryma</item>
+        <item>Acceso con gestión previa</item>
+    </string-array>
+</resources>

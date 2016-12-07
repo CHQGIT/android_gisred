@@ -807,7 +807,7 @@ public class LectorActivity extends AppCompatActivity {
 
                         if (oSpinner.getId() == R.id.spinnerEstado)
                             objectMap.put("estado", sValue);
-                        else if (oSpinner.getId() == R.id.spinnerTipoEdif)
+                        else if (oSpinner.getId() == R.id.spinnerTipoEdific)
                             objectMap.put("tipo_edificacion", sValue);
                     }
                 }

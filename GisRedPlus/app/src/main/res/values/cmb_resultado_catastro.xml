@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="resultado_catastro">
+        <item>Certificar</item>
+        <item>CNR</item>
+        <item>Normalizar</item>
+        <item>Tecnicamente normal</item>
+        <item>No es posible inspeccionar</item>
+        <item>Dirección no ubicada</item>
+    </string-array>
+</resources>

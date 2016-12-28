@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 app:fab_size="mini"
                 fab:fab_colorNormal="@color/white"
-                fab:fab_title="Ingresar Lectura"
+                fab:fab_title="Ingresar Catastro"
                 fab:fab_colorPressed="@color/white_pressed"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

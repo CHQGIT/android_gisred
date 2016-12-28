@@ -335,7 +335,7 @@ public class CatastroActivity extends AppCompatActivity {
         drawNo = new ShapeDrawable(new OvalShape());
         drawNo.getPaint().setColor(getResources().getColor(R.color.black_overlay));
 
-        menuCatastroActions = (FloatingActionsMenu) findViewById(R.id.lector_actions);
+        menuCatastroActions = (FloatingActionsMenu) findViewById(R.id.catastro_actions);
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
 
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
@@ -1299,13 +1299,37 @@ public class CatastroActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
-        Spinner spEstado = (Spinner) v.findViewById(R.id.spinnerEstado);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstadoMedidor);
-        spEstado.setAdapter(adapter);
+        Spinner spTipoEquipo = (Spinner) v.findViewById(R.id.spinnerTipoEquipo);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoEquipo);
+        spTipoEquipo.setAdapter(adapter);
 
-        Spinner spTipoEdif = (Spinner) v.findViewById(R.id.spinnerTipoEdific);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoEdif);
-        spTipoEdif.setAdapter(adapter);
+        Spinner spTipoCaja = (Spinner) v.findViewById(R.id.spinnerTipoCaja);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoCaja);
+        spTipoCaja.setAdapter(adapter);
+
+        Spinner spTipoConex = (Spinner) v.findViewById(R.id.spinnerTipoConex);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoConex);
+        spTipoConex.setAdapter(adapter);
+
+        Spinner spEstadoMedidor = (Spinner) v.findViewById(R.id.spinnerEstadoMedidor);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstadoMedidor);
+        spEstadoMedidor.setAdapter(adapter);
+
+        Spinner spPropiedad = (Spinner) v.findViewById(R.id.spinnerPropiedad);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayPropiedad);
+        spPropiedad.setAdapter(adapter);
+
+        Spinner spAccesoLectura = (Spinner) v.findViewById(R.id.spinnerAccesoLectura);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayAccesoLectura);
+        spAccesoLectura.setAdapter(adapter);
+
+        Spinner spTipoIrregular = (Spinner) v.findViewById(R.id.spinnerTipoIrregular);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoIrregularidad);
+        spTipoIrregular.setAdapter(adapter);
+
+        Spinner spResultado = (Spinner) v.findViewById(R.id.spinnerResultado);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayResultadoCatastro);
+        spResultado.setAdapter(adapter);
 
         ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
         btnIdentPoste.setOnClickListener(new View.OnClickListener() {
@@ -1318,23 +1342,8 @@ public class CatastroActivity extends AppCompatActivity {
                 oLyExistAsoc = LyPOSTES;
                 oLyExistAsoc.setVisible(true);
                 myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
-                Log.w("[LectorActivity]", "HIDE FORM POSTE and Zoom");
+                Log.w("[CatastroActivity]", "HIDE FORM POSTE and Zoom");
                 setValueToAsoc(getLayoutContenedor(view));
-            }
-        });
-
-        ImageButton btnIdentDireccion = (ImageButton) v.findViewById(R.id.btnDireccion);
-        btnIdentDireccion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                formCrear.hide();
-                bMapTap = true;
-                bCallOut = true;
-                oLySelectAsoc = LyAddDireccion;
-                oLyExistAsoc = LyDIRECCIONES;
-                oLyExistAsoc.setVisible(true);
-                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
-                setValueToAsoc(getLayoutContenedor(v));
             }
         });
 
@@ -1733,7 +1742,7 @@ public class CatastroActivity extends AppCompatActivity {
             case "SRV_CALLES":
                 srv_calles = layerURL;
                 break;
-            case "SRV_LECTORES":
+            case "SRV_CATASTRO":
                 srv_catastro = layerURL;
                 break;
             default:
@@ -1763,13 +1772,11 @@ public class CatastroActivity extends AppCompatActivity {
                     break;
                 case "ADDPOSTE":
                     LyAddPoste = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddPoste.setDefinitionExpression("where ESTADO IS null");
                     LyAddPoste.setMinScale(8000);
                     LyAddPoste.setVisible(visibilidad);
                     break;
                 case "ADDADDRESS":
                     LyAddDireccion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddDireccion.setDefinitionExpression("where ESTADO IS null");
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
@@ -1793,17 +1800,15 @@ public class CatastroActivity extends AppCompatActivity {
                     break;
                 case "ASOCTRAMO":
                     LyAsocTramo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocTramo.setMinScale(6000);
                     LyAsocTramo.setVisible(visibilidad);
                     break;
                 case "ASOCCALLE":
                     LyAsocCalle = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocCalle.setMinScale(6000);
                     LyAsocCalle.setVisible(visibilidad);
                     break;
-                case "ADDLECTOR":
+                case "ADDCATASTRO":
                     LyAddCatastro = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
                     LyAddCatastro.setMinScale(8000);
                     LyAddCatastro.setVisible(visibilidad);

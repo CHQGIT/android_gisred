@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "POWER_ON"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
                         oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    /*} else if (datos[position].getTitulo().contains("CATASTRO")){
+                    } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
-                        oBundle.putStringArrayList("modulos", aModulos);*/
+                        oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);
 
@@ -181,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("CATASTRO")) {
                 dato.setDescripcion("Visualización e ingreso de catastros AP");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+            } else if (dato.getTitulo().contains("POWER")) {
+                dato.setDescripcion("Visualización de interrupciones");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_power_on : R.mipmap.ic_menu_power_on_g);
             }
             return dato;
         }

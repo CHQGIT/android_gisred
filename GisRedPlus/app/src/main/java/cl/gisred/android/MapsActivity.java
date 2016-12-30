@@ -119,7 +119,7 @@ public class MapsActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "Encuestados", "Reemplazos"};
 
     public String[] arrayTipoEdif = {};
     public String[] arrayTipoPoste = {};
@@ -130,10 +130,10 @@ public class MapsActivity extends AppCompatActivity {
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
 
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
-    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx;
+    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE;
     //url para feature layers
     String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles;
 
@@ -143,7 +143,7 @@ public class MapsActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO;
     ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle;
 
     //set Extent inicial
@@ -240,6 +240,7 @@ public class MapsActivity extends AppCompatActivity {
         setLayersURL(this.getResources().getString(R.string.url_Direcciones), "DIRECCIONES");
         setLayersURL(this.getResources().getString(R.string.url_medidores), "MEDIDORES");
         setLayersURL(this.getResources().getString(R.string.url_Stx), "STX");
+        setLayersURL(this.getResources().getString(R.string.url_ECSE_varios), "ECSE");
 
         //Agrega layers dinámicos.
 
@@ -261,6 +262,8 @@ public class MapsActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "EMPALMES", din_urlClientes, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
 
         //Añade Layer al Mapa
         myMapView.addLayer(mRoadBaseMaps, 0);
@@ -281,13 +284,14 @@ public class MapsActivity extends AppCompatActivity {
         myMapView.addLayer(LyEMPALMES, 15);
         myMapView.addLayer(LyREDSTX, 16);
         myMapView.addLayer(LyTORRESSTX, 17);
+        myMapView.addLayer(LyENCUESTA, 18);
+        myMapView.addLayer(LyREEMPLAZO, 19);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
         btnGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO TEST THIS
                 LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     alertNoGps();
@@ -407,13 +411,13 @@ public class MapsActivity extends AppCompatActivity {
             addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
             addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-            myMapView.addLayer(LyAddPoste, 18);
-            myMapView.addLayer(LyAddDireccion, 19);
-            myMapView.addLayer(LyAddCliente, 20);
-            myMapView.addLayer(LyAddUnion, 21);
-            myMapView.addLayer(LyAsocTramo, 22);
-            myMapView.addLayer(LyAsocCalle, 23);
-            myMapView.addLayer(LyAddClienteCnr, 24);
+            myMapView.addLayer(LyAddPoste, 20);
+            myMapView.addLayer(LyAddDireccion, 21);
+            myMapView.addLayer(LyAddCliente, 22);
+            myMapView.addLayer(LyAddUnion, 23);
+            myMapView.addLayer(LyAsocTramo, 24);
+            myMapView.addLayer(LyAsocCalle, 25);
+            myMapView.addLayer(LyAddClienteCnr, 26);
 
             setLayerAddToggle(false);
 
@@ -1210,10 +1214,6 @@ public class MapsActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddDireccion;
                 oLyExistAsoc = LyDIRECCIONES;
-                /*myMapView.removeLayer(0);
-                addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
-                myMapView.addLayer(LyMapabase, 0);*/
-                //myMapView.zoomToScale(oUbicacion, 700.0f);
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1422,6 +1422,12 @@ public class MapsActivity extends AppCompatActivity {
             case "STX":
                 din_urlStx = layerURL;
                 break;
+            case "PO":
+                din_urlInterrupciones = layerURL;
+                break;
+            case "ECSE":
+                din_urlECSE = layerURL;
+                break;
             case "SRV_POSTES":
                 srv_urlPostes = layerURL;
                 break;
@@ -1467,13 +1473,11 @@ public class MapsActivity extends AppCompatActivity {
                     break;
                 case "ADDPOSTE":
                     LyAddPoste = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddPoste.setDefinitionExpression("where ESTADO IS null");
                     LyAddPoste.setMinScale(8000);
                     LyAddPoste.setVisible(visibilidad);
                     break;
                 case "ADDADDRESS":
                     LyAddDireccion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddDireccion.setDefinitionExpression("where ESTADO IS null");
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
@@ -1640,6 +1644,20 @@ public class MapsActivity extends AppCompatActivity {
                         LyTORRESSTX = new ArcGISDynamicMapServiceLayer(url, array17, credencial);
                         LyTORRESSTX.setVisible(visibilidad);
                         break;
+                    case "ENCUESTADO":
+                        int array18[];
+                        array18 = new int[1];
+                        array18[0] = 0;
+                        LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
+                        LyENCUESTA.setVisible(visibilidad);
+                        break;
+                    case "REEMPLAZO":
+                        int array19[];
+                        array19 = new int[1];
+                        array19[0] = 1;
+                        LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
+                        LyREEMPLAZO.setVisible(visibilidad);
+                        break;
                     default:
                         Toast.makeText(MapsActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
                         break;
@@ -1717,9 +1735,9 @@ public class MapsActivity extends AppCompatActivity {
                                     tv.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                             oTxtAsoc.setText(((GisTextView) v).getHint());
                                             oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                            oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                             oTxtAsoc.setPoint(myMapView.getCallout().getCoordinates());
                                             bCallOut = false;
                                             bMapTap = false;
@@ -1908,6 +1926,8 @@ public class MapsActivity extends AppCompatActivity {
                             LyCONCESIONES.reinitializeLayer(creds);
                             LyDIRECCIONES.reinitializeLayer(creds);
                             LyEMPALMES.reinitializeLayer(creds);
+                            LyENCUESTA.reinitializeLayer(creds);
+                            LyREEMPLAZO.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -2203,10 +2223,9 @@ public class MapsActivity extends AppCompatActivity {
                             tv.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                     oTxtAsoc.setText(((GisTextView) v).getHint());
                                     oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                    oTxtAsoc.setTipo(((GisTextView) v).getTipo());
-                                    oTxtAsoc.setIdObjeto(((GisTextView) v).getIdObjeto());
                                     oTxtAsoc.setPoint(myMapView.getCallout().getCoordinates());
                                     bCallOut = false;
                                     bMapTap = false;

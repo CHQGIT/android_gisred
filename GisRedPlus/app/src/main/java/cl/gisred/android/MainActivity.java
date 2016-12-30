@@ -108,7 +108,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent oIntent;
                     Bundle oBundle = new Bundle();
 
-                    if (datos[position].getTitulo().contains("INSPECCION")){
+                    if (datos[position].getTitulo().contains("CLIENTES")){
+                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("LECTORES")){
@@ -120,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("POWER")){
+                        oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
                     } else
-                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                        oIntent = new Intent(MainActivity.this, StandardActivity.class);
 
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);

@@ -37,6 +37,8 @@
     <string name="url_medidores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
     <string name="url_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
     <string name="url_Stx">http://gisred.chilquinta.cl:5555/arcgis/rest/services/STx/STx/MapServer</string>
+    <string name="url_interrupciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Interrupciones/PO/MapServer</string>
+    <string name="url_ECSE_varios">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Varios/ECSE/MapServer</string>
     <!-- Mapabase -->
     <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
     <!-- Urls Values Spinners Dialogs -->

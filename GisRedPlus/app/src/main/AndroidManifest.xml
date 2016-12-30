@@ -54,6 +54,11 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"/>
         <activity
+            android:name=".StandardActivity"
+            android:label="Standard"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MapsActivity"
             android:label="Ingreso Clientes"
             android:screenOrientation="locked"
@@ -76,6 +81,11 @@
         <activity
             android:name=".CatastroActivity"
             android:label="Catastro AP"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".PowerOnActivity"
+            android:label="Power On"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
     </application>

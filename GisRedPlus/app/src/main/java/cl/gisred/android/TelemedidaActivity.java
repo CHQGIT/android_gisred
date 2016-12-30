@@ -117,7 +117,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "Encuestados", "Reemplazos"};
 
     public String[] arrayTipoEdif = {};
     public String[] arrayTipoPoste = {};
@@ -131,10 +131,10 @@ public class TelemedidaActivity extends AppCompatActivity {
     public String[] arrayMarca = {};
     public String[] arrayTipoMarca = {};
 
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
-    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx;
+    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE;
     //url para feature layers
     String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_lectores, srv_Telemedida;
 
@@ -144,7 +144,7 @@ public class TelemedidaActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO;
     ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddLectores, LyAddTelemedida;
 
     //set Extent inicial
@@ -249,6 +249,7 @@ public class TelemedidaActivity extends AppCompatActivity {
         setLayersURL(this.getResources().getString(R.string.url_Direcciones), "DIRECCIONES");
         setLayersURL(this.getResources().getString(R.string.url_medidores), "MEDIDORES");
         setLayersURL(this.getResources().getString(R.string.url_Stx), "STX");
+        setLayersURL(this.getResources().getString(R.string.url_ECSE_varios), "ECSE");
 
         //Agrega layers dinámicos.
         addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
@@ -269,6 +270,8 @@ public class TelemedidaActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "EMPALMES", din_urlClientes, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
 
         //Añade Layer al Mapa
         myMapView.addLayer(mRoadBaseMaps, 0);
@@ -289,6 +292,8 @@ public class TelemedidaActivity extends AppCompatActivity {
         myMapView.addLayer(LyEMPALMES, 15);
         myMapView.addLayer(LyREDSTX, 16);
         myMapView.addLayer(LyTORRESSTX, 17);
+        myMapView.addLayer(LyENCUESTA, 18);
+        myMapView.addLayer(LyREEMPLAZO, 19);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
@@ -350,7 +355,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
             setLayersURL(this.getResources().getString(R.string.srv_Telemedida), "SRV_TELEMEDIDA");
             addLayersToMap(credenciales, "FEATURE", "ADDTELEMEDIDA", srv_Telemedida, null, true);
-            myMapView.addLayer(LyAddTelemedida, 18);
+            myMapView.addLayer(LyAddTelemedida, 20);
 
             arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
             arrayMarca = getResources().getStringArray(R.array.marca);
@@ -455,13 +460,13 @@ public class TelemedidaActivity extends AppCompatActivity {
                 addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
                 addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-                myMapView.addLayer(LyAddPoste, 19);
-                myMapView.addLayer(LyAddDireccion, 20);
-                myMapView.addLayer(LyAddCliente, 21);
-                myMapView.addLayer(LyAddUnion, 22);
-                myMapView.addLayer(LyAsocTramo, 23);
-                myMapView.addLayer(LyAsocCalle, 24);
-                myMapView.addLayer(LyAddClienteCnr, 25);
+                myMapView.addLayer(LyAddPoste, 21);
+                myMapView.addLayer(LyAddDireccion, 22);
+                myMapView.addLayer(LyAddCliente, 23);
+                myMapView.addLayer(LyAddUnion, 24);
+                myMapView.addLayer(LyAsocTramo, 25);
+                myMapView.addLayer(LyAsocCalle, 26);
+                myMapView.addLayer(LyAddClienteCnr, 27);
 
                 setLayerAddToggle(false);
             } else {
@@ -1720,6 +1725,12 @@ public class TelemedidaActivity extends AppCompatActivity {
             case "STX":
                 din_urlStx = layerURL;
                 break;
+            case "PO":
+                din_urlInterrupciones = layerURL;
+                break;
+            case "ECSE":
+                din_urlECSE = layerURL;
+                break;
             case "SRV_POSTES":
                 srv_urlPostes = layerURL;
                 break;
@@ -1777,7 +1788,6 @@ public class TelemedidaActivity extends AppCompatActivity {
                     break;
                 case "ADDADDRESS":
                     LyAddDireccion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddDireccion.setDefinitionExpression("where ESTADO IS null");
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
@@ -1795,13 +1805,11 @@ public class TelemedidaActivity extends AppCompatActivity {
                     break;
                 case "ADDUNION":
                     LyAddUnion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddUnion.setDefinitionExpression("where ESTADO IS null");
                     LyAddUnion.setMinScale(4500);
                     LyAddUnion.setVisible(visibilidad);
                     break;
                 case "ASOCTRAMO":
                     LyAsocTramo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocTramo.setMinScale(6000);
                     LyAsocTramo.setVisible(visibilidad);
                     break;
@@ -1955,6 +1963,20 @@ public class TelemedidaActivity extends AppCompatActivity {
                         array17[0] = 0;
                         LyTORRESSTX = new ArcGISDynamicMapServiceLayer(url, array17, credencial);
                         LyTORRESSTX.setVisible(visibilidad);
+                        break;
+                    case "ENCUESTADO":
+                        int array18[];
+                        array18 = new int[1];
+                        array18[0] = 0;
+                        LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
+                        LyENCUESTA.setVisible(visibilidad);
+                        break;
+                    case "REEMPLAZO":
+                        int array19[];
+                        array19 = new int[1];
+                        array19[0] = 1;
+                        LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
+                        LyREEMPLAZO.setVisible(visibilidad);
                         break;
                     default:
                         Toast.makeText(TelemedidaActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
@@ -2189,7 +2211,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                                 .getError();
                         if (securityEx.getCode() == EsriSecurityException.AUTHENTICATION_FAILED)
                             Toast.makeText(myMapView.getContext(),
-                                    "Ocurrió un problema con la autenticación! Intente volver al Login!",
+                                    "Su cuenta tiene permisos limitados, contacte con el administrador para solicitar permisos faltantes",
                                     Toast.LENGTH_SHORT).show();
                         else if (securityEx.getCode() == EsriSecurityException.TOKEN_INVALID)
                             Toast.makeText(myMapView.getContext(),
@@ -2225,6 +2247,8 @@ public class TelemedidaActivity extends AppCompatActivity {
                             LyCONCESIONES.reinitializeLayer(creds);
                             LyDIRECCIONES.reinitializeLayer(creds);
                             LyEMPALMES.reinitializeLayer(creds);
+                            LyENCUESTA.reinitializeLayer(creds);
+                            LyREEMPLAZO.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -2630,7 +2654,7 @@ public class TelemedidaActivity extends AppCompatActivity {
             } else {
                 if (loc.hasSpeed()){
                     int speed = (int) ((loc.getSpeed() * 3600) / 1000);
-                    if (speed > 10) {
+                    if (speed > 10 && speed < 150) {
                         myMapView.centerAt(p, true);
                         if (speed > 120) {
                             Toast.makeText(getApplicationContext(), String.format("Velocidad max superada: %s Km/h", speed),

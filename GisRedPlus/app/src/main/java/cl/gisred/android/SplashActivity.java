@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.esri.android.map.ags.ArcGISFeatureLayer;
+import com.esri.core.io.EsriSecurityException;
+import com.esri.core.io.EsriServiceException;
 import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
@@ -182,8 +184,17 @@ public class SplashActivity extends AppCompatActivity {
 
                 return results;
 
+            } catch (EsriSecurityException esec) {
+                esec.printStackTrace();
+                sError = "Hubo un problema con credenciales en dominio " + domain;
+                return null;
+            } catch (EsriServiceException eser){
+                eser.printStackTrace();
+                sError = "Ocurrió un error en el servidor GISRED";
+                return null;
             } catch (Exception e) {
                 e.printStackTrace();
+                sError = "Existe un problema de conectividad, verifique";
                 return null;
             }
         }
@@ -232,6 +243,7 @@ public class SplashActivity extends AppCompatActivity {
                 bundle.putStringArrayList("modulos", arrayModulos);
                 bundle.putStringArrayList("empresas", arrayEmpresas);
                 bundle.putStringArrayList("widgets", arrayWidgets);
+                bundle.putString("imei", sImei);
 
                 Map<String, Object> attributes = new HashMap<>();
 

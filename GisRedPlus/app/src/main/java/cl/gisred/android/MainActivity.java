@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.core.io.UserCredentials;
+import com.esri.core.map.CallbackListener;
+import com.esri.core.map.FeatureEditResult;
+import com.esri.core.map.Graphic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import cl.gisred.android.entity.MenuClass;
+import cl.gisred.android.util.Util;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,17 +39,21 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> aModulos;
     ArrayList<String> aWidgets;
     private String sEmpresa;
+    private String sImei;
     private Bundle bundle;
 
     String usuario, password;
     UserCredentials credenciales;
 
+    private ArcGISFeatureLayer oLayerAccess;
+
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "POWER_ON"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
         credenciales.setUserAccount(usuario, password);
+        oLayerAccess = new ArcGISFeatureLayer(getResources().getString(R.string.srv_LogAccess), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
     }
 
     public void getWidgets()
@@ -95,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
         sEmpresa = bundle.getString("empresa");
+        sImei = bundle.getString("imei");
 
         setCredenciales(usuario, password);
 
@@ -107,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 if (view.isEnabled()){
                     Intent oIntent;
                     Bundle oBundle = new Bundle();
+
+                    String sFecha = DateFormat.format("dd-MM-yyyy HH:mm:ss", new java.util.Date()).toString();
+                    String sPagina = String.format("Mobile-%s-%s", sEmpresa.toLowerCase(), datos[position].getTitulo().toLowerCase());
 
                     if (datos[position].getTitulo().contains("CLIENTES")){
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);
@@ -123,10 +139,24 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("POWER")){
+                    } else if (datos[position].getTitulo().contains("INTERRUPCIONES")){
                         oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
+
+                    Map<String, Object> attributes = new HashMap<>();
+
+                    attributes.put("usuario", credenciales.getUserName());
+                    attributes.put("fecha", sFecha);
+                    attributes.put("pagina", sPagina);
+                    attributes.put("modulo", "GISRED 2.0" + Util.getVersionPackage());
+                    attributes.put("nom_equipo", Util.getDeviceName());
+                    attributes.put("ip", sImei);
+
+                    Graphic newFeature = new Graphic(null, null, attributes);
+                    Graphic[] addsLogin = {newFeature};
+
+                    oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());
 
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);
@@ -141,6 +171,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private CallbackListener<FeatureEditResult[][]> callBackUnion() {
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Módulo cargado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return null;
+    }
+
 
     class AdaptadorMenus extends ArrayAdapter<MenuClass> {
 
@@ -186,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("CATASTRO")) {
                 dato.setDescripcion("Visualización e ingreso de catastros AP");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
-            } else if (dato.getTitulo().contains("POWER")) {
+            } else if (dato.getTitulo().contains("INTERRUPCIONES")) {
                 dato.setDescripcion("Visualización de interrupciones");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_power_on : R.mipmap.ic_menu_power_on_g);
             }

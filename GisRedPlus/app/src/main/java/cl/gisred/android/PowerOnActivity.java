@@ -111,23 +111,13 @@ public class PowerOnActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección", "ID Orden", "ID Incidencia"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "Encuestados", "Reemplazos", "PO SED", "PO Clientes"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "PO SED", "PO Tramos", "PO Clientes"};
 
-    public String[] arrayTipoEdif = {};
-    public String[] arrayTipoPoste = {};
-    public String[] arrayTension = {};
-    public String[] arrayMedidor = {};
-    public String[] arrayEmpalme = {};
-    public String[] arrayTecMedidor = {};
-    public String[] arrayTipoCnr = {};
-    public String[] arrayTipoFase = {};
-    public String[] arrayEstado = {};
-
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true};
 
     //url para dinamyc layers
     String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE;
@@ -138,7 +128,7 @@ public class PowerOnActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyPOSED, LyPOCLIENTES;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyPOSED, LyPOTRAMO, LyPOCLIENTES;
 
     //set Extent inicial
     Polygon mCurrentMapExtent = null;
@@ -147,7 +137,7 @@ public class PowerOnActivity extends AppCompatActivity {
     final SpatialReference egs = SpatialReference.create(4326);
 
     //Constantes
-    private static final String modPowerOn = "POWER_ON";
+    private static final String modPowerOn = "INTERRUPCIONES";
 
     //Sets
     ArrayList<String> arrayWidgets;
@@ -182,6 +172,7 @@ public class PowerOnActivity extends AppCompatActivity {
     Dialog dialogCur;
     FloatingActionsMenu menuPowerActions;
     FloatingActionButton fabShowForm;
+    FloatingActionButton fabNavRoute;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -257,6 +248,7 @@ public class PowerOnActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "POSED", din_urlInterrupciones, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "POTRAMO", din_urlInterrupciones, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "POCLIENTES", din_urlInterrupciones, null, true);
 
         //Añade Layer al Mapa
@@ -281,7 +273,8 @@ public class PowerOnActivity extends AppCompatActivity {
         myMapView.addLayer(LyENCUESTA, 18);
         myMapView.addLayer(LyREEMPLAZO, 19);
         myMapView.addLayer(LyPOSED, 20);
-        myMapView.addLayer(LyPOCLIENTES, 21);
+        myMapView.addLayer(LyPOTRAMO, 21);
+        myMapView.addLayer(LyPOCLIENTES, 22);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
@@ -332,22 +325,32 @@ public class PowerOnActivity extends AppCompatActivity {
         fabShowForm = (FloatingActionButton) findViewById(R.id.action_show_form);
         if (fabShowForm != null) fabShowForm.setVisibility(View.GONE);
 
-        if (modulo.replace(" ", "_").equals(modPowerOn)) {
+        fabNavRoute = (FloatingActionButton) findViewById(R.id.action_nav_route);
+        if (fabNavRoute != null) {
+            fabNavRoute.setVisibility(View.GONE);
+            fabNavRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myMapView != null && myMapView.getCallout().isShowing()) {
+                        Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
+                        Util.QueryWaze(PowerOnActivity.this, p);
+                    }
+                }
+            });
 
-            arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
-            arrayEstado = getResources().getStringArray(R.array.estado_lectura);
+            fabNavRoute.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Ir a Ruta", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+        }
+
+        if (modulo.replace(" ", "_").equals(modPowerOn)) {
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
-
-            FloatingActionButton oFabForm = (FloatingActionButton) findViewById(R.id.action_form);
-            oFabForm.setIconDrawable(drawOk);
-            oFabForm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO hacer form informativo
-                }
-            });
 
             FloatingActionButton oFabView = (FloatingActionButton) findViewById(R.id.action_view);
             oFabView.setIconDrawable(drawOk);
@@ -366,6 +369,7 @@ public class PowerOnActivity extends AppCompatActivity {
     private void abrirLeyenda() {
         ImageView image = new ImageView(this);
         image.setImageResource(R.drawable.leyenda_power);
+        image.setAdjustViewBounds(true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).
                 setPositiveButton("CERRAR", new DialogInterface.OnClickListener() {
@@ -594,6 +598,7 @@ public class PowerOnActivity extends AppCompatActivity {
         }
 
         bVerData = !bVerData;
+        fabNavRoute.setVisibility(View.GONE);
         myMapView.getCallout().hide();
     }
 
@@ -736,6 +741,18 @@ public class PowerOnActivity extends AppCompatActivity {
                             String[] sFields = {"nombre_calle", "numero"};
                             callQuery(sBuscar, sFields, LyDIRECCIONES.getUrl().concat("/0"));
                             break;
+                        case 5:
+                            callQuery(txtBusqueda, getValueByEmp("ARCGIS.dbo.POWERON_CLIENTES.id_orden"), LyPOCLIENTES.getUrl().concat("/1"));
+                            if (LyPOCLIENTES.getLayers() != null && LyPOCLIENTES.getLayers().length > 0)
+                                if(LyPOCLIENTES.getLayers()[1].getLayerServiceInfo().getMinScale()>0)
+                                    iBusqScale = LyPOCLIENTES.getLayers()[1].getLayerServiceInfo().getMinScale();
+                            break;
+                        case 6:
+                            callQueryInt(txtBusqueda, getValueByEmp("ARCGIS.dbo.POWERON_CLIENTES.id_incidencia"), LyPOCLIENTES.getUrl().concat("/1"));
+                            if (LyPOCLIENTES.getLayers() != null && LyPOCLIENTES.getLayers().length > 0)
+                                if(LyPOCLIENTES.getLayers()[1].getLayerServiceInfo().getMinScale()>0)
+                                    iBusqScale = LyPOCLIENTES.getLayers()[1].getLayerServiceInfo().getMinScale();
+                            break;
                     }
                 }
             }
@@ -773,6 +790,13 @@ public class PowerOnActivity extends AppCompatActivity {
 
     public void callQuery(String txtBusqueda, String nomCampo, String dirUrl) {
         String sWhere = String.format("%s = '%s'", nomCampo, txtBusqueda);
+
+        AsyncQueryTask queryTask = new AsyncQueryTask();
+        queryTask.execute(sWhere, dirUrl);
+    }
+
+    public void callQueryInt(String txtBusqueda, String nomCampo, String dirUrl) {
+        String sWhere = String.format("%s = %s", nomCampo, txtBusqueda);
 
         AsyncQueryTask queryTask = new AsyncQueryTask();
         queryTask.execute(sWhere, dirUrl);
@@ -1116,11 +1140,18 @@ public class PowerOnActivity extends AppCompatActivity {
                         LyPOSED = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
                         LyPOSED.setVisible(visibilidad);
                         break;
-                    case "POCLIENTES":
+                    case "POTRAMO":
                         int array21[];
                         array21 = new int[1];
-                        array21[0] = 1;
-                        LyPOCLIENTES = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
+                        array21[0] = 2;
+                        LyPOTRAMO = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
+                        LyPOTRAMO.setVisible(visibilidad);
+                        break;
+                    case "POCLIENTES":
+                        int array22[];
+                        array22 = new int[1];
+                        array22[0] = 1;
+                        LyPOCLIENTES = new ArcGISDynamicMapServiceLayer(url, array22, credencial);
                         LyPOCLIENTES.setVisible(visibilidad);
                         break;
                     default:
@@ -1157,7 +1188,6 @@ public class PowerOnActivity extends AppCompatActivity {
 
                             myMapView.addLayer(mSeleccionLayer);
 
-                            //TODO buscar tramo
                             switch (nIndentify) {
                                 case 1:
                                     getCalleToDialog(oPoint);
@@ -1174,7 +1204,7 @@ public class PowerOnActivity extends AppCompatActivity {
                             // select the features
                             oLySelectAsoc.clearSelection();
                             oLySelectAsoc.setSelectedGraphics(selectedFeatures, true);
-                            Log.w("MapsActivity", "Selected Graphics " + selectedFeatures.length);
+                            Log.w("PowerOnActivity", "Selected Graphics " + selectedFeatures.length);
 
                             if (selectedFeatures.length > 0) {
                                 Graphic[] results = oLySelectAsoc.getSelectedFeatures();
@@ -1397,6 +1427,7 @@ public class PowerOnActivity extends AppCompatActivity {
 
                             LyPOCLIENTES.reinitializeLayer(creds);
                             LyPOSED.reinitializeLayer(creds);
+                            LyPOTRAMO.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -1522,6 +1553,29 @@ public class PowerOnActivity extends AppCompatActivity {
                             Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
                             mBusquedaLayer.addGraphic(resultLocGraphic);
                         }
+
+                        Callout mapCallout = myMapView.getCallout();
+                        fabNavRoute.setVisibility(View.GONE);
+                        mapCallout.hide();
+
+                        StringBuilder outStr;
+                        Util oUtil = new Util();
+                        outStr = oUtil.getStringByAttrClass(feature.getAttributes());
+                        GisTextView tv = new GisTextView(PowerOnActivity.this);
+                        tv.setText(outStr.toString());
+                        tv.setPoint((Point) feature.getGeometry());
+                        tv.setTextColor(Color.WHITE);
+
+
+                        mapCallout.setOffset(0, -3);
+                        mapCallout.setCoordinates(tv.getPoint());
+                        mapCallout.setMaxHeight(100);
+                        mapCallout.setMaxWidth(400);
+                        mapCallout.setStyle(R.xml.mycalloutprefs);
+                        mapCallout.setContent(tv);
+
+                        mapCallout.show();
+                        fabNavRoute.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -1649,6 +1703,7 @@ public class PowerOnActivity extends AppCompatActivity {
                     Util oUtil = new Util();
 
                     Callout mapCallout = myMapView.getCallout();
+                    fabNavRoute.setVisibility(View.GONE);
                     mapCallout.hide();
 
                     for (IdentifyResult identifyResult : identifyResults) {
@@ -1677,6 +1732,7 @@ public class PowerOnActivity extends AppCompatActivity {
                             mapCallout.setContent(tv);
 
                             mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
                         } else {
                             Map<String, Object> attr = identifyResult.getAttributes();
                             CalloutTvClass oCall = oUtil.getCalloutValues(attr);

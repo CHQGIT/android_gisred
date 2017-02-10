@@ -117,7 +117,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "Encuestados", "Reemplazos"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos"};
 
     public String[] arrayTipoEdif = {};
     public String[] arrayTipoPoste = {};
@@ -199,6 +199,7 @@ public class TelemedidaActivity extends AppCompatActivity {
     FloatingActionButton fabShowDialog;
     FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
+    FloatingActionButton fabNavRoute;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -350,6 +351,28 @@ public class TelemedidaActivity extends AppCompatActivity {
 
         fabVerCapas = (FloatingActionButton) findViewById(R.id.action_ver_capa);
         if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
+
+        fabNavRoute = (FloatingActionButton) findViewById(R.id.action_nav_route);
+        if (fabNavRoute != null) {
+            fabNavRoute.setVisibility(View.GONE);
+            fabNavRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myMapView != null && myMapView.getCallout().isShowing()) {
+                        Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
+                        Util.QueryWaze(TelemedidaActivity.this, p);
+                    }
+                }
+            });
+
+            fabNavRoute.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Ir a Ruta", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+        }
 
         if (modulo.replace(" ", "_").equals(modTelemedida)) {
 
@@ -902,7 +925,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                     View oView = getLayoutValidate(viewDialog);
                     Util oUtil = new Util(oUbicacion);
 
-                    ArrayList<Map<String, Object>> oAttrToSave = oUtil.getAttrAddByView(oView, idResLayoutSelect);
+                    ArrayList<Map<String, Object>> oAttrToSave = oUtil.getAttrAddByView(oView, idResLayoutSelect, empresa);
 
                     Map<String, Object> attributes = oAttrToSave.get(0);
                     Graphic newFeatureGraphic = new Graphic(oUbicacion, null, attributes);
@@ -1098,6 +1121,7 @@ public class TelemedidaActivity extends AppCompatActivity {
         }
 
         bVerData = !bVerData;
+        fabNavRoute.setVisibility(View.GONE);
         myMapView.getCallout().hide();
     }
 
@@ -1782,29 +1806,31 @@ public class TelemedidaActivity extends AppCompatActivity {
                     break;
                 case "ADDPOSTE":
                     LyAddPoste = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddPoste.setDefinitionExpression("where ESTADO IS null");
+                    LyAddPoste.setDefinitionExpression(String.format("EMPRESA = '%s'", empresa));
                     LyAddPoste.setMinScale(8000);
                     LyAddPoste.setVisible(visibilidad);
                     break;
                 case "ADDADDRESS":
                     LyAddDireccion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddDireccion.setDefinitionExpression(String.format("EMPRESA = '%s'", empresa));
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTE":
                     LyAddCliente = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddCliente.setDefinitionExpression("ESTADO IS null");
+                    LyAddCliente.setDefinitionExpression(String.format("EMPRESA = '%s' AND ESTADO IS null", empresa));
                     LyAddCliente.setMinScale(6000);
                     LyAddCliente.setVisible(visibilidad);
                     break;
                 case "ADDCLIENTECNR":
                     LyAddClienteCnr = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddClienteCnr.setDefinitionExpression("ESTADO IS null");
+                    LyAddClienteCnr.setDefinitionExpression(String.format("EMPRESA = '%s' AND ESTADO IS null", empresa));
                     LyAddClienteCnr.setMinScale(6000);
                     LyAddClienteCnr.setVisible(visibilidad);
                     break;
                 case "ADDUNION":
                     LyAddUnion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddUnion.setDefinitionExpression(String.format("EMPRESA = '%s'", empresa));
                     LyAddUnion.setMinScale(4500);
                     LyAddUnion.setVisible(visibilidad);
                     break;
@@ -2374,6 +2400,28 @@ public class TelemedidaActivity extends AppCompatActivity {
                             Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
                             mBusquedaLayer.addGraphic(resultLocGraphic);
                         }
+
+                        Callout mapCallout = myMapView.getCallout();
+                        fabNavRoute.setVisibility(View.GONE);
+                        mapCallout.hide();
+
+                        StringBuilder outStr;
+                        Util oUtil = new Util();
+                        outStr = oUtil.getStringByAttrClass(feature.getAttributes());
+                        GisTextView tv = new GisTextView(TelemedidaActivity.this);
+                        tv.setText(outStr.toString());
+                        tv.setPoint((Point) feature.getGeometry());
+                        tv.setTextColor(Color.WHITE);
+
+                        mapCallout.setOffset(0, -3);
+                        mapCallout.setCoordinates(tv.getPoint());
+                        mapCallout.setMaxHeight(100);
+                        mapCallout.setMaxWidth(400);
+                        mapCallout.setStyle(R.xml.mycalloutprefs);
+                        mapCallout.setContent(tv);
+
+                        mapCallout.show();
+                        fabNavRoute.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -2501,6 +2549,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                     Util oUtil = new Util();
 
                     Callout mapCallout = myMapView.getCallout();
+                    fabNavRoute.setVisibility(View.GONE);
                     mapCallout.hide();
 
                     for (IdentifyResult identifyResult : identifyResults) {
@@ -2529,6 +2578,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                             mapCallout.setContent(tv);
 
                             mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
                         } else {
                             Map<String, Object> attr = identifyResult.getAttributes();
                             CalloutTvClass oCall = oUtil.getCalloutValues(attr);

@@ -106,7 +106,7 @@ public class StandardActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "Encuestados", "Reemplazos"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos"};
 
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
@@ -160,7 +160,7 @@ public class StandardActivity extends AppCompatActivity {
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
     FloatingActionButton fabShowDialog;
-    FloatingActionButton fabVerCapas;
+    FloatingActionButton fabNavRoute;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -305,8 +305,27 @@ public class StandardActivity extends AppCompatActivity {
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
         if (fabShowDialog != null) fabShowDialog.setVisibility(View.GONE);
 
-        fabVerCapas = (FloatingActionButton) findViewById(R.id.action_ver_capa);
-        if (fabVerCapas != null) fabVerCapas.setVisibility(View.GONE);
+        fabNavRoute = (FloatingActionButton) findViewById(R.id.action_nav_route);
+        if (fabNavRoute != null) {
+            fabNavRoute.setVisibility(View.GONE);
+            fabNavRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myMapView != null && myMapView.getCallout().isShowing()) {
+                        Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
+                        Util.QueryWaze(StandardActivity.this, p);
+                    }
+                }
+            });
+
+            fabNavRoute.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Ir a Ruta", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+        }
     }
 
     private void verifPermisos() {
@@ -567,6 +586,7 @@ public class StandardActivity extends AppCompatActivity {
         }
 
         bVerData = !bVerData;
+        fabNavRoute.setVisibility(View.GONE);
         myMapView.getCallout().hide();
     }
 
@@ -1492,6 +1512,29 @@ public class StandardActivity extends AppCompatActivity {
                             Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
                             mBusquedaLayer.addGraphic(resultLocGraphic);
                         }
+
+                        Callout mapCallout = myMapView.getCallout();
+                        fabNavRoute.setVisibility(View.GONE);
+                        mapCallout.hide();
+
+                        StringBuilder outStr;
+                        Util oUtil = new Util();
+                        outStr = oUtil.getStringByAttrClass(feature.getAttributes());
+
+                        GisTextView tv = new GisTextView(StandardActivity.this);
+                        tv.setText(outStr.toString());
+                        tv.setPoint((Point) feature.getGeometry());
+                        tv.setTextColor(Color.WHITE);
+
+                        mapCallout.setOffset(0, -3);
+                        mapCallout.setCoordinates(tv.getPoint());
+                        mapCallout.setMaxHeight(100);
+                        mapCallout.setMaxWidth(400);
+                        mapCallout.setStyle(R.xml.mycalloutprefs);
+                        mapCallout.setContent(tv);
+
+                        mapCallout.show();
+                        fabNavRoute.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -1619,6 +1662,7 @@ public class StandardActivity extends AppCompatActivity {
                     Util oUtil = new Util();
 
                     Callout mapCallout = myMapView.getCallout();
+                    fabNavRoute.setVisibility(View.GONE);
                     mapCallout.hide();
 
                     for (IdentifyResult identifyResult : identifyResults) {
@@ -1647,6 +1691,7 @@ public class StandardActivity extends AppCompatActivity {
                             mapCallout.setContent(tv);
 
                             mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
                         } else {
                             Map<String, Object> attr = identifyResult.getAttributes();
                             CalloutTvClass oCall = oUtil.getCalloutValues(attr);

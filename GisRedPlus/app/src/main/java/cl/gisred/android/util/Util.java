@@ -3,13 +3,17 @@ package cl.gisred.android.util;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -17,10 +21,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polyline;
+import com.esri.core.geometry.SpatialReference;
+import com.esri.core.map.Feature;
 import com.esri.core.map.Graphic;
+import com.esri.core.symbol.Symbol;
 import com.esri.core.tasks.identify.IdentifyResult;
 
 import java.net.InetAddress;
@@ -110,7 +119,7 @@ public class Util {
         return new CalloutTvClass(viewText.toString(), value, objectId, tipo);
     }
 
-    public ArrayList<Map<String, Object>> getAttrAddByView(View v, int idRes) {
+    public ArrayList<Map<String, Object>> getAttrAddByView(View v, int idRes, String emp) {
         Map<String, Object> objectMap = new HashMap<>();
         Map<String, Object> oMapDireccion = new HashMap<>();
         Map<String, Object> oMapPoste = new HashMap<>();
@@ -153,7 +162,7 @@ public class Util {
 
                     if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
                         if (oText.getId() == R.id.txtStreet)
-                            objectMap.put("CALLE", oText.getText().toString());
+                            objectMap.put("CALLE", oText.getText().toString().toUpperCase());
                         else if (oText.getId() == R.id.txtNumber)
                             objectMap.put("NUMERO", oText.getText().toString());
                         else if (oText.getId() == R.id.txtAnexo1)
@@ -267,6 +276,8 @@ public class Util {
                             objectMap.put("OS", oText.getText().toString());
                         else if (oText.getId() == R.id.txtNumMedidor)
                             objectMap.put("NUMERO_MEDIDOR", oText.getText().toString());
+                        else if (oText.getId() == R.id.txtNumIcp)
+                            objectMap.put("ICP", oText.getText().toString());
                     }
 
                 } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
@@ -286,6 +297,11 @@ public class Util {
                 }
             }
         }
+
+        //ADD Empresa 19/01/17
+        objectMap.put("EMPRESA", emp);
+        oMapDireccion.put("EMPRESA", emp);
+        oMapPoste.put("EMPRESA", emp);
 
         arrayMapAttr.add(objectMap);
         arrayMapAttr.add(oMapDireccion);
@@ -320,6 +336,21 @@ public class Util {
         return adds;
     }
 
+    public String formatCampoDB(String str) {
+        String formatStr = str.replace(".", " ");
+        String[] splitStr = formatStr.split(" ");
+
+        if (splitStr.length > 1) {
+            int nLast = splitStr.length - 1;
+            String resp = splitStr[nLast];
+
+            return resp;
+        }
+        else {
+            return str;
+        }
+    }
+
     public String formatCapitalize(String str) {
         String formatStr = str.replace("_", " ");
         String[] splitStr = formatStr.split(" ");
@@ -333,6 +364,29 @@ public class Util {
             }
         }
         return resp.trim();
+    }
+
+    public StringBuilder getStringByAttrClass(Map<String, Object> oAtrr) {
+        String LSP = System.getProperty("line.separator");
+        StringBuilder outStr = new StringBuilder();
+
+        for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {
+            String sKey = formatCampoDB(oKeyVal.getKey());
+            Log.w("MultiIdentifyResults", String.format("%s : %s", oKeyVal.getKey(), oKeyVal.getValue()));
+            Log.w("MultiIdentifyResultsXs", String.format("%s : %s", sKey, oKeyVal.getValue()));
+
+            if (!sKey.contains("id_") &&
+                    !sKey.contains("ID_") &&
+                    !sKey.equalsIgnoreCase("OBJECTID") &&
+                    !sKey.contains("SHAPE")) {
+
+                outStr.append(String.format("%s: %s", formatCapitalize(sKey), oKeyVal.getValue()));
+                outStr.append(LSP);
+            }
+        }
+
+        if (outStr.length() > 0) outStr.deleteCharAt(outStr.length() - 1);
+        return outStr;
     }
 
     public StringBuilder getStringByClassAttr(IdentifyResult identResult) {
@@ -372,17 +426,27 @@ public class Util {
 
         } else if (identResult.getLayerName().equalsIgnoreCase("Clientes")) {
 
-            outStr.append("CLIENTE"); outStr.append(LSP); outStr.append(LSP);
+            outStr.append("CLIENTE");
+            if (!identResult.getValue().toString().trim().isEmpty())
+                outStr.append(": " + identResult.getValue());
+            outStr.append(LSP); outStr.append(LSP);
+            String sTemp;
 
-            String[] keys = {"nis", "nm_estado_suministro", "categoria", "cd_area_tipica", "empalme", "nm_tarifa", "cd_sector", "cd_area", "consumidor", "zona",
-                    "nm_comuna", "oficina", "resp_tipo_cliente", "estado_direccion", "estado_poste", "estado_final", "resp_rotulo_nodo", "direccion_resu"};
+            if (identResult.getLayerId() == 0) {
+                String[] keys = {"nis", "nm_estado_suministro", "categoria", "cd_area_tipica", "empalme", "nm_tarifa", "cd_sector", "cd_area", "consumidor", "zona",
+                        "nm_comuna", "oficina", "resp_tipo_cliente", "estado_direccion", "estado_poste", "estado_final", "resp_rotulo_nodo", "direccion_resu"};
 
-            String sTemp = setValuesByKey(keys, oAtrr);
-            sTemp = sTemp.replace("Nm ", "");
-            sTemp = sTemp.replace("Cd ", "");
-            sTemp = sTemp.replace("Resp ", "");
-            sTemp = sTemp.replace(" Nodo", "");
-            sTemp = sTemp.replace(" Resu", "");
+                sTemp = setValuesByKey(keys, oAtrr);
+                sTemp = sTemp.replace("Nm ", "");
+                sTemp = sTemp.replace("Cd ", "");
+                sTemp = sTemp.replace("Resp ", "");
+                sTemp = sTemp.replace(" Nodo", "");
+                sTemp = sTemp.replace(" Resu", "");
+
+            } else {
+                String[] keys = {"id_orden", "tipo_orden", "estado_orden", "causa", "comentario", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada"};
+                sTemp = setValuesByKey(keys, oAtrr);
+            }
 
             outStr.append(sTemp);
 
@@ -420,6 +484,14 @@ public class Util {
             String[] keys = {"codigo", "nombre", "kva", "alimentador", "comuna", "montaje", "fecha"};
             outStr.append(setValuesByKey(keys, oAtrr));
 
+        } else if (identResult.getLayerName().equalsIgnoreCase("SED")) {
+
+            outStr.append("SED"); outStr.append(LSP); outStr.append(LSP);
+            if (!identResult.getValue().toString().trim().isEmpty())
+                outStr.append(": " + identResult.getValue());
+
+            String[] keys = {"id_orden", "tipo_orden", "estado_orden", "causa", "comentario", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada"};
+            outStr.append(setValuesByKey(keys, oAtrr));
         } else {
             isOrdenable = false;
         }
@@ -438,7 +510,7 @@ public class Util {
                 }
             }
 
-            outStr.deleteCharAt(outStr.length() - 1);
+            if (outStr.length() > 0) outStr.deleteCharAt(outStr.length() - 1);
         }
 
         return outStr;
@@ -456,7 +528,7 @@ public class Util {
             }
         }
 
-        outStr.deleteCharAt(outStr.length() - 1);
+        if (outStr.length() > 0) outStr.deleteCharAt(outStr.length() - 1);
 
         return outStr.toString();
     }
@@ -810,5 +882,28 @@ public class Util {
                 break;
         }
         return sValue;
+    }
+
+    public static void QueryWaze(Context oCtx, final Point point) {
+        try
+        {
+            String url = String.format("waze://?ll=%s,%s&navigate=yes", point.getY(), point.getX());
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+            oCtx.startActivity( intent );
+        }
+        catch ( ActivityNotFoundException ex  )
+        {
+            try {
+                String url = String.format("google.navigation:q=%s,%s", point.getY(), point.getX());
+                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+                oCtx.startActivity( intent );
+            }
+            catch (Exception e)
+            {
+                Intent intent =
+                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
+                oCtx.startActivity(intent);
+            }
+        }
     }
 }

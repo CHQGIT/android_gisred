@@ -85,7 +85,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".PowerOnActivity"
-            android:label="Power On"
+            android:label="Interrupciones"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
     </application>

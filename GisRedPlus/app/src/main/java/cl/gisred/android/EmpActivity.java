@@ -33,8 +33,6 @@ public class EmpActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.appEmp);
         setSupportActionBar(toolbar);
 
-        Log.w("EmpActivity inicia", " en modo " + getResources().getConfiguration().orientation);
-
         try {
             final Bundle bundle = getIntent().getExtras();
             aEmpresas = bundle.getStringArrayList("empresas");

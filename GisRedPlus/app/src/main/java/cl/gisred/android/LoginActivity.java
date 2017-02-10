@@ -20,6 +20,8 @@ import android.widget.Toast;
 import android.os.AsyncTask;
 
 import com.esri.android.map.ags.ArcGISFeatureLayer;
+import com.esri.core.io.EsriSecurityException;
+import com.esri.core.io.EsriServiceException;
 import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
@@ -149,10 +151,17 @@ public class LoginActivity extends AppCompatActivity {
                     sError = "Usuario ingresado no tiene permiso móvil";
 
                 return results;
-
+            } catch (EsriSecurityException esec) {
+                esec.printStackTrace();
+                sError = "Hubo un problema con credenciales en dominio " + domain;
+                return null;
+            } catch (EsriServiceException eser){
+                eser.printStackTrace();
+                sError = "Ocurrió un error en el servidor GISRED";
+                return null;
             } catch (Exception e) {
                 e.printStackTrace();
-                sError = "Credenciales inválidas en dominio " + domain;
+                sError = "Existe un problema de conectividad, intente nuevamente";
                 return null;
             }
         }
@@ -209,6 +218,7 @@ public class LoginActivity extends AppCompatActivity {
                 bundle.putStringArrayList("modulos", arrayModulos);
                 bundle.putStringArrayList("empresas", arrayEmpresas);
                 bundle.putStringArrayList("widgets", arrayWidgets);
+                bundle.putString("imei", sImei);
 
                 Map<String, Object> attributes = new HashMap<>();
 

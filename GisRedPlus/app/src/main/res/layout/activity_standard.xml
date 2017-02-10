@@ -55,7 +55,7 @@
                 fab:fab_colorPressed="@color/colorAccent"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/action_ver_capa"
+                android:id="@+id/action_nav_route"
                 android:elevation="8dp"
                 android:layout_below="@id/action_ver_data"
                 android:layout_gravity="start"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 app:fab_size="mini"
-                app:fab_icon="@drawable/ic_eye_off_white_24dp"
+                app:fab_icon="@drawable/ic_directions_white_24dp"
                 fab:fab_colorNormal="@color/colorPrimaryDark"
                 fab:fab_colorPressed="@color/colorAccent"/>
 

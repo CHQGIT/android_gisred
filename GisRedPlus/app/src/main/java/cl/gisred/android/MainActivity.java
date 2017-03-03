@@ -48,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "CATASTRO_AP", "INTERRUPCIONES"));
+    // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
         credenciales.setUserAccount(usuario, password);
-        oLayerAccess = new ArcGISFeatureLayer(getResources().getString(R.string.srv_LogAccess), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
+        //oLayerAccess = new ArcGISFeatureLayer(getResources().getString(R.string.srv_LogAccess), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
     }
 
     public void getWidgets()
@@ -121,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent oIntent;
                     Bundle oBundle = new Bundle();
 
-                    String sFecha = DateFormat.format("dd-MM-yyyy HH:mm:ss", new java.util.Date()).toString();
-                    String sPagina = String.format("Mobile-%s-%s", sEmpresa.toLowerCase(), datos[position].getTitulo().toLowerCase());
+                    //String sFecha = DateFormat.format("dd-MM-yyyy HH:mm:ss", new java.util.Date()).toString();
+                    //String sPagina = String.format("Mobile-%s-%s", sEmpresa.toLowerCase(), datos[position].getTitulo().toLowerCase());
 
                     if (datos[position].getTitulo().contains("CLIENTES")){
                         oIntent = new Intent(MainActivity.this, MapsActivity.class);
@@ -144,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
 
-                    Map<String, Object> attributes = new HashMap<>();
+                    //Comentado el 02/03/17 para optimizar carga de mapa
+                    /*Map<String, Object> attributes = new HashMap<>();
 
                     attributes.put("usuario", credenciales.getUserName());
                     attributes.put("fecha", sFecha);
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     Graphic newFeature = new Graphic(null, null, attributes);
                     Graphic[] addsLogin = {newFeature};
 
-                    oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());
+                    oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());*/
 
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);

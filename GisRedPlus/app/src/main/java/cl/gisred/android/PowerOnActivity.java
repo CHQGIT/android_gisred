@@ -55,6 +55,7 @@ import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.Line;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
@@ -272,8 +273,8 @@ public class PowerOnActivity extends AppCompatActivity {
         myMapView.addLayer(LyTORRESSTX, 17);
         myMapView.addLayer(LyENCUESTA, 18);
         myMapView.addLayer(LyREEMPLAZO, 19);
-        myMapView.addLayer(LyPOSED, 20);
-        myMapView.addLayer(LyPOTRAMO, 21);
+        myMapView.addLayer(LyPOTRAMO, 20);
+        myMapView.addLayer(LyPOSED, 21);
         myMapView.addLayer(LyPOCLIENTES, 22);
 
 
@@ -667,6 +668,7 @@ public class PowerOnActivity extends AppCompatActivity {
         Spinner spinner = (Spinner) v.findViewById(R.id.spinnerBusqueda);
         final LinearLayout llBuscar = (LinearLayout) v.findViewById(R.id.llBuscar);
         final LinearLayout llDireccion = (LinearLayout) v.findViewById(R.id.llBuscarDir);
+        final LinearLayout llOrden = (LinearLayout) v.findViewById(R.id.llBuscarOrden);
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, searchArray);
 
@@ -677,12 +679,18 @@ public class PowerOnActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = position;
 
-                if (position != 4) {
+                if (position == 5) {
                     if (llDireccion != null) llDireccion.setVisibility(View.GONE);
-                    if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
-                } else {
-                    if (llDireccion != null) llDireccion.setVisibility(View.VISIBLE);
                     if (llBuscar != null) llBuscar.setVisibility(View.GONE);
+                    if (llOrden != null) llOrden.setVisibility(View.VISIBLE);
+                } else if (position == 4) {
+                    if (llBuscar != null) llBuscar.setVisibility(View.GONE);
+                    if (llOrden != null) llOrden.setVisibility(View.GONE);
+                    if (llDireccion != null) llDireccion.setVisibility(View.VISIBLE);
+                } else {
+                    if (llDireccion != null) llDireccion.setVisibility(View.GONE);
+                    if (llOrden != null) llOrden.setVisibility(View.GONE);
+                    if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -695,6 +703,7 @@ public class PowerOnActivity extends AppCompatActivity {
         final EditText eSearch = (EditText) v.findViewById(R.id.txtBuscar);
         final EditText eStreet = (EditText) v.findViewById(R.id.txtCalle);
         final EditText eNumber = (EditText) v.findViewById(R.id.txtNum);
+        final EditText eOrder = (EditText) v.findViewById(R.id.txtOrden);
 
         dialogBusqueda.setPositiveButton("Buscar", new DialogInterface.OnClickListener() {
             @Override
@@ -705,6 +714,8 @@ public class PowerOnActivity extends AppCompatActivity {
                     if (!eStreet.getText().toString().isEmpty())
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
                     txtBusqueda = txtBusqueda + eStreet.getText().toString();
+                } else if (SpiBusqueda == 5){
+                    txtBusqueda = eOrder.getText().toString() + "-1";
                 } else {
                     txtBusqueda = eSearch.getText().toString();
                 }
@@ -1133,19 +1144,19 @@ public class PowerOnActivity extends AppCompatActivity {
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
                         LyREEMPLAZO.setVisible(visibilidad);
                         break;
-                    case "POSED":
+                    case "POTRAMO":
                         int array20[];
                         array20 = new int[1];
                         array20[0] = 0;
-                        LyPOSED = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
-                        LyPOSED.setVisible(visibilidad);
+                        LyPOTRAMO = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
+                        LyPOTRAMO.setVisible(visibilidad);
                         break;
-                    case "POTRAMO":
+                    case "POSED":
                         int array21[];
                         array21 = new int[1];
                         array21[0] = 2;
-                        LyPOTRAMO = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
-                        LyPOTRAMO.setVisible(visibilidad);
+                        LyPOSED = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
+                        LyPOSED.setVisible(visibilidad);
                         break;
                     case "POCLIENTES":
                         int array22[];
@@ -1566,6 +1577,12 @@ public class PowerOnActivity extends AppCompatActivity {
                         tv.setPoint((Point) feature.getGeometry());
                         tv.setTextColor(Color.WHITE);
 
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myMapView.getCallout().hide();
+                            }
+                        });
 
                         mapCallout.setOffset(0, -3);
                         mapCallout.setCoordinates(tv.getPoint());
@@ -1723,6 +1740,13 @@ public class PowerOnActivity extends AppCompatActivity {
                                     tv.setPoint(oUtil.calculateCenterPolyline(oPolyline));
                                 } else tv.setPoint(oPoint);
                             } else tv.setPoint((Point) identifyResult.getGeometry());
+
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myMapView.getCallout().hide();
+                                }
+                            });
 
                             mapCallout.setOffset(0, -3);
                             mapCallout.setCoordinates(tv.getPoint());

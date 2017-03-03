@@ -2093,6 +2093,13 @@ public class MapsActivity extends AppCompatActivity {
                         tv.setPoint((Point) feature.getGeometry());
                         tv.setTextColor(Color.WHITE);
 
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myMapView.getCallout().hide();
+                            }
+                        });
+
                         mapCallout.setOffset(0, -3);
                         mapCallout.setCoordinates(tv.getPoint());
                         mapCallout.setMaxHeight(100);
@@ -2249,6 +2256,13 @@ public class MapsActivity extends AppCompatActivity {
                                     tv.setPoint(oUtil.calculateCenterPolyline(oPolyline));
                                 } else tv.setPoint(oPoint);
                             } else tv.setPoint((Point) identifyResult.getGeometry());
+
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myMapView.getCallout().hide();
+                                }
+                            });
 
                             mapCallout.setOffset(0, -3);
                             mapCallout.setCoordinates(tv.getPoint());

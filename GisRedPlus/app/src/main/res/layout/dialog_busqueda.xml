@@ -66,4 +66,24 @@
 
     </LinearLayout>
 
+    <LinearLayout android:id="@+id/llBuscarOrden"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/txtOrden"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Númerio Orden (Sin dígito verificador)"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
+    </LinearLayout>
+
 </LinearLayout>

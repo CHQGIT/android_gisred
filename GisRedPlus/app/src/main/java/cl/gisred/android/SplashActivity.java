@@ -1,6 +1,7 @@
 package cl.gisred.android;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -272,13 +275,14 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+
     private CallbackListener<FeatureEditResult[][]> callBackIngreso() {
 
         runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
-                Toast.makeText(SplashActivity.this, "Registrando ingreso", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SplashActivity.this, "Registrando ingreso", Toast.LENGTH_SHORT).show();
             }
         });
 

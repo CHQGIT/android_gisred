@@ -8,22 +8,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
+
+import cl.gisred.android.classes.GifView;
 
 public class EmpActivity extends AppCompatActivity {
 
     ArrayList<String> aEmpresas;
+    Dialog formNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,20 +100,25 @@ public class EmpActivity extends AppCompatActivity {
                 });
             }
 
+            formNews = new Dialog(EmpActivity.this);
+            boolean bAbrir;
+
+            SharedPreferences oPref = getSharedPreferences("GisRedPrefs", Context.MODE_PRIVATE);
+            if (!oPref.contains("news")) { bAbrir = true; }
+            else {
+                if (oPref.getBoolean("news", true)) bAbrir = true;
+                else bAbrir = false;
+            }
+
+            if (bAbrir) {
+                abrirFormNews();
+                SharedPreferences.Editor editor = oPref.edit();
+                editor.putBoolean("news", false);
+                editor.apply();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "Landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(this, "Portrait", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -127,6 +140,9 @@ public class EmpActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_news:
+                abrirFormNews();
+                return true;
             case R.id.action_logout:
                 DialogoConfirmacion dialogo = new DialogoConfirmacion();
                 dialogo.show(getFragmentManager(), "tagAlerta");
@@ -134,6 +150,36 @@ public class EmpActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void abrirFormNews() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v;
+        if (Build.VERSION.SDK_INT < 23)
+            v = inflater.inflate(R.layout.form_news, null);
+        else
+            v = inflater.inflate(R.layout.form_news_6, null);
+
+        final int topeWidth = 650;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (int) ((widthSize * 3) / 4);
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+        formNews.setTitle("NOVEDADES GISRED");
+        formNews.setContentView(v);
+
+        FloatingActionButton fabClose = (FloatingActionButton) v.findViewById(R.id.actionClose);
+        fabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formNews.hide();
+            }
+        });
+
+        formNews.show();
     }
 
     @Override

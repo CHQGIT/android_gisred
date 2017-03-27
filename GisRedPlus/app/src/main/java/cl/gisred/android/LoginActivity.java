@@ -252,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Toast.makeText(LoginActivity.this, "Registrando ingreso", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, "Registrando ingreso", Toast.LENGTH_SHORT).show();
             }
         });
 

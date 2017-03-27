@@ -4,6 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".MainActivity">
 
+    <item android:id="@+id/action_news"
+        android:title="@string/action_news"
+        android:icon="@drawable/ic_information_outline_white_48dp"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText" />
+
     <item android:id="@+id/action_logout"
         android:title="@string/action_logout"
         android:icon="@drawable/ic_account_off_white_48dp"

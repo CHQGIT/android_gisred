@@ -21,6 +21,7 @@
     <string name="selecciona_una_opcion">Selecciona una opción</string>
     <string name="title_activity_main2">Main Activity</string>
     <string name="action_logout">Cerrar Sesión</string>
+    <string name="action_news">Novedades</string>
     <string name="action_search">Buscar</string>
     <string name="action_layers">Capas</string>
     <string name="action_maps">Mapas</string>

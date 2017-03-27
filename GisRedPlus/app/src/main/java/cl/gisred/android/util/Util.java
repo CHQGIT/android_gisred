@@ -16,6 +16,7 @@ import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -36,10 +37,12 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cl.gisred.android.BuildConfig;
 import cl.gisred.android.R;
@@ -366,22 +369,84 @@ public class Util {
         return resp.trim();
     }
 
-    public StringBuilder getStringByAttrClass(Map<String, Object> oAtrr) {
+    public String formatValCampoDB(Object o){
+        String sVal = "";
+        if (o != null) {
+            if (o.getClass().equals(Double.class)) {
+                sVal = String.valueOf(((Double) o).intValue());
+            } else if (o.getClass().equals(Long.class)){
+                Date date = new Date(Long.valueOf(o.toString()));
+                sVal = date.toGMTString();
+            } else {
+                sVal = o.toString();
+            }
+        }
+        return sVal;
+    }
+
+    public StringBuilder getStringByAttrClass(int numBusq, Map<String, Object> oAtrr) {
         String LSP = System.getProperty("line.separator");
         StringBuilder outStr = new StringBuilder();
+        Map<String, Object> oAttrAbrev = new HashMap<>();
 
         for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {
-            String sKey = formatCampoDB(oKeyVal.getKey());
-            Log.w("MultiIdentifyResults", String.format("%s : %s", oKeyVal.getKey(), oKeyVal.getValue()));
-            Log.w("MultiIdentifyResultsXs", String.format("%s : %s", sKey, oKeyVal.getValue()));
+            oAttrAbrev.put(formatCampoDB(oKeyVal.getKey()), formatValCampoDB(oKeyVal.getValue()));
+        }
 
-            if (!sKey.contains("id_") &&
-                    !sKey.contains("ID_") &&
-                    !sKey.equalsIgnoreCase("OBJECTID") &&
-                    !sKey.contains("SHAPE")) {
+        if (numBusq == 0) {
 
-                outStr.append(String.format("%s: %s", formatCapitalize(sKey), oKeyVal.getValue()));
-                outStr.append(LSP);
+            outStr.append("CLIENTE");
+            if (oAttrAbrev.containsKey("nis") && !oAttrAbrev.get("nis").toString().trim().isEmpty())
+                outStr.append(": " + oAttrAbrev.get("nis").toString());
+            outStr.append(LSP);
+            outStr.append(LSP);
+
+            String[] keys = {"nm_estado_suministro", "zona", "nm_tarifa", "categoria", "oficina", "nm_comuna", "empalme", "cd_sector", "cd_area", "consumidor",
+                    "resp_rotulo_nodo", "resp_id_sed", "direccion_resu"};
+
+            String sTemp = setValuesByKey(keys, oAttrAbrev);
+            sTemp = sTemp.replace("Nm ", "");
+            sTemp = sTemp.replace("Cd ", "");
+            sTemp = sTemp.replace("Resp ", "");
+            sTemp = sTemp.replace("Id ", "");
+            sTemp = sTemp.replace(" Nodo", "");
+            sTemp = sTemp.replace(" Resu", "");
+            sTemp = sTemp.replace(" Suministro", "");
+            sTemp = sTemp.replace("Sed", "SED");
+
+            outStr.append(sTemp);
+
+        } else if (numBusq == 1) {
+
+            outStr.append("SED");
+            if (oAttrAbrev.containsKey("codigo") && !oAttrAbrev.get("codigo").toString().trim().isEmpty())
+                outStr.append(": " + oAttrAbrev.get("codigo").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"nombre", "montaje", "alimentador", "comuna", "propiedad", "kva", "fecha"};
+            outStr.append(setValuesByKey(keys, oAttrAbrev));
+        } else if (numBusq == 2) {
+
+            outStr.append("POSTE");
+            if (oAttrAbrev.containsKey("rotulo") && !oAttrAbrev.get("rotulo").toString().trim().isEmpty())
+                outStr.append(". " + oAttrAbrev.get("rotulo").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
+            outStr.append(setValuesByKey(keys, oAttrAbrev));
+        } else {
+            //GENERICOS
+            for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {
+                String sKey = formatCampoDB(oKeyVal.getKey());
+
+                if (!sKey.contains("id_") &&
+                        !sKey.contains("ID_") &&
+                        !sKey.equalsIgnoreCase("OBJECTID") &&
+                        !sKey.contains("SHAPE")) {
+
+                    outStr.append(String.format("%s: %s", formatCapitalize(sKey), oKeyVal.getValue()));
+                    outStr.append(LSP);
+                }
             }
         }
 
@@ -402,26 +467,43 @@ public class Util {
                 outStr.append(LSP); outStr.append(LSP);
             }
 
-            String[] keys = {"rotulo", "sed", "alimentador", "comuna", "tipo", "catalogo", "cudn", "fecha", "año_poste"};
+            String[] keys = {"rotulo", "id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
             outStr.append(setValuesByKey(keys, oAtrr));
 
         } else if (identResult.getLayerName().equalsIgnoreCase("RED BT")) {
 
-            outStr.append("RED BT"); outStr.append(LSP); outStr.append(LSP);
+            outStr.append("RED BT");
+            if (oAtrr.containsKey("id_tramo") && !oAtrr.get("id_tramo").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("id_tramo").toString());
+            outStr.append(LSP); outStr.append(LSP);
 
-            String[] keys = {"sed", "alimentador", "comuna", "propiedad", "catalogo", "descripcion", "fecha", "cudn"};
-            outStr.append(setValuesByKey(keys, oAtrr));
+            String[] keys = {"alimentador", "comuna", "tipo", "propiedad", "sed", "catalogo", "descripcion", "fecha"};
+            String sTemp = setValuesByKey(keys, oAtrr);
+            sTemp = sTemp.replace("Sed:", "SED:");
+
+            outStr.append(sTemp);
 
         } else if (identResult.getLayerName().equalsIgnoreCase("RED AP")) {
 
-            outStr.append("RED AP"); outStr.append(LSP); outStr.append(LSP);
+            outStr.append("RED AP");
+            if (oAtrr.containsKey("id_tramo") && !oAtrr.get("id_tramo").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("id_tramo").toString());
+            outStr.append(LSP); outStr.append(LSP);
 
-            String[] keys = {"sed", "alimentador", "comuna", "propiedad", "descripcion"};
-            outStr.append(setValuesByKey(keys, oAtrr));
+            String[] keys = {"sed", "alimentador", "comuna", "tipo", "tipo_red", "propiedad", "catalogo", "descripcion", "fecha", "id_equipo_ap"};
+            String sTemp = setValuesByKey(keys, oAtrr);
+            sTemp = sTemp.replace("Sed:", "SED:");
 
-        } else if (identResult.getLayerName().equalsIgnoreCase("Equipos_linea_006")) {
+            outStr.append(sTemp);
 
-            String[] keys = {"nombre", "estado_normal", "descripcion", "estado", "alimentador", "fecha"};
+        } else if (identResult.getLayerName().equalsIgnoreCase("RED MT")) {
+
+            outStr.append("RED MT");
+            if (oAtrr.containsKey("id") && !oAtrr.get("id").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("id").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"alimentador", "comuna", "tipo", "propiedad", "catalogo", "descripcion", "tension", "fecha", "color"};
             outStr.append(setValuesByKey(keys, oAtrr));
 
         } else if (identResult.getLayerName().equalsIgnoreCase("Clientes")) {
@@ -433,72 +515,150 @@ public class Util {
             String sTemp;
 
             if (identResult.getLayerId() == 0) {
-                String[] keys = {"nis", "nm_estado_suministro", "categoria", "cd_area_tipica", "empalme", "nm_tarifa", "cd_sector", "cd_area", "consumidor", "zona",
-                        "nm_comuna", "oficina", "resp_tipo_cliente", "estado_direccion", "estado_poste", "estado_final", "resp_rotulo_nodo", "direccion_resu"};
+                String[] keys = {"nm_estado_suministro", "zona", "nm_tarifa", "categoria", "oficina", "nm_comuna", "empalme", "cd_sector", "cd_area", "consumidor",
+                        "resp_rotulo_nodo", "resp_id_sed", "direccion_resu"};
 
                 sTemp = setValuesByKey(keys, oAtrr);
                 sTemp = sTemp.replace("Nm ", "");
                 sTemp = sTemp.replace("Cd ", "");
                 sTemp = sTemp.replace("Resp ", "");
+                sTemp = sTemp.replace("Id ", "");
                 sTemp = sTemp.replace(" Nodo", "");
                 sTemp = sTemp.replace(" Resu", "");
+                sTemp = sTemp.replace(" Suministro", "");
+                sTemp = sTemp.replace("Sed", "SED");
 
             } else {
-                String[] keys = {"id_orden", "tipo_orden", "estado_orden", "causa", "comentario", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada"};
+                String[] keys = {"id_orden", "id_incidencia", "causa", "comentario", "estado_orden", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada", "TIEMPO_TRA", "etr"};
+
                 sTemp = setValuesByKey(keys, oAtrr);
+                sTemp = sTemp.replace("Id ", "ID ");
+                sTemp = sTemp.replace(" Orden", "");
+                sTemp = sTemp.replace("TIEMPO TRA", "Tiempo transcurrido");
+                sTemp = sTemp.replace("Etr", "ETR");
             }
 
             outStr.append(sTemp);
 
         } else if (identResult.getLayerName().equalsIgnoreCase("STx Torres")) {
 
-            String[] keys = {"nombre_obj", "empresa"};
-            String sTemp = setValuesByKey(keys, oAtrr);
-            sTemp = sTemp.replace(" Obj", "");
+            outStr.append("STx TORRE");
+            if (oAtrr.containsKey("nombre_obj") && !oAtrr.get("nombre_obj").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("nombre_obj").toString());
+            outStr.append(LSP); outStr.append(LSP);
 
-            outStr.append(sTemp);
+            String[] keys = {"empresa"};
+            outStr.append(setValuesByKey(keys, oAtrr));
 
         } else if (identResult.getLayerName().equalsIgnoreCase("STx TRAMOS")) {
 
-            String[] keys = {"nm_linea", "tension", "nm_tramo_l", "largo", "cable_guar", "circuito_s", "empresa"};
+            outStr.append("STx TRAMO");
+            if (oAtrr.containsKey("nm_linea") && !oAtrr.get("nm_linea").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("nm_linea").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"tension", "nm_tramo_l", "largo", "cable_guar", "empresa"};
             String sTemp = setValuesByKey(keys, oAtrr);
 
             sTemp = sTemp.replace("Nm Tramo L", "Tramo Linea");
-            sTemp = sTemp.replace("Nm ", "Nombre ");
-            sTemp = sTemp.replace(" S", "");
             sTemp = sTemp.replace(" Guar", " Guardia");
 
             outStr.append(sTemp);
 
         } else if (identResult.getLayerName().contains("Salida")) {
 
-            outStr.append("Salida Alimentador"); outStr.append(LSP); outStr.append(LSP);
+            outStr.append("Alimentador");
+            if (!identResult.getValue().toString().trim().isEmpty())
+                outStr.append(": " + identResult.getValue());
+            outStr.append(LSP); outStr.append(LSP);
 
-            String[] keys = {"nombre", "tension"};
+            String[] keys = {"id_alimentador", "color", "tension"};
             outStr.append(setValuesByKey(keys, oAtrr));
 
         } else if (identResult.getLayerName().contains("Subestaciones")) {
 
-            outStr.append("SED"); outStr.append(LSP); outStr.append(LSP);
+            outStr.append("SED");
+            if (oAtrr.containsKey("codigo") && !oAtrr.get("codigo").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("codigo").toString());
+            outStr.append(LSP); outStr.append(LSP);
 
-            String[] keys = {"codigo", "nombre", "kva", "alimentador", "comuna", "montaje", "fecha"};
+            String[] keys = {"nombre", "montaje", "alimentador", "comuna", "propiedad", "kva", "fecha"};
             outStr.append(setValuesByKey(keys, oAtrr));
 
         } else if (identResult.getLayerName().equalsIgnoreCase("SED")) {
 
-            outStr.append("SED"); outStr.append(LSP); outStr.append(LSP);
-            if (!identResult.getValue().toString().trim().isEmpty())
-                outStr.append(": " + identResult.getValue());
+            outStr.append("SED");
+            if (oAtrr.containsKey("ARCGIS.DBO.SED_006.codigo") && !oAtrr.get("ARCGIS.DBO.SED_006.codigo").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("ARCGIS.DBO.SED_006.codigo").toString());
+            outStr.append(LSP); outStr.append(LSP);
 
-            String[] keys = {"id_orden", "tipo_orden", "estado_orden", "causa", "comentario", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada"};
+            String[] keys = {"id_orden", "id_incidencia", "alimentador", "causa", "comentario", "estado_orden", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada", "TIEMPO_TRA", "etr"};
+
+            String sTemp = setValuesByKey(keys, oAtrr);
+            sTemp = sTemp.replace("Id ", "ID ");
+            sTemp = sTemp.replace(" Orden", "");
+            sTemp = sTemp.replace("TIEMPO TRA", "Tiempo transcurrido");
+            sTemp = sTemp.replace("Etr", "ETR");
+
+            outStr.append(sTemp);
+
+        } else if (identResult.getLayerName().equalsIgnoreCase("Equipos_linea_006")) {
+
+            outStr.append("Equipo Linea");
+            if (oAtrr.containsKey("id_equipo") && !oAtrr.get("id_equipo").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("id_equipo").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"tipo", "nombre", "alimentador", "descripcion", "propiedad", "catalogo", "estado", "estado_normal", "tension", "fecha"};
+
             outStr.append(setValuesByKey(keys, oAtrr));
+
+        } else if (identResult.getLayerName().equalsIgnoreCase("Empalmes")) {
+
+            outStr.append("Empalme");
+            if (oAtrr.containsKey("empalme") && !oAtrr.get("empalme").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("empalme").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"nis", "tipo_nodo"};
+
+            outStr.append(setValuesByKey(keys, oAtrr));
+
+        } else if (identResult.getLayerName().equalsIgnoreCase("DMPS_DIRECCIONES")) {
+
+            outStr.append("Dirección");
+            if (oAtrr.containsKey("id_direccion") && !oAtrr.get("id_direccion").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("id_direccion").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"nombre_calle", "numero", "comuna", "tipo_edificacion"};
+
+            String sTemp = setValuesByKey(keys, oAtrr);
+            sTemp = sTemp.replace("Tipo ", "");
+
+            outStr.append(sTemp);
+
+        } else if (identResult.getLayerName().equalsIgnoreCase("LUMINARIAS")) {
+
+            outStr.append("Luminaria");
+            if (oAtrr.containsKey("potencia") && !oAtrr.get("potencia").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("potencia").toString());
+            outStr.append(LSP); outStr.append(LSP);
+
+            String[] keys = {"tipo_cnx", "catalogo", "propiedad", "descripcion", "nm_comuna"};
+
+            String sTemp = setValuesByKey(keys, oAtrr);
+            sTemp = sTemp.replace(" Cnx", " Conexión");
+            sTemp = sTemp.replace("Nm ", "");
+
+            outStr.append(sTemp);
         } else {
             isOrdenable = false;
         }
 
         if (!isOrdenable) {
             for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {
-                Log.w("MultiIdentifyResults", String.format("%s : %s", oKeyVal.getKey(), oKeyVal.getValue()));
+                //Log.w("MultiIdentifyResults", String.format("%s : %s", oKeyVal.getKey(), oKeyVal.getValue()));
 
                 if (!oKeyVal.getKey().contains("id_") &&
                         !oKeyVal.getKey().contains("ID_") &&
@@ -522,7 +682,9 @@ public class Util {
         StringBuilder outStr = new StringBuilder();
 
         for (String key : keys) {
-            if (oAtrr.containsKey(key) && !oAtrr.get(key).toString().trim().isEmpty()) {
+            //13/03/2017 se muestran tal cual
+            //if (oAtrr.containsKey(key) && !oAtrr.get(key).toString().trim().isEmpty()) {
+            if (oAtrr.containsKey(key)) {
                 outStr.append(String.format("%s: %s", formatCapitalize(key), oAtrr.get(key).toString()));
                 outStr.append(LSP);
             }

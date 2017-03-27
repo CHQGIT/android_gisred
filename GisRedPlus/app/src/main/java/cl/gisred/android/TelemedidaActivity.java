@@ -2173,7 +2173,9 @@ public class TelemedidaActivity extends AppCompatActivity {
                             myMapView.removeLayer(oLyViewGraphs);
 
                         oLyViewGraphs = new GraphicsLayer();
-                        Graphic oGraph = new Graphic(oPoint, new SimpleMarkerSymbol(R.color.green, 12, SimpleMarkerSymbol.STYLE.CIRCLE));
+                        SimpleMarkerSymbol oMarketSymbol = new SimpleMarkerSymbol(Color.BLACK, 10, SimpleMarkerSymbol.STYLE.CIRCLE);
+                        oMarketSymbol.setOutline(new SimpleLineSymbol(Color.RED, 1, SimpleLineSymbol.STYLE.SOLID));
+                        Graphic oGraph = new Graphic(oPoint, oMarketSymbol);
                         oLyViewGraphs.addGraphic(oGraph);
 
                         myMapView.addLayer(oLyViewGraphs);
@@ -2407,7 +2409,7 @@ public class TelemedidaActivity extends AppCompatActivity {
 
                         StringBuilder outStr;
                         Util oUtil = new Util();
-                        outStr = oUtil.getStringByAttrClass(feature.getAttributes());
+                        outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
                         GisTextView tv = new GisTextView(TelemedidaActivity.this);
                         tv.setText(outStr.toString());
                         tv.setPoint((Point) feature.getGeometry());
@@ -2417,6 +2419,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 myMapView.getCallout().hide();
+                                fabNavRoute.setVisibility(View.GONE);
                             }
                         });
 
@@ -2581,6 +2584,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     myMapView.getCallout().hide();
+                                    fabNavRoute.setVisibility(View.GONE);
                                 }
                             });
 

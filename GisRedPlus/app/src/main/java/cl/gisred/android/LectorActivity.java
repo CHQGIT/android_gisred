@@ -2,11 +2,9 @@ package cl.gisred.android;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +15,6 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -81,17 +77,14 @@ import com.esri.core.tasks.query.QueryTask;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
 import cl.gisred.android.entity.CalloutTvClass;
-import cl.gisred.android.util.HtmlUtils;
 import cl.gisred.android.util.Util;
 
 public class LectorActivity extends AppCompatActivity {
@@ -132,6 +125,7 @@ public class LectorActivity extends AppCompatActivity {
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
     public String[] arrayEstado = {};
+    public String[] arrayUserCosenza = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -193,7 +187,7 @@ public class LectorActivity extends AppCompatActivity {
     Dialog dialogCrear;
     Dialog formCrear;
     Dialog dialogCur;
-    boolean bInspRotulo = true;
+    boolean bIngCliente = true;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
@@ -303,7 +297,6 @@ public class LectorActivity extends AppCompatActivity {
         btnGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     alertNoGps();
@@ -362,7 +355,7 @@ public class LectorActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(LectorActivity.this, p);
+                        Util.QueryNavigation(LectorActivity.this, p);
                     }
                 }
             });
@@ -378,11 +371,20 @@ public class LectorActivity extends AppCompatActivity {
         if (modulo.replace(" ", "_").equals(modLectores)) {
 
             setLayersURL(this.getResources().getString(R.string.srv_Lectores), "SRV_LECTORES");
+            setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
+            setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
+
             addLayersToMap(credenciales, "FEATURE", "ADDLECTOR", srv_lectores, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
+
             myMapView.addLayer(LyAddLectores, 20);
+            myMapView.addLayer(LyAddPoste, 21);
+            myMapView.addLayer(LyAddDireccion, 22);
 
             arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
             arrayEstado = getResources().getStringArray(R.array.estado_lectura);
+            arrayUserCosenza = getResources().getStringArray(R.array.user_cosenza);
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
@@ -468,24 +470,18 @@ public class LectorActivity extends AppCompatActivity {
                 setOpcion(actionC, modIngreso + "_TECNO");
                 setOpcion(actionD, modIngreso + "_CNR");
 
-                setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
-                setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
                 setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
                 setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
                 setLayersURL(din_urlTramos, "TRAMOS");
                 setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
                 setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
 
-                addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
-                addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
                 addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
                 addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
                 addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
                 addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
                 addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-                myMapView.addLayer(LyAddPoste, 21);
-                myMapView.addLayer(LyAddDireccion, 22);
                 myMapView.addLayer(LyAddCliente, 23);
                 myMapView.addLayer(LyAddUnion, 24);
                 myMapView.addLayer(LyAsocTramo, 25);
@@ -494,7 +490,9 @@ public class LectorActivity extends AppCompatActivity {
 
                 setLayerAddToggle(false);
             } else {
+                bIngCliente = false;
                 menuMultipleActions.setVisibility(View.GONE);
+                //Informar al usuario que carece de permisos para ver y usar la capa de ingreso clientes comun
             }
 
         } else {
@@ -615,7 +613,7 @@ public class LectorActivity extends AppCompatActivity {
 
         if (!bEnable) {
             for (View view : vDialog.getTouchables()) {
-                if (view.getId() != R.id.btnUbicacion && view.getId() != R.id.btnCancelar)
+                if (view.getId() != R.id.btnUbicacion && view.getId() != R.id.btnCancelar && view.getId() != R.id.txtNis && view.getId() != R.id.btnVerifNis)
                     arrayTouchs.add(view);
             }
         }
@@ -673,6 +671,14 @@ public class LectorActivity extends AppCompatActivity {
         return contRequeridos;
     }
 
+    private View getLayoutChkNis(View v) {
+        if (v.getId() == R.id.llCliente) {
+            return (View) v.getParent();
+        } else {
+            return getLayoutChkNis((View) v.getParent());
+        }
+    }
+
     private View getLayoutValidate(View v) {
         if (v.getId() == R.id.actionDialog) {
             return (View) v.getParent();
@@ -688,6 +694,25 @@ public class LectorActivity extends AppCompatActivity {
     }
 
     private void setValueToAsoc(View v) {
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                oTxtAsoc = (GisEditText) view;
+            }
+        }
+    }
+
+    private String getValueNis(View v) {
+        String sResp = "";
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                sResp = ((EditText) view).getText().toString();
+                break;
+            }
+        }
+        return sResp;
+    }
+
+    private void setValuesByNis(View v) {
         for (View view : v.getTouchables()) {
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 oTxtAsoc = (GisEditText) view;
@@ -836,6 +861,8 @@ public class LectorActivity extends AppCompatActivity {
                             objectMap.put("estado", sValue);
                         else if (oSpinner.getId() == R.id.spinnerTipoEdific)
                             objectMap.put("tipo_edificacion", sValue);
+                        else if (oSpinner.getId() == R.id.spinnerUser)
+                            objectMap.put("lector", sValue);
                     }
                 }
 
@@ -891,7 +918,7 @@ public class LectorActivity extends AppCompatActivity {
 
         if (bVerCapas) toogleCapas(fabVerCapas);
 
-        menuMultipleActions.setVisibility(View.VISIBLE);
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
         menuLectorActions.setVisibility(View.VISIBLE);
         fabShowForm.setVisibility(View.GONE);
         formCrear.dismiss();
@@ -996,7 +1023,7 @@ public class LectorActivity extends AppCompatActivity {
         oUbicacion = null;
         if (bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(false);
-        menuMultipleActions.setVisibility(View.VISIBLE);
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
         menuLectorActions.setVisibility(View.VISIBLE);
         fabShowDialog.setVisibility(View.GONE);
         dialogCrear.dismiss();
@@ -1019,8 +1046,10 @@ public class LectorActivity extends AppCompatActivity {
     private void abrirFormIngreso(View view) {
 
         FloatingActionButton fabTemp = (FloatingActionButton) view;
-        menuMultipleActions.collapse();
-        menuMultipleActions.setVisibility(View.GONE);
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
 
         menuLectorActions.collapse();
         menuLectorActions.setVisibility(View.GONE);
@@ -1331,6 +1360,10 @@ public class LectorActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
+        Spinner spUserCosenza = (Spinner) v.findViewById(R.id.spinnerUser);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayUserCosenza);
+        spUserCosenza.setAdapter(adapter);
+
         Spinner spEstado = (Spinner) v.findViewById(R.id.spinnerEstado);
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstado);
         spEstado.setAdapter(adapter);
@@ -1529,6 +1562,20 @@ public class LectorActivity extends AppCompatActivity {
             return;
         }
 
+        ImageButton btnVerifNis = (ImageButton) v.findViewById(R.id.btnVerifNis);
+        btnVerifNis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sUrl = (idResLayoutSelect == R.layout.dialog_cliente) ? srv_urlClientes : srv_urlClientesCnr;
+                String sNis = getValueNis(getLayoutContenedor(v));
+                if (!sNis.isEmpty()) {
+                    verifNisQuery(sNis, "nis", sUrl, v);
+                } else {
+                    Toast.makeText(getApplicationContext(), "El campo NIS está vacío", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         ImageButton btnAsocDireccion = (ImageButton) v.findViewById(R.id.btnAsocDireccion);
         btnAsocDireccion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1551,7 +1598,6 @@ public class LectorActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddPoste;
                 oLyExistAsoc = LyPOSTES;
-                Log.w("[InspActivity]", "HIDE DIALOG POSTE");
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1566,11 +1612,17 @@ public class LectorActivity extends AppCompatActivity {
                     bCallOut = true;
                     nIndentify = 2; //2 = valor para tramo
                     oLySelectAsoc = LyAsocTramo;
-                    Log.w("[InspActivity]", "HIDE DIALOG TRAMO");
                     setValueToAsoc(getLayoutContenedor(v));
                 }
             });
         }
+    }
+
+    public void verifNisQuery(String txtBusqueda, String nomCampo, String dirUrl, View v) {
+        String sWhere = String.format("%s = %s", nomCampo, txtBusqueda);
+
+        NisVerifResult queryTask = new NisVerifResult(getLayoutChkNis(v));
+        queryTask.execute(sWhere, dirUrl);
     }
 
     public void callQuery(String txtBusqueda, String nomCampo, String dirUrl) {
@@ -1686,12 +1738,15 @@ public class LectorActivity extends AppCompatActivity {
     public void setLayerAddToggle(boolean visible) {
         LyAddPoste.setVisible(visible);
         LyAddDireccion.setVisible(visible);
-        LyAddCliente.setVisible(visible);
-        LyAddUnion.setVisible(visible);
-        LyAddClienteCnr.setVisible(visible);
         LyAddLectores.setVisible(visible);
-        LyAsocTramo.setVisible(false);
-        LyAsocCalle.setVisible(false);
+
+        if (bIngCliente) {
+            LyAddCliente.setVisible(visible);
+            LyAddUnion.setVisible(visible);
+            LyAddClienteCnr.setVisible(visible);
+            LyAsocTramo.setVisible(false);
+            LyAsocCalle.setVisible(false);
+        }
 
         if (fabShowDialog.getVisibility() == View.VISIBLE) {
             if (idResLayoutSelect == R.layout.dialog_cliente_cnr) LyAsocTramo.setVisible(visible);
@@ -2293,6 +2348,84 @@ public class LectorActivity extends AppCompatActivity {
         }
 
         return point;
+    }
+
+    private class NisVerifResult extends AsyncTask<String, Void, FeatureResult> {
+
+        View vLayout;
+
+        public NisVerifResult(View v) {
+            vLayout = v;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(LectorActivity.this);
+            progress = ProgressDialog.show(LectorActivity.this, "",
+                    "Verificando NIS.");
+        }
+
+        @Override
+        protected FeatureResult doInBackground(String... params) {
+            try {
+                String whereClause = params[0];
+                QueryParameters myParameters = new QueryParameters();
+                myParameters.setWhere(whereClause);
+
+                myParameters.setReturnGeometry(true);
+                String[] outfields = new String[]{"*"};
+                myParameters.setOutFields(outfields);
+
+                String url = params[1];
+                FeatureResult results;
+
+                QueryTask queryTask = new QueryTask(url, credenciales);
+                results = queryTask.execute(myParameters);
+
+                return results;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(FeatureResult results) {
+            if (results != null) {
+                int numResult = (int) results.featureCount();
+
+                if (numResult > 0) {
+                    for (Object element : results) {
+                        progress.incrementProgressBy(numResult / 100);
+
+                        if (element instanceof Feature) {
+
+                            Feature feature = (Feature) element;
+                            myMapView.setExtent(feature.getGeometry(), 0, true);
+                            Util oUtil = new Util();
+
+                            oUbicacion = myMapView.getCenter();
+
+                            oUtil.setAttrInView(idResLayoutSelect, vLayout, feature.getAttributes());
+
+                            /*GisTextView tv = new GisTextView(MapsActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) feature.getGeometry());*/
+
+                            break;
+                        }
+                    }
+
+                    myMapView.zoomin(true);
+                } else {
+                    Toast.makeText(LectorActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(LectorActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
+            }
+            progress.dismiss();
+        }
     }
 
     private class AsyncQueryTask extends AsyncTask<String, Void, FeatureResult> {

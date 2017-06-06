@@ -57,6 +57,8 @@ public class Util {
     public static final int REQUEST_READ_PHONE_STATE = 1001;
     public static final int REQUEST_ACCESS_FINE_LOCATION = 1002;
     public static final int REQUEST_CAMERA = 1003;
+    public static final int REQUEST_READ_EXTERNAL_STORAGE = 1004;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1005;
     private Point oUbic = null;
 
     public Util(Point mPoint) {
@@ -120,6 +122,52 @@ public class Util {
         viewText.deleteCharAt(viewText.length() - 1);
 
         return new CalloutTvClass(viewText.toString(), value, objectId, tipo);
+    }
+
+    public void setAttrInView(int idRes, View v, Map<String, Object> oAttr) {
+
+        if (idRes == R.layout.dialog_cliente) {
+
+            for (View view : v.getTouchables()) {
+
+                if (view.getClass().equals(GisEditText.class)) {
+                    GisEditText oText = (GisEditText) view;
+
+                    if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
+                        /*if (oText.getId() == R.id.txtAsocAddress) {
+                            objectMap.put("ID_DIRECCION", oText.getIdObjeto());
+                            objectMap.put("TIPO_DIRECCION", oText.getTipo());
+
+                            oMapDireccion.put("ID_DIRECCION", oText.getIdObjeto());
+                            oMapUbicacion.put("DIRECCION_POINT", oText.getPoint());
+                        } else if (oText.getId() == R.id.txtAsocPoste) {
+                            objectMap.put("ID_POSTE_CAMARA", oText.getIdObjeto());
+                            objectMap.put("TIPO_POSTE_CAMARA", oText.getTipo());
+
+                            oMapPoste.put("ID_POSTE", oText.getIdObjeto());
+                            oMapPoste.put("ROTULO", oText.getText().toString());
+                            oMapUbicacion.put("POSTE_POINT", oText.getPoint());
+                        }*/
+                    }
+
+                } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                    EditText oText = (EditText) view;
+
+                    //VALIDAR contains oAttr.get("OS").toString() and isEmpty()
+
+                    if (oText.getText() != null) {
+                        if (oText.getId() == R.id.txtOS)
+                            oText.setText(formatValCampoDB(oAttr.get("OS")));
+                        else if (oText.getId() == R.id.txtNumMedidor)
+                            oText.setText(formatValCampoDB(oAttr.get("NUMERO_MEDIDOR")));
+                    }
+
+                }
+            }
+
+        } else if (idRes == R.layout.dialog_cliente_cnr) {
+
+        }
     }
 
     public ArrayList<Map<String, Object>> getAttrAddByView(View v, int idRes, String emp) {
@@ -237,6 +285,8 @@ public class Util {
                         objectMap.put("TIPO_TECNOLOGIA", sValue);
                     else if (oSpinner.getId() == R.id.spinnerTipoEmpalme)
                         objectMap.put("TIPO_EMPALME", sValue);
+                    else if (oSpinner.getId() == R.id.spinnerFaseConex)
+                        objectMap.put("FASE_CONEXION", sValue);
                 }
             }
         } else if (idRes == R.layout.dialog_cliente_cnr) {
@@ -448,9 +498,10 @@ public class Util {
                     outStr.append(LSP);
                 }
             }
+
+            if (outStr.length() > 0) outStr.deleteCharAt(outStr.length() - 1);
         }
 
-        if (outStr.length() > 0) outStr.deleteCharAt(outStr.length() - 1);
         return outStr;
     }
 
@@ -509,8 +560,8 @@ public class Util {
         } else if (identResult.getLayerName().equalsIgnoreCase("Clientes")) {
 
             outStr.append("CLIENTE");
-            if (!identResult.getValue().toString().trim().isEmpty())
-                outStr.append(": " + identResult.getValue());
+            if (oAtrr.containsKey("nis") && !oAtrr.get("nis").toString().trim().isEmpty())
+                outStr.append(": " + oAtrr.get("nis").toString());
             outStr.append(LSP); outStr.append(LSP);
             String sTemp;
 
@@ -1046,7 +1097,30 @@ public class Util {
         return sValue;
     }
 
-    public static void QueryWaze(Context oCtx, final Point point) {
+    public static void QueryNavigation(Context oCtx, final Point point) {
+        try
+        {
+            String url = String.format("geo:%s,%s", point.getY(), point.getX());
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+            oCtx.startActivity( intent );
+        }
+        catch ( ActivityNotFoundException ex  )
+        {
+            try {
+                String url = String.format("google.navigation:q=%s,%s", point.getY(), point.getX());
+                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+                oCtx.startActivity( intent );
+            }
+            catch (Exception e)
+            {
+                Intent intent =
+                        new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
+                oCtx.startActivity(intent);
+            }
+        }
+    }
+
+    public static void QueryWazeDef(Context oCtx, final Point point) {
         try
         {
             String url = String.format("waze://?ll=%s,%s&navigate=yes", point.getY(), point.getX());

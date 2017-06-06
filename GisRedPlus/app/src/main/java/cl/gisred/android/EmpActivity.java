@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -155,20 +157,36 @@ public class EmpActivity extends AppCompatActivity {
     private void abrirFormNews() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v;
-        if (Build.VERSION.SDK_INT < 23)
-            v = inflater.inflate(R.layout.form_news, null);
-        else
-            v = inflater.inflate(R.layout.form_news_6, null);
 
-        final int topeWidth = 650;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int widthSize = displayMetrics.widthPixels;
-        int widthScale = (int) ((widthSize * 3) / 4);
-        if (topeWidth < widthScale) widthScale = topeWidth;
+        int widthScale = (widthSize * 3) / 4;
+
+        if (Build.VERSION.SDK_INT < 21) {
+            v = inflater.inflate(R.layout.form_news, null);
+            ImageView imgAbout1 = (ImageView) v.findViewById(R.id.imgAbout1);
+            imgAbout1.setImageResource(R.drawable.img_about_old);
+        } else {
+            v = inflater.inflate(R.layout.form_news_card, null);
+            ImageView imgAbout1 = (ImageView) v.findViewById(R.id.imgAbout1);
+            ImageView imgAbout2 = (ImageView) v.findViewById(R.id.imgAbout2);
+
+            if (widthSize <= 540){
+                imgAbout1.setImageResource(R.drawable.img_nov_sma);
+                imgAbout2.setImageResource(R.drawable.img_waz_sma);
+            } else if (widthSize <= 720){
+                imgAbout1.setImageResource(R.drawable.img_nov_med);
+                imgAbout2.setImageResource(R.drawable.img_waz_med);
+            } else if (widthSize > 720){
+                imgAbout1.setImageResource(R.drawable.img_nov_lar);
+                imgAbout2.setImageResource(R.drawable.img_waz_lar);
+            }
+        }
 
         v.setMinimumWidth(widthScale);
-        formNews.setTitle("NOVEDADES GISRED");
+
+        if (Build.VERSION.SDK_INT < 21) formNews.setTitle("NOVEDADES GISRED");
         formNews.setContentView(v);
 
         FloatingActionButton fabClose = (FloatingActionButton) v.findViewById(R.id.actionClose);

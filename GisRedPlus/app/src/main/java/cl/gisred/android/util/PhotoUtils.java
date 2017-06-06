@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,6 +50,21 @@ public class PhotoUtils {
         }
     }
 
+    public static File createFileExternal(String name, String ext, Context myContext) throws Exception {
+        if (myContext != null) {
+            String path = myContext.getExternalFilesDir(null).getAbsolutePath() + "/insp/";
+            File tempDir = new File(path);
+            if (!tempDir.exists()) {
+                tempDir.mkdir();
+            }
+
+            return new File(tempDir, String.format("%s.%s", name, ext));
+        }
+        else {
+            return null;
+        }
+    }
+
     public static File createTemporaryFile(String part, String ext, Context myContext) throws Exception {
         if (myContext != null) {
             String path = myContext.getExternalCacheDir().getAbsolutePath() + "/insp/";
@@ -64,10 +80,10 @@ public class PhotoUtils {
         }
     }
 
-    public static void createFirma(Bitmap sData, Context myContext) throws Exception {
+    public static void createFirma(Bitmap sData, Context myContext, String sNom) throws Exception {
         try
         {
-            File oFile = PhotoUtils.createFile("firma", "jpg", myContext);
+            File oFile = PhotoUtils.createFile(sNom, "jpg", myContext);
             oFile.createNewFile();
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -81,7 +97,7 @@ public class PhotoUtils {
         }
         catch (Exception ex)
         {
-            Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+            Toast.makeText(myContext, "No es posible guardar la firma, si el problema persiste contacte soporte", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -123,7 +139,7 @@ public class PhotoUtils {
         }
         catch (Exception ex)
         {
-            Log.e("Ficheros", "Error al escribir fichero a memoria interna: " +ex.getMessage());
+            Toast.makeText(mContext, "No es posible acceder a la imagen, intente nuevamente", Toast.LENGTH_SHORT).show();
         }
     }
 

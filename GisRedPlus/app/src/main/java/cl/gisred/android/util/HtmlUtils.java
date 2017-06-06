@@ -24,9 +24,11 @@ public class HtmlUtils {
     static final String IMG = "img";
     static final String TXT = "txt";
     static final String CHK = "chk";
+    static final String RAD = "rad";
     private int iSub = 0;
     private String htmlFinal;
     private String path;
+    public double sumHH = 0.0;
 
     public HtmlUtils(String sHtml) {
         mHtml = sHtml;
@@ -299,11 +301,260 @@ public class HtmlUtils {
             case R.id.chkVerif5:
                 sValue = "chk_5_";
                 break;
-            case R.id.txtNomInst:
-                sValue = "nombre";
+            case R.id.chkConsVerif1:
+                sValue = "chkc_1_";
                 break;
-            case R.id.txtRut:
-                sValue = "rut";
+            case R.id.chkConsVerif2:
+                sValue = "chkc_2_";
+                break;
+            case R.id.chkConsVerif3:
+                sValue = "chkc_3_";
+                break;
+            case R.id.chkConsVerif4:
+                sValue = "chkc_4_";
+                break;
+            case R.id.chkConsVerif5:
+                sValue = "chkc_5_";
+                break;
+            case R.id.txtNomInst:
+                sValue = "nom_prop";
+                break;
+            case R.id.txtRutInst:
+                sValue = "rut_pro";
+                break;
+            case R.id.txtNomTecn:
+                sValue = "nom_tecn";
+                break;
+            case R.id.txtRutTecn:
+                sValue = "rut_tecn";
+                break;
+            case R.id.txtMat1:
+                sValue = "txt_mat01";
+                break;
+            case R.id.txtMat2:
+                sValue = "txt_mat02";
+                break;
+            case R.id.txtMat3:
+                sValue = "txt_mat03";
+                break;
+            case R.id.txtMat4:
+                sValue = "txt_mat04";
+                break;
+            case R.id.txtMat5:
+                sValue = "txt_mat05";
+                break;
+            case R.id.txtMat6:
+                sValue = "txt_mat06";
+                break;
+            case R.id.txtMat7:
+                sValue = "txt_mat07";
+                break;
+            case R.id.txtMat8:
+                sValue = "txt_mat08";
+                break;
+            case R.id.txtMat9:
+                sValue = "txt_mat09";
+                break;
+            case R.id.txtMat10:
+                sValue = "txt_mat10";
+                break;
+            case R.id.txtMat11:
+                sValue = "txt_mat11";
+                break;
+            case R.id.txtMat12:
+                sValue = "txt_mat12";
+                break;
+            case R.id.txtMat13:
+                sValue = "txt_mat13";
+                break;
+            case R.id.txtMat14:
+                sValue = "txt_mat14";
+                break;
+            case R.id.txtMat15:
+                sValue = "txt_mat15";
+                break;
+            case R.id.txtMat16:
+                sValue = "txt_mat16";
+                break;
+            case R.id.txtMat17:
+                sValue = "txt_mat17";
+                break;
+            case R.id.txtMat18:
+                sValue = "txt_mat18";
+                break;
+            case R.id.txtMat19:
+                sValue = "txt_mat19";
+                break;
+            case R.id.txtMat20:
+                sValue = "txt_mat20";
+                break;
+            case R.id.txtMat21:
+                sValue = "txt_mat21";
+                break;
+            case R.id.txtMat22:
+                sValue = "txt_mat22";
+                break;
+            case R.id.txtMat23:
+                sValue = "txt_mat23";
+                break;
+            case R.id.txtMat24:
+                sValue = "txt_mat24";
+                break;
+            case R.id.txtMat25:
+                sValue = "txt_mat25";
+                break;
+            case R.id.txtMat26:
+                sValue = "txt_mat26";
+                break;
+            case R.id.txtMat27:
+                sValue = "txt_mat27";
+                break;
+            case R.id.txtMat28:
+                sValue = "txt_mat28";
+                break;
+            case R.id.txtMat29:
+                sValue = "txt_mat29";
+                break;
+            case R.id.txtMat30:
+                sValue = "txt_mat30";
+                break;
+            case R.id.txtMat31:
+                sValue = "txt_mat31";
+                break;
+            case R.id.txtMat32:
+                sValue = "txt_mat32";
+                break;
+            case R.id.txtMat33:
+                sValue = "txt_mat33";
+                break;
+            case R.id.txtMat34:
+                sValue = "txt_mat34";
+                break;
+            case R.id.txtMat35:
+                sValue = "txt_mat35";
+                break;
+            case R.id.txtMat36:
+                sValue = "txt_mat36";
+                break;
+            case R.id.txtMat37:
+                sValue = "txt_mat37";
+                break;
+            case R.id.txtMat38:
+                sValue = "txt_mat38";
+                break;
+            case R.id.txtMat39:
+                sValue = "txt_mat39";
+                break;
+            case R.id.txtMaterialesAdd1:
+                sValue = "txt_mat_add1";
+                break;
+            case R.id.txtMaterialCant1:
+                sValue = "txt_mat40";
+                break;
+            case R.id.txtMaterialesAdd2:
+                sValue = "txt_mat_add2";
+                break;
+            case R.id.txtMaterialCant2:
+                sValue = "txt_mat41";
+                break;
+            case R.id.txtMaterialesAdd3:
+                sValue = "txt_mat_add3";
+                break;
+            case R.id.txtMaterialCant3:
+                sValue = "txt_mat42";
+                break;
+            case R.id.txtTrabajoServ1:
+                sValue = "txt_trabajo_serv1";
+                break;
+            case R.id.txtTrabajoCant1:
+                sValue = "txt_trabajo_cant1";
+                break;
+            case R.id.txtTrabajoServ2:
+                sValue = "txt_trabajo_serv2";
+                break;
+            case R.id.txtTrabajoCant2:
+                sValue = "txt_trabajo_cant2";
+                break;
+            case R.id.txtTrabajoServ3:
+                sValue = "txt_trabajo_serv3";
+                break;
+            case R.id.txtTrabajoCant3:
+                sValue = "txt_trabajo_cant3";
+                break;
+            case R.id.txtTrabajoServ4:
+                sValue = "txt_trabajo_serv4";
+                break;
+            case R.id.txtTrabajoCant4:
+                sValue = "txt_trabajo_cant4";
+                break;
+            case R.id.txtTrabajoServ5:
+                sValue = "txt_trabajo_serv5";
+                break;
+            case R.id.txtTrabajoCant5:
+                sValue = "txt_trabajo_cant5";
+                break;
+            case R.id.txtTrabajoServ6:
+                sValue = "txt_trabajo_serv6";
+                break;
+            case R.id.txtTrabajoCant6:
+                sValue = "txt_trabajo_cant6";
+                break;
+            case R.id.txtTrabajoServ7:
+                sValue = "txt_trabajo_serv7";
+                break;
+            case R.id.txtTrabajoCant7:
+                sValue = "txt_trabajo_cant7";
+                break;
+            case R.id.txtTrabajoServ8:
+                sValue = "txt_trabajo_serv8";
+                break;
+            case R.id.txtTrabajoCant8:
+                sValue = "txt_trabajo_cant8";
+                break;
+            case R.id.txtMedRetirado:
+                sValue = "txt_medidor_ret";
+                break;
+            case R.id.spinnerMarcaRet:
+                sValue = "txt_marca_ret";
+                break;
+            case R.id.spinnerTipoRet:
+                sValue = "txt_tipo_ret";
+                break;
+            case R.id.preNum1:
+                sValue = "rad_1_";
+                break;
+            case R.id.preNum2:
+                sValue = "rad_2_";
+                break;
+            case R.id.preNum3:
+                sValue = "rad_3_";
+                break;
+            case R.id.preNum4:
+                sValue = "rad_4_";
+                break;
+            case R.id.preNum5:
+                sValue = "rad_5_";
+                break;
+            case R.id.preNum6:
+                sValue = "rad_6_";
+                break;
+            case R.id.preNum7:
+                sValue = "rad_7_";
+                break;
+            case R.id.preNum8:
+                sValue = "rad_8_";
+                break;
+            case R.id.preNum9:
+                sValue = "rad_9_";
+                break;
+            case R.id.preNum10:
+                sValue = "rad_10_";
+                break;
+            case R.id.preNum11:
+                sValue = "rad_11_";
+                break;
+            case R.id.preNum12:
+                sValue = "rad_12_";
                 break;
             default:
                 sValue = null;

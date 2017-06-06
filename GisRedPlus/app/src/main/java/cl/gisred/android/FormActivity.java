@@ -36,7 +36,7 @@ public class FormActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES", "INSPECCION_MANTENIMIENTO_CORRECTIVO", "INSPECCION_CONSTRUCCION_EMPALMES"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -149,6 +149,12 @@ public class FormActivity extends AppCompatActivity {
                 //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             } else if (dato.getTitulo().contains("ESPECIALES")) {
                 dato.setDescripcion("Formulario de inspección de clientes especiales");
+                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("CORRECTIVO")) {
+                dato.setDescripcion("Formulario de inspección y mantenimiento correctivo");
+                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+            } else if (dato.getTitulo().contains("EMPALMES")) {
+                dato.setDescripcion("Formulario de inspección y construcción de empalmes");
                 //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             }
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);

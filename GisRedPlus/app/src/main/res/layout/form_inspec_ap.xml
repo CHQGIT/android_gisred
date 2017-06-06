@@ -26,11 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText android:id="@+id/txtSerieMedidor"
+                <EditText android:id="@+id/txtNumMedidor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textShortMessage"
-                    android:hint="Serie Medidor *"/>
+                    android:inputType="number"
+                    android:hint="Número Medidor *"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -311,7 +311,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText android:id="@+id/txtNomInst"
+                <EditText android:id="@+id/txtNomTecn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
@@ -323,7 +323,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText android:id="@+id/txtRut"
+                <EditText android:id="@+id/txtRutTecn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="0123456789Kk"
@@ -341,7 +341,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Firma"
+                    android:text="Firma Técnico"
                     android:textSize="18sp"
                     android:singleLine="false"
                     android:layout_marginLeft="6dp"
@@ -352,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView android:id="@+id/imgFirma"
+                    <ImageView android:id="@+id/imgFirmaTec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minHeight="150dp"
@@ -363,7 +363,7 @@
                         android:cropToPadding="true"
                         style="@style/myImageView"/>
 
-                    <ImageButton android:id="@+id/btnFirma"
+                    <ImageButton android:id="@+id/btnFirmaTec"
                         android:layout_width="80dp"
                         android:maxWidth="80dp"
                         android:layout_height="match_parent"

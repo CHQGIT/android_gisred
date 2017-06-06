@@ -3,7 +3,6 @@ package cl.gisred.android;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,14 +17,10 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +29,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -55,16 +49,13 @@ import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.GeometryEngine;
-import com.esri.core.geometry.Line;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.io.EsriSecurityException;
 import com.esri.core.io.UserCredentials;
-import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
-import com.esri.core.map.FeatureEditResult;
 import com.esri.core.map.FeatureResult;
 import com.esri.core.map.Graphic;
 import com.esri.core.runtime.LicenseLevel;
@@ -80,9 +71,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
@@ -334,7 +323,7 @@ public class PowerOnActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(PowerOnActivity.this, p);
+                        Util.QueryNavigation(PowerOnActivity.this, p);
                     }
                 }
             });

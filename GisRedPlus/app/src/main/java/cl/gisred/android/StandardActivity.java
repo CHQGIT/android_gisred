@@ -313,7 +313,7 @@ public class StandardActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(StandardActivity.this, p);
+                        Util.QueryNavigation(StandardActivity.this, p);
                     }
                 }
             });

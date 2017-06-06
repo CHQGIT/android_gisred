@@ -2,7 +2,6 @@ package cl.gisred.android;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -14,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -30,7 +28,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -53,6 +50,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -99,7 +98,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -224,7 +222,8 @@ public class InspActivity extends AppCompatActivity {
     FloatingActionButton fabVerCapas;
     FloatingActionButton fabNavRoute;
     //var inspeccion
-    public ImageView imgFirma;
+    public ImageView imgFirmaTec;
+    public ImageView imgFirmaInsp;
     public ImageView imgTemp;
     public ImageView imgPhoto1;
     public ImageView imgPhoto2;
@@ -271,7 +270,7 @@ public class InspActivity extends AppCompatActivity {
         setMap(R.id.map, 0xffffff, 0xffffff, 10, 10, false, true);
         choices = 0;
 
-        if (Build.VERSION.SDK_INT >= 23) verifPermisos();
+        if (Build.VERSION.SDK_INT >= 22) verifPermisos();
         else initGeoposition();
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
@@ -397,7 +396,7 @@ public class InspActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(InspActivity.this, p);
+                        Util.QueryNavigation(InspActivity.this, p);
                     }
                 }
             });
@@ -522,13 +521,13 @@ public class InspActivity extends AppCompatActivity {
                 addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
                 addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-            myMapView.addLayer(LyAddPoste, 20);
-            myMapView.addLayer(LyAddDireccion, 21);
-            myMapView.addLayer(LyAddCliente, 22);
-            myMapView.addLayer(LyAddUnion, 23);
-            myMapView.addLayer(LyAsocTramo, 24);
-            myMapView.addLayer(LyAsocCalle, 25);
-            myMapView.addLayer(LyAddClienteCnr, 26);
+                myMapView.addLayer(LyAddPoste, 20);
+                myMapView.addLayer(LyAddDireccion, 21);
+                myMapView.addLayer(LyAddCliente, 22);
+                myMapView.addLayer(LyAddUnion, 23);
+                myMapView.addLayer(LyAsocTramo, 24);
+                myMapView.addLayer(LyAsocCalle, 25);
+                myMapView.addLayer(LyAddClienteCnr, 26);
 
                 setLayerAddToggle(false);
             } else {
@@ -560,6 +559,71 @@ public class InspActivity extends AppCompatActivity {
             initGeoposition();
         }
 
+        if (ContextCompat.checkSelfPermission(InspActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Util.REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(InspActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Util.REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
+
+    }
+
+    private void verifAccesoExterno(String sFoto) {
+
+        if (ContextCompat.checkSelfPermission(InspActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Util.REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(InspActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(InspActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(InspActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Util.REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        } else {
+            imageGallery(sFoto);
+        }
     }
 
     private void verifCamara(String sFoto) {
@@ -683,7 +747,7 @@ public class InspActivity extends AppCompatActivity {
 
         if (!bEnable) {
             for (View view : vDialog.getTouchables()) {
-                if (view.getId() != R.id.btnUbicacion && view.getId() != R.id.btnCancelar)
+                if (view.getId() != R.id.btnUbicacion && view.getId() != R.id.btnCancelar && view.getId() != R.id.txtNis && view.getId() != R.id.btnVerifNis)
                     arrayTouchs.add(view);
             }
         }
@@ -724,7 +788,7 @@ public class InspActivity extends AppCompatActivity {
                         oText.setError("Campo obligatorio");
                     } else {
                         oText.setError(null);
-                        if (oText.getId() == R.id.txtRut){
+                        if (oText.getId() == R.id.txtRutInst || oText.getId() == R.id.txtRutTecn){
                             if (!Util.validateRut(oText.getText().toString())) {
                                 contRequeridos++;
                                 oText.setError("Rut no válido");
@@ -737,7 +801,7 @@ public class InspActivity extends AppCompatActivity {
         }
 
         //28-09 Se elimina firma como requisito
-        //contRequeridos += (valImage(v, R.id.imgFirma)) ? 0 : 1;
+        //contRequeridos += (valImage(v, R.id.imgFirmaTec)) ? 0 : 1;
 
         //23-09 Se elimina fotos como requisito
         //contRequeridos += (valImage(v, R.id.imgPhoto1)) ? 0 : 1;
@@ -766,6 +830,14 @@ public class InspActivity extends AppCompatActivity {
         return contRequeridos;
     }
 
+    private View getLayoutChkNis(View v) {
+        if (v.getId() == R.id.llCliente) {
+            return (View) v.getParent();
+        } else {
+            return getLayoutChkNis((View) v.getParent());
+        }
+    }
+
     private View getLayoutValidate(View v) {
         if (v.getId() == R.id.actionDialog) {
             return (View) v.getParent();
@@ -781,6 +853,25 @@ public class InspActivity extends AppCompatActivity {
     }
 
     private void setValueToAsoc(View v) {
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                oTxtAsoc = (GisEditText) view;
+            }
+        }
+    }
+
+    private String getValueNis(View v) {
+        String sResp = "";
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                sResp = ((EditText) view).getText().toString();
+                break;
+            }
+        }
+        return sResp;
+    }
+
+    private void setValuesByNis(View v) {
         for (View view : v.getTouchables()) {
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 oTxtAsoc = (GisEditText) view;
@@ -898,13 +989,9 @@ public class InspActivity extends AppCompatActivity {
                 oDialog.show(getFragmentManager(), "tagAlert");
                 return;
             } else {
-                int idIndex;
-
-                if (idR == R.layout.form_inspec_ap) idIndex = R.raw.index_ap;
-                else idIndex = R.raw.index;
 
                 Resources res = getResources();
-                InputStream in_s = res.openRawResource(idIndex);
+                InputStream in_s = res.openRawResource(R.raw.index);
                 try {
                     View vAction = getLayoutValidate(v);
                     byte[] b = new byte[in_s.available()];
@@ -919,7 +1006,9 @@ public class InspActivity extends AppCompatActivity {
                         if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                             EditText oText = (EditText) view;
                             if (!oText.getText().toString().trim().isEmpty()){
-                                oHtml.setValueById(HtmlUtils.getMapvalue(oText.getId()), "txt", oText.getText().toString());
+                                String sMapvalue = HtmlUtils.getMapvalue(oText.getId());
+                                String sValorChr = oText.getText().toString();
+                                oHtml.setValueById(sMapvalue, "txt", sValorChr);
                                 switch (oText.getId()) {
                                     case R.id.txtNumMedidor:
                                         sValueNumMed = oText.getText().toString();
@@ -927,6 +1016,15 @@ public class InspActivity extends AppCompatActivity {
                                     case R.id.txtSerieMedidor:
                                         sValueNumMed = oText.getText().toString();
                                         break;
+                                }
+
+                                if (sMapvalue.contains("txt_trabajo_cant")) {
+                                    try {
+                                        double dValue = Double.valueOf(sValorChr);
+                                        oHtml.sumHH += dValue;
+                                    } catch (Exception ex) {
+                                        Log.e("Double Convert", "error: " + ex.getMessage());
+                                    }
                                 }
                             }
                         } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
@@ -937,10 +1035,23 @@ public class InspActivity extends AppCompatActivity {
                         } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
                             Spinner oSpinner = (Spinner) view;
                             oHtml.setValueById(HtmlUtils.getMapvalue(oSpinner.getId()), "txt", oSpinner.getSelectedItem().toString());
+                        } else if (view.getClass().getGenericSuperclass().equals(RadioButton.class)) {
+                            RadioButton oRadioButton = (RadioButton) view;
+                            if (oRadioButton.isChecked()) {
+                                String sRadio = HtmlUtils.getMapvalue(((RadioGroup) oRadioButton.getParent()).getId());
+                                sRadio += oRadioButton.getText().toString().toLowerCase().replace(" ", "");
+                                oHtml.setValueById(sRadio, "rad", "");
+                            }
                         } else if (view.getClass().getGenericSuperclass().equals(ImageView.class)) {
-                            Log.w("ImageView", "OK");
                         }
                     }
+
+                    //SUMA TOTAL HH
+                    oHtml.setValueById("txt_trabajo_cant_tot", "txt", ""+oHtml.sumHH);
+
+                    //VALIDAR FIRMAS
+                    if (valImage(vAction, R.id.imgFirmaIns)) oHtml.setValueById("firm_prop", "img", String.format("%s.jpg", R.id.imgFirmaIns));
+                    if (valImage(vAction, R.id.imgFirmaTec)) oHtml.setValueById("firm_tecn", "img", String.format("%s.jpg", R.id.imgFirmaTec));
 
                     if (valImage(vAction, R.id.imgPhoto1)) oHtml.setValueById("foto_1", "img", "foto1.jpg");
                     if (valImage(vAction, R.id.imgPhoto2)) oHtml.setValueById("foto_2", "img", "foto2.jpg");
@@ -1144,6 +1255,10 @@ public class InspActivity extends AppCompatActivity {
             setActionsForm(R.layout.form_inspec_ap, fabTemp.getTitle());
         } else if (form.contains("ESPECIALES")) {
             setActionsForm(R.layout.form_inspec_clientes_esp, fabTemp.getTitle());
+        } else if (form.contains("CORRECTIVO")) {
+            setActionsForm(R.layout.form_inspec_mant_correctivo, fabTemp.getTitle());
+        } else if (form.contains("EMPALMES")) {
+            setActionsForm(R.layout.form_inspec_cons_empalme, fabTemp.getTitle());
         }
         //setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
 
@@ -1183,8 +1298,6 @@ public class InspActivity extends AppCompatActivity {
 
         View vAction = getLayoutValidate(view);
         int iReq = recorrerForm(vAction);
-
-        Log.w("validaForm", "falta: " + iReq);
         return (iReq == 0);
     }
 
@@ -1225,20 +1338,20 @@ public class InspActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             SignatureView signView = (SignatureView) getDialog().findViewById(R.id.signatureView);
 
-                            //guardar firma
-                            try {
-                                PhotoUtils.createFirma(signView.getImage(), getActivity().getBaseContext());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
                             //setear imagen
-                            ImageView imgFirma = ((InspActivity) ((AlertDialog) dialog).getOwnerActivity()).imgFirma;
+                            ImageView imgFirma = ((InspActivity) ((AlertDialog) dialog).getOwnerActivity()).imgTemp;
 
                             if (imgFirma != null) {
                                 imgFirma.setAdjustViewBounds(true);
                                 imgFirma.setImageBitmap(signView.getImage());
                                 imgFirma.setCropToPadding(true);
+                            }
+
+                            //guardar firma
+                            try {
+                                PhotoUtils.createFirma(signView.getImage(), getActivity().getBaseContext(), ""+imgFirma.getId());
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
                             //cerrar dialogo
@@ -1596,28 +1709,39 @@ public class InspActivity extends AppCompatActivity {
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                txtHora.setText(String.format("%s:%s", selectedHour, selectedMinute));
+                txtHora.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
             }
         }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), false);
 
         final EditText txtEjecutor = (EditText) v.findViewById(R.id.txtEjecutor);
         txtEjecutor.setText(Util.getUserWithoutDomain(usuar));
 
-        if (idRes != R.layout.form_inspec_ap) {
-
-            Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
+        Spinner spFirmante = (Spinner) v.findViewById(R.id.spinnerFirmante);
+        if (spFirmante != null) {
             adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFirmante);
             spFirmante.setAdapter(adapter);
             spFirmante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    setRequerido(view, R.id.txtRut, i > 0);
+                    setRequerido(view, R.id.txtRutInst, i > 0);
                     setRequerido(view, R.id.txtNomInst, i > 0);
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) { }
             });
+        }
+
+        Spinner spTipoMarcaRet = (Spinner) v.findViewById(R.id.spinnerTipoRet);
+        if (spTipoMarcaRet != null) {
+            adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoMarca);
+            spTipoMarcaRet.setAdapter(adapter);
+        }
+
+        Spinner spMarcaRet = (Spinner) v.findViewById(R.id.spinnerMarcaRet);
+        if (spMarcaRet != null) {
+            adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayMarca);
+            spMarcaRet.setAdapter(adapter);
         }
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
@@ -1636,27 +1760,52 @@ public class InspActivity extends AppCompatActivity {
             }
         });
 
-        imgFirma = (ImageView) v.findViewById(R.id.imgFirma);
+        imgFirmaTec = (ImageView) v.findViewById(R.id.imgFirmaTec);
+        imgFirmaInsp = (ImageView) v.findViewById(R.id.imgFirmaIns);
         imgPhoto1 = (ImageView) v.findViewById(R.id.imgPhoto1);
         imgPhoto2 = (ImageView) v.findViewById(R.id.imgPhoto2);
         imgPhoto3 = (ImageView) v.findViewById(R.id.imgPhoto3);
 
-        final ImageButton btnFirma = (ImageButton) v.findViewById(R.id.btnFirma);
-        btnFirma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogoFirma oDialog = new DialogoFirma();
-                oDialog.show(getFragmentManager(), "tagFirma");
-            }
-        });
+        final ImageButton btnFirmaTec = (ImageButton) v.findViewById(R.id.btnFirmaTec);
+        if (btnFirmaTec != null && imgFirmaTec != null) {
+            btnFirmaTec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgTemp = imgFirmaTec;
+                    DialogoFirma oDialog = new DialogoFirma();
+                    oDialog.show(getFragmentManager(), "tagFirma");
+                }
+            });
 
-        imgFirma.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                crearDialogoImg((ImageView) v).show();
-                return false;
-            }
-        });
+            imgFirmaTec.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    crearDialogoImg((ImageView) v).show();
+                    return false;
+                }
+            });
+        }
+
+        final ImageButton btnFirmaInsp = (ImageButton) v.findViewById(R.id.btnFirmaIns);
+        if (btnFirmaInsp != null && imgFirmaInsp != null) {
+            btnFirmaInsp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imgTemp = imgFirmaInsp;
+                    DialogoFirma oDialog = new DialogoFirma();
+                    oDialog.show(getFragmentManager(), "tagFirma");
+                }
+            });
+
+            imgFirmaInsp.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    crearDialogoImg((ImageView) v).show();
+                    return false;
+                }
+            });
+        }
+
 
         imgPhoto1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -1687,7 +1836,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto1;
-                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto1");
+                if (Build.VERSION.SDK_INT >= 22) verifCamara("foto1");
                 else tomarFoto("foto1");
 
             }
@@ -1698,7 +1847,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto2;
-                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto2");
+                if (Build.VERSION.SDK_INT >= 22) verifCamara("foto2");
                 else tomarFoto("foto2");
             }
         });
@@ -1708,7 +1857,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto3;
-                if (Build.VERSION.SDK_INT >= 23) verifCamara("foto3");
+                if (Build.VERSION.SDK_INT >= 22) verifCamara("foto3");
                 else tomarFoto("foto3");
             }
         });
@@ -1718,7 +1867,8 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto1;
-                imageGallery("foto1");
+                if (Build.VERSION.SDK_INT >= 22) verifAccesoExterno("foto1");
+                else imageGallery("foto1");
             }
         });
 
@@ -1727,7 +1877,8 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto2;
-                imageGallery("foto2");
+                if (Build.VERSION.SDK_INT >= 22) verifAccesoExterno("foto2");
+                else imageGallery("foto2");
             }
         });
 
@@ -1736,7 +1887,8 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imgTemp = imgPhoto3;
-                imageGallery("foto3");
+                if (Build.VERSION.SDK_INT >= 22) verifAccesoExterno("foto3");
+                else imageGallery("foto3");
             }
         });
 
@@ -1948,6 +2100,20 @@ public class InspActivity extends AppCompatActivity {
             return;
         }
 
+        ImageButton btnVerifNis = (ImageButton) v.findViewById(R.id.btnVerifNis);
+        btnVerifNis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sUrl = (idResLayoutSelect == R.layout.dialog_cliente) ? srv_urlClientes : srv_urlClientesCnr;
+                String sNis = getValueNis(getLayoutContenedor(v));
+                if (!sNis.isEmpty()) {
+                    verifNisQuery(sNis, "nis", sUrl, v);
+                } else {
+                    Toast.makeText(getApplicationContext(), "El campo NIS está vacío", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         ImageButton btnAsocDireccion = (ImageButton) v.findViewById(R.id.btnAsocDireccion);
         btnAsocDireccion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1970,7 +2136,6 @@ public class InspActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddPoste;
                 oLyExistAsoc = LyPOSTES;
-                Log.w("[InspActivity]", "HIDE DIALOG POSTE");
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1985,11 +2150,17 @@ public class InspActivity extends AppCompatActivity {
                     bCallOut = true;
                     nIndentify = 2; //2 = valor para tramo
                     oLySelectAsoc = LyAsocTramo;
-                    Log.w("[InspActivity]", "HIDE DIALOG TRAMO");
                     setValueToAsoc(getLayoutContenedor(v));
                 }
             });
         }
+    }
+
+    public void verifNisQuery(String txtBusqueda, String nomCampo, String dirUrl, View v) {
+        String sWhere = String.format("%s = %s", nomCampo, txtBusqueda);
+
+        NisVerifResult queryTask = new NisVerifResult(getLayoutChkNis(v));
+        queryTask.execute(sWhere, dirUrl);
     }
 
     public void callQuery(String txtBusqueda, String nomCampo, String dirUrl) {
@@ -2702,6 +2873,84 @@ public class InspActivity extends AppCompatActivity {
         return point;
     }
 
+    private class NisVerifResult extends AsyncTask<String, Void, FeatureResult> {
+
+        View vLayout;
+
+        public NisVerifResult(View v) {
+            vLayout = v;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(InspActivity.this);
+            progress = ProgressDialog.show(InspActivity.this, "",
+                    "Verificando NIS.");
+        }
+
+        @Override
+        protected FeatureResult doInBackground(String... params) {
+            try {
+                String whereClause = params[0];
+                QueryParameters myParameters = new QueryParameters();
+                myParameters.setWhere(whereClause);
+
+                myParameters.setReturnGeometry(true);
+                String[] outfields = new String[]{"*"};
+                myParameters.setOutFields(outfields);
+
+                String url = params[1];
+                FeatureResult results;
+
+                QueryTask queryTask = new QueryTask(url, credenciales);
+                results = queryTask.execute(myParameters);
+
+                return results;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(FeatureResult results) {
+            if (results != null) {
+                int numResult = (int) results.featureCount();
+
+                if (numResult > 0) {
+                    for (Object element : results) {
+                        progress.incrementProgressBy(numResult / 100);
+
+                        if (element instanceof Feature) {
+
+                            Feature feature = (Feature) element;
+                            myMapView.setExtent(feature.getGeometry(), 0, true);
+                            Util oUtil = new Util();
+
+                            oUbicacion = myMapView.getCenter();
+
+                            oUtil.setAttrInView(idResLayoutSelect, vLayout, feature.getAttributes());
+
+                            /*GisTextView tv = new GisTextView(MapsActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) feature.getGeometry());*/
+
+                            break;
+                        }
+                    }
+
+                    myMapView.zoomin(true);
+                } else {
+                    Toast.makeText(InspActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(InspActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
+            }
+            progress.dismiss();
+        }
+    }
+
     private class AsyncQueryTask extends AsyncTask<String, Void, FeatureResult> {
 
         FeatureResult oResultTramos;
@@ -3203,7 +3452,61 @@ public class InspActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
 
-                    Log.w("InspActivity", "No hay permisos de ACCESS_FINE_LOCATION");
+                    Toast.makeText(InspActivity.this, "No puede utilizar GPS, contacte soporte", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case Util.REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(InspActivity.this, "Ya puede utilizar archivos, presione nuevamente", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Toast.makeText(InspActivity.this, "No puede utilizar archivos, contacte soporte", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case Util.REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(InspActivity.this, "Ya puede utilizar camara, presione nuevamente", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Toast.makeText(InspActivity.this, "No puede utilizar camara, contacte soporte", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case Util.REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(InspActivity.this, "Ya puede copiar archivos, presione nuevamente", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Toast.makeText(InspActivity.this, "No puede copiar archivos, contacte soporte", Toast.LENGTH_LONG).show();
                 }
                 break;
             }

@@ -360,7 +360,7 @@ public class TelemedidaActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(TelemedidaActivity.this, p);
+                        Util.QueryNavigation(TelemedidaActivity.this, p);
                     }
                 }
             });

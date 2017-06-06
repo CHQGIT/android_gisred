@@ -361,7 +361,7 @@ public class CatastroActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryWaze(CatastroActivity.this, p);
+                        Util.QueryNavigation(CatastroActivity.this, p);
                     }
                 }
             });

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "CATASTRO_AP", "INTERRUPCIONES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
@@ -228,8 +228,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("TELEMEDIDA")) {
                 dato.setDescripcion("Visualización e ingreso de telemedidas");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
-            } else if (dato.getTitulo().contains("CATASTRO")) {
-                dato.setDescripcion("Visualización e ingreso de catastros AP");
+            } else if (dato.getTitulo().contains("ALUMBRADO")) {
+                dato.setDescripcion("Visualización e ingreso de alumbrado público");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             } else if (dato.getTitulo().contains("INTERRUPCIONES")) {
                 dato.setDescripcion("Visualización de interrupciones");

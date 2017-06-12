@@ -270,7 +270,7 @@ public class InspActivity extends AppCompatActivity {
         setMap(R.id.map, 0xffffff, 0xffffff, 10, 10, false, true);
         choices = 0;
 
-        if (Build.VERSION.SDK_INT >= 22) verifPermisos();
+        if (Build.VERSION.SDK_INT >= 23) verifPermisos();
         else initGeoposition();
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
@@ -2055,6 +2055,10 @@ public class InspActivity extends AppCompatActivity {
                 Spinner spEmpalme = (Spinner) v.findViewById(R.id.spinnerTipoEmpalme);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEmpalme);
                 spEmpalme.setAdapter(adapter);
+
+                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
+                spTipoFase.setAdapter(adapter);
                 break;
             case R.layout.dialog_cliente_cnr:
                 Spinner spTipoMedidorCnr = (Spinner) v.findViewById(R.id.spinnerTipoMedidor);
@@ -2073,9 +2077,9 @@ public class InspActivity extends AppCompatActivity {
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoCnr);
                 spTipoCnr.setAdapter(adapter);
 
-                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                Spinner spTipoFaseCnr = (Spinner) v.findViewById(R.id.spinnerFaseConex);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
-                spTipoFase.setAdapter(adapter);
+                spTipoFaseCnr.setAdapter(adapter);
                 break;
         }
     }
@@ -2725,6 +2729,9 @@ public class InspActivity extends AppCompatActivity {
                             if (idResLayoutSelect == R.layout.dialog_cliente_cnr)
                                 LyREDBT.setVisible(true);
 
+                            if (LyPOSTES.getMinScale() < myMapView.getScale())
+                                myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
+                        } else if (R.layout.form_lectores == idResLayoutSelect){
                             if (LyPOSTES.getMinScale() < myMapView.getScale())
                                 myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
                         }

@@ -247,6 +247,20 @@ public class PhotoUtils {
             cursor.close();
             return filePath;
         }
+        else if (uri.getHost().contains("media")){
+
+            String[] column = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = context.getContentResolver().query(uri, column, null, null, null);
+
+            int columnIndex = cursor.getColumnIndex(column[0]);
+
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+            return filePath;
+        }
         return filePath;
     }
 }

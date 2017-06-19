@@ -1517,6 +1517,10 @@ public class LectorActivity extends AppCompatActivity {
                 Spinner spEmpalme = (Spinner) v.findViewById(R.id.spinnerTipoEmpalme);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEmpalme);
                 spEmpalme.setAdapter(adapter);
+
+                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
+                spTipoFase.setAdapter(adapter);
                 break;
             case R.layout.dialog_cliente_cnr:
                 Spinner spTipoMedidorCnr = (Spinner) v.findViewById(R.id.spinnerTipoMedidor);
@@ -1535,9 +1539,9 @@ public class LectorActivity extends AppCompatActivity {
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoCnr);
                 spTipoCnr.setAdapter(adapter);
 
-                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                Spinner spTipoFaseCnr = (Spinner) v.findViewById(R.id.spinnerFaseConex);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
-                spTipoFase.setAdapter(adapter);
+                spTipoFaseCnr.setAdapter(adapter);
                 break;
         }
     }

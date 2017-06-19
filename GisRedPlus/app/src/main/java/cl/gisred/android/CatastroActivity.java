@@ -673,6 +673,14 @@ public class CatastroActivity extends AppCompatActivity {
         return contRequeridos;
     }
 
+    private View getLayoutChkNis(View v) {
+        if (v.getId() == R.id.llCliente) {
+            return (View) v.getParent();
+        } else {
+            return getLayoutChkNis((View) v.getParent());
+        }
+    }
+
     private View getLayoutValidate(View v) {
         if (v.getId() == R.id.actionDialog) {
             return (View) v.getParent();
@@ -688,6 +696,25 @@ public class CatastroActivity extends AppCompatActivity {
     }
 
     private void setValueToAsoc(View v) {
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                oTxtAsoc = (GisEditText) view;
+            }
+        }
+    }
+
+    private String getValueNis(View v) {
+        String sResp = "";
+        for (View view : v.getTouchables()) {
+            if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                sResp = ((EditText) view).getText().toString();
+                break;
+            }
+        }
+        return sResp;
+    }
+
+    private void setValuesByNis(View v) {
         for (View view : v.getTouchables()) {
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 oTxtAsoc = (GisEditText) view;
@@ -1489,6 +1516,10 @@ public class CatastroActivity extends AppCompatActivity {
                 Spinner spEmpalme = (Spinner) v.findViewById(R.id.spinnerTipoEmpalme);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEmpalme);
                 spEmpalme.setAdapter(adapter);
+
+                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
+                spTipoFase.setAdapter(adapter);
                 break;
             case R.layout.dialog_cliente_cnr:
                 Spinner spTipoMedidorCnr = (Spinner) v.findViewById(R.id.spinnerTipoMedidor);
@@ -1507,9 +1538,9 @@ public class CatastroActivity extends AppCompatActivity {
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoCnr);
                 spTipoCnr.setAdapter(adapter);
 
-                Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFaseConex);
+                Spinner spTipoFaseCnr = (Spinner) v.findViewById(R.id.spinnerFaseConex);
                 adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
-                spTipoFase.setAdapter(adapter);
+                spTipoFaseCnr.setAdapter(adapter);
                 break;
         }
     }
@@ -1534,6 +1565,20 @@ public class CatastroActivity extends AppCompatActivity {
             return;
         }
 
+        ImageButton btnVerifNis = (ImageButton) v.findViewById(R.id.btnVerifNis);
+        btnVerifNis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sUrl = (idResLayoutSelect == R.layout.dialog_cliente) ? srv_urlClientes : srv_urlClientesCnr;
+                String sNis = getValueNis(getLayoutContenedor(v));
+                if (!sNis.isEmpty()) {
+                    verifNisQuery(sNis, "nis", sUrl, v);
+                } else {
+                    Toast.makeText(getApplicationContext(), "El campo NIS está vacío", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         ImageButton btnAsocDireccion = (ImageButton) v.findViewById(R.id.btnAsocDireccion);
         btnAsocDireccion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1556,7 +1601,6 @@ public class CatastroActivity extends AppCompatActivity {
                 bCallOut = true;
                 oLySelectAsoc = LyAddPoste;
                 oLyExistAsoc = LyPOSTES;
-                Log.w("[InspActivity]", "HIDE DIALOG POSTE");
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
@@ -1571,11 +1615,17 @@ public class CatastroActivity extends AppCompatActivity {
                     bCallOut = true;
                     nIndentify = 2; //2 = valor para tramo
                     oLySelectAsoc = LyAsocTramo;
-                    Log.w("[InspActivity]", "HIDE DIALOG TRAMO");
                     setValueToAsoc(getLayoutContenedor(v));
                 }
             });
         }
+    }
+
+    public void verifNisQuery(String txtBusqueda, String nomCampo, String dirUrl, View v) {
+        String sWhere = String.format("%s = %s", nomCampo, txtBusqueda);
+
+        NisVerifResult queryTask = new NisVerifResult(getLayoutChkNis(v));
+        queryTask.execute(sWhere, dirUrl);
     }
 
     public void callQuery(String txtBusqueda, String nomCampo, String dirUrl) {
@@ -2297,6 +2347,84 @@ public class CatastroActivity extends AppCompatActivity {
         }
 
         return point;
+    }
+
+    private class NisVerifResult extends AsyncTask<String, Void, FeatureResult> {
+
+        View vLayout;
+
+        public NisVerifResult(View v) {
+            vLayout = v;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(CatastroActivity.this);
+            progress = ProgressDialog.show(CatastroActivity.this, "",
+                    "Verificando NIS.");
+        }
+
+        @Override
+        protected FeatureResult doInBackground(String... params) {
+            try {
+                String whereClause = params[0];
+                QueryParameters myParameters = new QueryParameters();
+                myParameters.setWhere(whereClause);
+
+                myParameters.setReturnGeometry(true);
+                String[] outfields = new String[]{"*"};
+                myParameters.setOutFields(outfields);
+
+                String url = params[1];
+                FeatureResult results;
+
+                QueryTask queryTask = new QueryTask(url, credenciales);
+                results = queryTask.execute(myParameters);
+
+                return results;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(FeatureResult results) {
+            if (results != null) {
+                int numResult = (int) results.featureCount();
+
+                if (numResult > 0) {
+                    for (Object element : results) {
+                        progress.incrementProgressBy(numResult / 100);
+
+                        if (element instanceof Feature) {
+
+                            Feature feature = (Feature) element;
+                            myMapView.setExtent(feature.getGeometry(), 0, true);
+                            Util oUtil = new Util();
+
+                            oUbicacion = myMapView.getCenter();
+
+                            oUtil.setAttrInView(idResLayoutSelect, vLayout, feature.getAttributes());
+
+                            /*GisTextView tv = new GisTextView(MapsActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) feature.getGeometry());*/
+
+                            break;
+                        }
+                    }
+
+                    myMapView.zoomin(true);
+                } else {
+                    Toast.makeText(CatastroActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(CatastroActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
+            }
+            progress.dismiss();
+        }
     }
 
     private class AsyncQueryTask extends AsyncTask<String, Void, FeatureResult> {

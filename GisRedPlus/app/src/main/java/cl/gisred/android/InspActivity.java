@@ -797,6 +797,12 @@ public class InspActivity extends AppCompatActivity {
                     }
                 }
             } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
+
+            } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+                if (view.getId() == R.id.spinnerMarca || view.getId() == R.id.spinnerTipo) {
+                    Spinner oSpinner = (Spinner) view;
+                    if (oSpinner.getSelectedItemPosition() == 0) contRequeridos++;
+                }
             }
         }
 

@@ -379,6 +379,9 @@ public class HtmlUtils {
             case R.id.txtMat17:
                 sValue = "txt_mat17";
                 break;
+            case R.id.txtMat18Amp:
+                sValue = "txt_amp18";
+                break;
             case R.id.txtMat18:
                 sValue = "txt_mat18";
                 break;
@@ -429,6 +432,9 @@ public class HtmlUtils {
                 break;
             case R.id.txtMat34:
                 sValue = "txt_mat34";
+                break;
+            case R.id.txtMat35Amp:
+                sValue = "txt_amp35";
                 break;
             case R.id.txtMat35:
                 sValue = "txt_mat35";
@@ -513,6 +519,9 @@ public class HtmlUtils {
                 break;
             case R.id.txtMedRetirado:
                 sValue = "txt_medidor_ret";
+                break;
+            case R.id.txtLecturaRet:
+                sValue = "txt_lectura_ret";
                 break;
             case R.id.spinnerMarcaRet:
                 sValue = "txt_marca_ret";

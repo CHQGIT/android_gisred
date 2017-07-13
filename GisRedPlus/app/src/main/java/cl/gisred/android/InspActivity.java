@@ -135,7 +135,7 @@ public class InspActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Dirección"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
@@ -1504,7 +1504,7 @@ public class InspActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = position;
 
-                if (position != 4) {
+                if (position != 3) {
                     if (llDireccion != null) llDireccion.setVisibility(View.GONE);
                     if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
                 } else {
@@ -1527,7 +1527,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (SpiBusqueda == 4) {
+                if (SpiBusqueda == 3) {
                     txtBusqueda = new String();
                     if (!eStreet.getText().toString().isEmpty())
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
@@ -1559,10 +1559,6 @@ public class InspActivity extends AppCompatActivity {
                                 iBusqScale = LyPOSTES.getLayers()[0].getLayerServiceInfo().getMinScale();
                             break;
                         case 3:
-                            //Pendiente
-                            //callQuery(txtBusqueda, "numero", din_urlMedidores);
-                            break;
-                        case 4:
                             iBusqScale = 5000;
                             String[] sBuscar = {eStreet.getText().toString(), eNumber.getText().toString()};
                             String[] sFields = {"nombre_calle", "numero"};

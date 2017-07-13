@@ -195,8 +195,6 @@ public class PhotoUtils {
         ratio = Math.floor(1.0 / ratio);
         int sample = nearest2pow((int) ratio);
 
-        Log.w("scaleImage", String.format("W: %s H: %s", dstWidth, dstHeight));
-
         options.inJustDecodeBounds = false;
         if (sample <= 0) {
             sample = 1;

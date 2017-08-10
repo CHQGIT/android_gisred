@@ -26,6 +26,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <EditText android:id="@+id/txtOT"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Nombre OT/OS/ID *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <EditText android:id="@+id/txtNumMedidor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -577,6 +589,18 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:hint="Medidor Retirado"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtLecturaRet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:hint="Lectura"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -1445,15 +1469,29 @@
                     android:hint="Tarugo Plástico # 10"/>
 
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText android:id="@+id/txtMat18"
+                <EditText android:id="@+id/txtMat18Amp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Interruptor Termomagnetico Monofásico (amp)"/>
+                    android:maxLength="3"
+                    android:hint="Carga Interruptor Termomagnetico Monofásico (amp)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/txtMat18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="Cantidad Interruptor Termomagnetico Monofásico (unidad)"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -1653,11 +1691,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <EditText android:id="@+id/txtMat35Amp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:hint="Carga Interruptor Termomagnetico Trifásico (amp)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <EditText android:id="@+id/txtMat35"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Interruptor Termomagnetico Trifásico (amp)"/>
+                    android:hint="Cantidad Interruptor Termomagnetico Trifásico (unidad)"/>
 
             </android.support.design.widget.TextInputLayout>
 

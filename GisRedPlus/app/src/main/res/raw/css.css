@@ -16,6 +16,16 @@ page-break-after: always;
 	margin:0 auto;
 }
 
+.containerfall{
+	width:960px;
+	background-color:#FFFFFF;
+	margin:0 auto;
+	background-position:center top;
+	background-image: url(image_fallo.png);
+    background-repeat: no-repeat;
+    visibility: visible;
+}
+
 header{
 		padding-top:5px;
 }
@@ -39,6 +49,7 @@ header div {
 	align-content:center;
 
 }
+
 .cont2{
 	border:solid;
 	border-width:3px;
@@ -132,7 +143,5 @@ header div {
 }
 
 .photo_anexo{
-
     width: 28em;
-    
 }

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES", "EH&S"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("LECTORES")){
-                        oIntent = new Intent(MainActivity.this, LectorActivity.class);
+                        oIntent = new Intent(MainActivity.this, FormLectActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
                         oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
@@ -142,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("INTERRUPCIONES")){
                         oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
+                    } else if (datos[position].getTitulo().contains("EH&S")){
+                        oIntent = new Intent(MainActivity.this, FormEhysActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
 
@@ -230,10 +233,13 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
             } else if (dato.getTitulo().contains("ALUMBRADO")) {
                 dato.setDescripcion("Visualización e ingreso de alumbrado público");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
             } else if (dato.getTitulo().contains("INTERRUPCIONES")) {
                 dato.setDescripcion("Visualización de interrupciones");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_power_on : R.mipmap.ic_menu_power_on_g);
+            } else if (dato.getTitulo().contains("EH&S")) {
+                dato.setDescripcion("Módulo EH&S");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             }
             return dato;
         }

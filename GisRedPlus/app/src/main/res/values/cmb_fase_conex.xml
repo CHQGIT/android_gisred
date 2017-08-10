@@ -6,4 +6,11 @@
         <item>C</item>
         <item>ABC</item>
     </string-array>
+    <string-array name="fase_conexion_insp">
+        <item></item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>ABC</item>
+    </string-array>
 </resources>

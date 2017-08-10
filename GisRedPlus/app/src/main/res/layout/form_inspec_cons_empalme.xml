@@ -15,12 +15,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <CheckBox android:id="@+id/chkInspFallo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Inspección de fallo"
+                android:elegantTextHeight="true"
+                android:checked="false"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DATOS DEL EMPALME"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtOT"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Nombre OT/OS/ID *"/>
+
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -65,6 +86,7 @@
                 android:layoutDirection="ltr">
 
                 <TextView
+                    android:id="@+id/spTextMarca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Marca *"/>
@@ -82,6 +104,7 @@
                 android:layoutDirection="ltr">
 
                 <TextView
+                    android:id="@+id/spTextTipo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Tipo *"/>
@@ -99,6 +122,7 @@
                 android:layoutDirection="ltr">
 
                 <TextView
+                    android:id="@+id/spTextFase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Fase Conexión *"/>
@@ -580,6 +604,18 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtLecturaRet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:hint="Lectura"/>
+
+            </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -664,6 +700,7 @@
                             android:id="@+id/preNA1"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -715,6 +752,7 @@
                             android:id="@+id/preNA2"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -766,6 +804,7 @@
                             android:id="@+id/preNA3"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -817,6 +856,7 @@
                             android:id="@+id/preNA4"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -868,6 +908,7 @@
                             android:id="@+id/preNA5"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -919,6 +960,7 @@
                             android:id="@+id/preNA6"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -970,6 +1012,7 @@
                             android:id="@+id/preNA7"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1021,6 +1064,7 @@
                             android:id="@+id/preNA8"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1072,6 +1116,7 @@
                             android:id="@+id/preNA9"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1123,6 +1168,7 @@
                             android:id="@+id/preNA10"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1174,6 +1220,7 @@
                             android:id="@+id/preNA11"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1225,6 +1272,7 @@
                             android:id="@+id/preNA12"
                             android:layout_weight="1"
                             android:text="No Aplica"
+                            android:checked="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -1445,6 +1493,19 @@
                     android:hint="Tarugo Plástico # 10"/>
 
             </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtMat18Amp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Carga Interruptor Termomagnetico Monofásico (amp)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -1453,7 +1514,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Interruptor Termomagnetico Monofásico (amp)"/>
+                    android:hint="Cantidad Interruptor Termomagnetico Monofásico (unidad)"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -1653,11 +1714,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <EditText android:id="@+id/txtMat35Amp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Carga Interruptor Termomagnetico Trifásico (amp)"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <EditText android:id="@+id/txtMat35"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Interruptor Termomagnetico Trifásico (amp)"/>
+                    android:hint="Cantidad Interruptor Termomagnetico Trifásico (unidad)"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -1824,6 +1897,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/verif_1"
                 android:elegantTextHeight="true"
+                android:checked="true"
                 android:layout_marginTop="10dp" />
 
             <CheckBox android:id="@+id/chkConsVerif2"
@@ -1831,6 +1905,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/verif_2"
                 android:elegantTextHeight="true"
+                android:checked="true"
                 android:layout_marginTop="10dp" />
 
             <CheckBox android:id="@+id/chkConsVerif3"
@@ -1838,6 +1913,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/verif_3"
                 android:elegantTextHeight="true"
+                android:checked="true"
                 android:layout_marginTop="10dp" />
 
             <CheckBox android:id="@+id/chkConsVerif4"
@@ -1845,6 +1921,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/verif_4"
                 android:elegantTextHeight="true"
+                android:checked="true"
                 android:layout_marginTop="10dp" />
 
             <CheckBox android:id="@+id/chkConsVerif5"
@@ -1852,6 +1929,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/verif_5"
                 android:elegantTextHeight="true"
+                android:checked="true"
                 android:layout_marginTop="10dp" />
 
             <TextView

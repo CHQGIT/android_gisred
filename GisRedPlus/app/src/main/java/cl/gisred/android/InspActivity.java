@@ -53,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -135,7 +136,7 @@ public class InspActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
@@ -152,6 +153,7 @@ public class InspActivity extends AppCompatActivity {
     public String[] arrayMarca = {};
     public String[] arrayTipoMarca = {};
     public String[] arrayFirmante = {};
+    public String[] arrayTipoFaseInsp = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -237,6 +239,7 @@ public class InspActivity extends AppCompatActivity {
     private EditText txtHora;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
+    private boolean bFallo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -412,7 +415,7 @@ public class InspActivity extends AppCompatActivity {
         if (modulo.replace(" ", "_").equals(modInspeccion)) {
             dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 
-            arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
+            arrayTipoFaseInsp = getResources().getStringArray(R.array.fase_conexion_insp);
             arrayMarca = getResources().getStringArray(R.array.marca);
             arrayTipoMarca = getResources().getStringArray(R.array.tipo_marca);
             arrayFirmante = getResources().getStringArray(R.array.situacion_firmante);
@@ -459,6 +462,7 @@ public class InspActivity extends AppCompatActivity {
                 arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
                 arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
                 arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
                 dialogCrear = new Dialog(InspActivity.this);
 
@@ -799,9 +803,9 @@ public class InspActivity extends AppCompatActivity {
             } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)) {
 
             } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
-                if (view.getId() == R.id.spinnerMarca || view.getId() == R.id.spinnerTipo) {
+                if (view.getId() == R.id.spinnerMarca || view.getId() == R.id.spinnerTipo || view.getId() == R.id.spinnerFase) {
                     Spinner oSpinner = (Spinner) view;
-                    if (oSpinner.getSelectedItemPosition() == 0) contRequeridos++;
+                    if (!bFallo && oSpinner.getSelectedItemPosition() == 0) contRequeridos++;
                 }
             }
         }
@@ -1070,18 +1074,8 @@ public class InspActivity extends AppCompatActivity {
                     //guardar en disco
                     oHtml.createHtml(sHtmlFinal);
 
-                    //PDF de prueba
-                    /*InputStream inTemp = res.openRawResource(R.raw.index_temp);
-                    byte[] bTemp = new byte[inTemp.available()];
-                    inTemp.read(bTemp);
-                    String sHtmlTemp = new String(bTemp);
-                    Pdf oPdf = new Pdf(sHtmlTemp);
-                    oPdf.create(sHtmlTemp, oHtml.getPath());*/
-
-
                     //VIA CHROME scheme
                     if (Util.isPackageExisted("com.android.chrome", this)) {
-                        Log.w("isPackageExisted", "true");
                         String url = oHtml.getPathHtml();
 
                         Uri uri = Uri.parse("googlechrome://navigate?url=" + url);
@@ -1504,7 +1498,7 @@ public class InspActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = position;
 
-                if (position != 3) {
+                if (position != 4) {
                     if (llDireccion != null) llDireccion.setVisibility(View.GONE);
                     if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
                 } else {
@@ -1527,7 +1521,7 @@ public class InspActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (SpiBusqueda == 3) {
+                if (SpiBusqueda == 4) {
                     txtBusqueda = new String();
                     if (!eStreet.getText().toString().isEmpty())
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
@@ -1559,6 +1553,11 @@ public class InspActivity extends AppCompatActivity {
                                 iBusqScale = LyPOSTES.getLayers()[0].getLayerServiceInfo().getMinScale();
                             break;
                         case 3:
+                            callQuery(txtBusqueda, "serie_medidor", LyMEDIDORES.getUrl().concat("/1"));
+                            if (LyMEDIDORES.getLayers() != null && LyMEDIDORES.getLayers().length > 1)
+                                iBusqScale = LyMEDIDORES.getLayers()[1].getLayerServiceInfo().getMinScale();
+                            break;
+                        case 4:
                             iBusqScale = 5000;
                             String[] sBuscar = {eStreet.getText().toString(), eNumber.getText().toString()};
                             String[] sFields = {"nombre_calle", "numero"};
@@ -1619,7 +1618,7 @@ public class InspActivity extends AppCompatActivity {
         idResLayoutSelect = idRes;
 
         Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFase);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFase);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFaseInsp);
         spTipoFase.setAdapter(adapter);
 
         Spinner spTipoMarca = (Spinner) v.findViewById(R.id.spinnerTipo);
@@ -1744,6 +1743,17 @@ public class InspActivity extends AppCompatActivity {
         if (spMarcaRet != null) {
             adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayMarca);
             spMarcaRet.setAdapter(adapter);
+        }
+
+        final CheckBox chkInspFallo = (CheckBox) v.findViewById(R.id.chkInspFallo);
+        if (chkInspFallo != null) {
+            chkInspFallo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bFallo = chkInspFallo.isChecked();
+                    modoFallo(v, bFallo);
+                }
+            });
         }
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
@@ -1936,6 +1946,22 @@ public class InspActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
     }
 
+    private void modoFallo(View view, boolean bool) {
+        // Activa desactiva elementos obligatorios
+        setRequerido(view, R.id.txtNumMedidor, bool);
+        setRequerido(view, R.id.txtLectura, bool);
+        setRequerido(view, R.id.txtPoste, bool);
+        setRequerido(view, R.id.txtRotulo, bool);
+        setRequerido(view, R.id.txtSellos, bool);
+        setRequerido(view, R.id.txtIcp, bool);
+        setRequerido(view, R.id.txtVoltF1n, bool);
+
+        // Activa o desactiva texto de olbigacion de spinner
+        setTextViewReq(view, R.id.spTextMarca, bool);
+        setTextViewReq(view, R.id.spTextTipo, bool);
+        setTextViewReq(view, R.id.spTextFase, bool);
+    }
+
     private void setRequerido(View view, int idRequerido, boolean bool) {
         if (bool) {
             EditText oText = (EditText) getLayoutContenedor(view).findViewById(idRequerido);
@@ -1951,6 +1977,20 @@ public class InspActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private void setTextViewReq(View view, int idRequerido, boolean bool) {
+        if (bool) {
+            TextView oText = (TextView) getLayoutContenedor(view).findViewById(idRequerido);
+            if (oText.getText() != null && oText.getText().toString().contains("*")) {
+                oText.setText(oText.getText().toString().replace("*",""));
+            }
+        } else {
+            TextView oText = (TextView) getLayoutContenedor(view).findViewById(idRequerido);
+            if (oText.getText() != null && !oText.getText().toString().contains("*")) {
+                oText.setText(oText.getText().toString().concat("*"));
+            }
+        }
     }
 
     private void imageGallery(String name) {
@@ -2515,7 +2555,7 @@ public class InspActivity extends AppCompatActivity {
                     case "MEDIDORES":
                         int array11[]; //declaracion arreglo de tipo numerico
                         array11 = new int[1];
-                        array11[0] = 0;
+                        array11[0] = 1;
                         LyMEDIDORES = new ArcGISDynamicMapServiceLayer(url, array11, credencial);
                         LyMEDIDORES.setVisible(visibilidad);
                         break;
@@ -2963,6 +3003,7 @@ public class InspActivity extends AppCompatActivity {
     private class AsyncQueryTask extends AsyncTask<String, Void, FeatureResult> {
 
         FeatureResult oResultTramos;
+        FeatureResult oResultNis;
 
         @Override
         protected void onPreExecute() {
@@ -3002,6 +3043,35 @@ public class InspActivity extends AppCompatActivity {
 
                     QueryTask oQueryTramos = new QueryTask(urlTramos, credenciales);
                     oResultTramos = oQueryTramos.execute(oParam);
+                } else if (SpiBusqueda == 3) {
+                    if (results != null && results.featureCount() > 1) {
+
+                    } else if (results != null && results.featureCount() == 1) {
+
+                    }
+
+                    //TEMPORAL
+                    if (results != null && results.featureCount() >= 1) {
+                        for (Object element : results) {
+                            Feature feature = (Feature) element;
+                            String sNis = feature.getAttributeValue("nis").toString();
+
+                            String sWhere = getValueByEmp("CLIENTES_XY_006.nis = '") + sNis + "'";
+
+                            QueryParameters oParam = new QueryParameters();
+                            oParam.setWhere(sWhere);
+
+                            oParam.setReturnGeometry(true);
+                            oParam.setOutFields(new String[]{"*"});
+
+                            String urlClientes = LyCLIENTES.getUrl().concat("/0");
+
+                            QueryTask oQueryNis = new QueryTask(urlClientes, credenciales);
+                            oResultNis = oQueryNis.execute(oParam);
+
+                            if (oResultNis.featureCount() > 0) break;
+                        }
+                    }
                 }
 
                 return results;
@@ -3026,71 +3096,122 @@ public class InspActivity extends AppCompatActivity {
 
                 myMapView.setScale(iBusqScale);
 
-                for (Object element : results) {
-                    progress.incrementProgressBy(numResult / 100);
+                if (SpiBusqueda == 3) {
 
-                    if (element instanceof Feature) {
+                    try {
 
-                        Feature feature = (Feature) element;
-                        myMapView.setExtent(feature.getGeometry(), 0, true);
+                        for (Object oNis : oResultNis) {
+                            Feature fNis = (Feature) oNis;
 
-                        if (feature.getSymbol() == null) {
+                            myMapView.setExtent(fNis.getGeometry(), 0, true);
+
                             SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
-                            Graphic resultLocGraphic = new Graphic(feature.getGeometry(), resultSymbol);
+                            Graphic resultLocGraphic = new Graphic(fNis.getGeometry(), resultSymbol);
                             mBusquedaLayer.addGraphic(resultLocGraphic);
 
-                            try {
+                            Callout mapCallout = myMapView.getCallout();
+                            fabNavRoute.setVisibility(View.GONE);
+                            mapCallout.hide();
 
-                                for (Object tramo : oResultTramos) {
-                                    Feature oTramo = (Feature) tramo;
+                            StringBuilder outStr;
+                            Util oUtil = new Util();
+                            outStr = oUtil.getStringByAttrClass(0, fNis.getAttributes());
+                            GisTextView tv = new GisTextView(InspActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) fNis.getGeometry());
+                            tv.setTextColor(Color.WHITE);
 
-                                    SimpleLineSymbol oLine = new SimpleLineSymbol(Color.RED, 1f, SimpleLineSymbol.STYLE.SOLID);
-                                    Graphic resGraph = new Graphic(oTramo.getGeometry(), oLine);
-
-                                    mBusquedaLayer.addGraphic(resGraph);
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myMapView.getCallout().hide();
+                                    fabNavRoute.setVisibility(View.GONE);
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            });
 
-                        } else {
-                            Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
-                            mBusquedaLayer.addGraphic(resultLocGraphic);
+                            mapCallout.setOffset(0, -3);
+                            mapCallout.setCoordinates(tv.getPoint());
+                            mapCallout.setMaxHeight(100);
+                            mapCallout.setMaxWidth(400);
+                            mapCallout.setStyle(R.xml.mycalloutprefs);
+                            mapCallout.setContent(tv);
+
+                            mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                        Callout mapCallout = myMapView.getCallout();
-                        fabNavRoute.setVisibility(View.GONE);
-                        mapCallout.hide();
+                } else {
 
-                        StringBuilder outStr;
-                        Util oUtil = new Util();
-                        outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
-                        GisTextView tv = new GisTextView(InspActivity.this);
-                        tv.setText(outStr.toString());
-                        tv.setPoint((Point) feature.getGeometry());
-                        tv.setTextColor(Color.WHITE);
+                    for (Object element : results) {
+                        progress.incrementProgressBy(numResult / 100);
 
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                myMapView.getCallout().hide();
-                                fabNavRoute.setVisibility(View.GONE);
+                        if (element instanceof Feature) {
+
+                            Feature feature = (Feature) element;
+                            myMapView.setExtent(feature.getGeometry(), 0, true);
+
+                            if (feature.getSymbol() == null) {
+                                SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
+                                Graphic resultLocGraphic = new Graphic(feature.getGeometry(), resultSymbol);
+                                mBusquedaLayer.addGraphic(resultLocGraphic);
+
+                                try {
+
+                                    for (Object tramo : oResultTramos) {
+                                        Feature oTramo = (Feature) tramo;
+
+                                        SimpleLineSymbol oLine = new SimpleLineSymbol(Color.RED, 1f, SimpleLineSymbol.STYLE.SOLID);
+                                        Graphic resGraph = new Graphic(oTramo.getGeometry(), oLine);
+
+                                        mBusquedaLayer.addGraphic(resGraph);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
+                                mBusquedaLayer.addGraphic(resultLocGraphic);
                             }
-                        });
 
-                        mapCallout.setOffset(0, -3);
-                        mapCallout.setCoordinates(tv.getPoint());
-                        mapCallout.setMaxHeight(100);
-                        mapCallout.setMaxWidth(400);
-                        mapCallout.setStyle(R.xml.mycalloutprefs);
-                        mapCallout.setContent(tv);
+                            Callout mapCallout = myMapView.getCallout();
+                            fabNavRoute.setVisibility(View.GONE);
+                            mapCallout.hide();
 
-                        mapCallout.show();
-                        fabNavRoute.setVisibility(View.VISIBLE);
+                            StringBuilder outStr;
+                            Util oUtil = new Util();
+                            outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
+                            GisTextView tv = new GisTextView(InspActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) feature.getGeometry());
+                            tv.setTextColor(Color.WHITE);
+
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myMapView.getCallout().hide();
+                                    fabNavRoute.setVisibility(View.GONE);
+                                }
+                            });
+
+                            mapCallout.setOffset(0, -3);
+                            mapCallout.setCoordinates(tv.getPoint());
+                            mapCallout.setMaxHeight(100);
+                            mapCallout.setMaxWidth(400);
+                            mapCallout.setStyle(R.xml.mycalloutprefs);
+                            mapCallout.setContent(tv);
+
+                            mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
                 myMapView.zoomin(true);
+
             } else {
                 Toast.makeText(InspActivity.this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
             }

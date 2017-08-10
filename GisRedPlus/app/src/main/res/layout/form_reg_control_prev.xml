@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="false">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <LinearLayout android:id="@+id/llDatosInsp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CONTROL PREVENTIVO"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtEmpresa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Empresa *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtLugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Lugar *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtProceso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Proceso *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtFechaCP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:editable="false"
+                    android:hint="Fecha *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtHoraCP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:editable="false"
+                    android:hint="Hora *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="ltr">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contratistas *"/>
+
+                <Spinner android:id="@+id/spinnerContratista"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+            </android.support.design.widget.CoordinatorLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ASPECTOS EVALUADOS TERRENO"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Incidentes potenciales que pueden ocurrir en la obra"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"/>
+
+            <CheckBox android:id="@+id/chkEval1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_1"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_2"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_3"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_4"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_5"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_6"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_7"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_8"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_9"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_10"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_11"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_12"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EPP"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"/>
+
+            <CheckBox android:id="@+id/chkEval13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_13"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_14"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_15"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_16"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_17"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_18"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_19"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_20"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_21"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_22"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval23"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_23"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Herramientas y equipos"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"/>
+
+            <CheckBox android:id="@+id/chkEval25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_25"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval26"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_26"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval27"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_27"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_28"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval29"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_29"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_30"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval31"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_31"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval32"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_32"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval33"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_33"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval34"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_34"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval35"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_35"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Procedimientos e intructivos"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"/>
+
+            <CheckBox android:id="@+id/chkEval37"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_37"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval38"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_38"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval39"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_39"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval40"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_40"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval41"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_41"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval42"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_42"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval43"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_43"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval44"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_44"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval45"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_45"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval46"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_46"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval47"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_47"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval48"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_48"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trabajos específicos observados"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"/>
+
+            <CheckBox android:id="@+id/chkEval49"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_49"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_50"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval51"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_51"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval52"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_52"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval53"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_53"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval54"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_54"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval55"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_55"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval56"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_56"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval57"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_57"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval58"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_58"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkEval59"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eval_59"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS DEL FIRMANTE"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtNomInst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Nombre instalador autorizado y/o propietario *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtRutInst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="0123456789Kk"
+                    android:inputType="textShortMessage"
+                    android:hint="Rut (Sin puntos ni guión) *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="ltr">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Situación firmante"/>
+
+                <Spinner android:id="@+id/spinnerFirmante"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+            </android.support.design.widget.CoordinatorLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Firma"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgFirmaIns"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <ImageButton android:id="@+id/btnFirmaIns"
+                        android:layout_width="80dp"
+                        android:maxWidth="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_brush_black_48dp"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ANEXO FOTOGRAFICO"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Conexionado del medidor"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:maxWidth="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Caja de conexión"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:maxWidth="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tablero general"
+                    android:textSize="18sp"
+                    android:singleLine="false"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView android:id="@+id/imgPhoto3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:minWidth="200dp"
+                        android:maxWidth="200dp"
+                        android:layout_weight="3"
+                        android:padding="1dp"
+                        android:cropToPadding="true"
+                        style="@style/myImageView"/>
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:maxWidth="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton android:id="@+id/btnPhoto3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera_black_48dp"
+                            android:layout_gravity="center"/>
+
+                        <ImageButton android:id="@+id/btnFile3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_image_black_48dp"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include android:id="@+id/actionDialog"
+            layout="@layout/botonera_form" />
+
+    </LinearLayout>
+
+</ScrollView>

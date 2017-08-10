@@ -15,7 +15,7 @@ android {
         applicationId "cl.gisred.android"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 24
+        versionCode 25
         versionName "1.2.0"
         signingConfig signingConfigs.config
     }

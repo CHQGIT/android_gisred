@@ -55,6 +55,16 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"/>
         <activity
+            android:name=".FormLectActivity"
+            android:label="Menú Lectores"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".FormEhysActivity"
+            android:label="Menú EH and S"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".StandardActivity"
             android:label="Standard"
             android:screenOrientation="locked"
@@ -71,9 +81,9 @@
             android:parentActivityName=".FormActivity" />
         <activity
             android:name=".LectorActivity"
-            android:label="Lectores"
+            android:label="Lectura Nis"
             android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".FormLectActivity" />
         <activity
             android:name=".TelemedidaActivity"
             android:label="Telemedidas"

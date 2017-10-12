@@ -126,47 +126,37 @@ public class Util {
 
     public void setAttrInView(int idRes, View v, Map<String, Object> oAttr) {
 
-        if (idRes == R.layout.dialog_cliente) {
+        for (View view : v.getTouchables()) {
 
-            for (View view : v.getTouchables()) {
+            if (view.getClass().equals(GisEditText.class)) {
+                GisEditText oText = (GisEditText) view;
 
-                if (view.getClass().equals(GisEditText.class)) {
-                    GisEditText oText = (GisEditText) view;
+                if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
+                    /*if (oText.getId() == R.id.txtAsocAddress) {
+                        objectMap.put("ID_DIRECCION", oText.getIdObjeto());
+                        objectMap.put("TIPO_DIRECCION", oText.getTipo());
 
-                    if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                        /*if (oText.getId() == R.id.txtAsocAddress) {
-                            objectMap.put("ID_DIRECCION", oText.getIdObjeto());
-                            objectMap.put("TIPO_DIRECCION", oText.getTipo());
+                        oMapDireccion.put("ID_DIRECCION", oText.getIdObjeto());
+                        oMapUbicacion.put("DIRECCION_POINT", oText.getPoint());
+                    } else if (oText.getId() == R.id.txtAsocPoste) {
+                        objectMap.put("ID_POSTE_CAMARA", oText.getIdObjeto());
+                        objectMap.put("TIPO_POSTE_CAMARA", oText.getTipo());
 
-                            oMapDireccion.put("ID_DIRECCION", oText.getIdObjeto());
-                            oMapUbicacion.put("DIRECCION_POINT", oText.getPoint());
-                        } else if (oText.getId() == R.id.txtAsocPoste) {
-                            objectMap.put("ID_POSTE_CAMARA", oText.getIdObjeto());
-                            objectMap.put("TIPO_POSTE_CAMARA", oText.getTipo());
-
-                            oMapPoste.put("ID_POSTE", oText.getIdObjeto());
-                            oMapPoste.put("ROTULO", oText.getText().toString());
-                            oMapUbicacion.put("POSTE_POINT", oText.getPoint());
-                        }*/
-                    }
-
-                } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
-                    EditText oText = (EditText) view;
-
-                    //VALIDAR contains oAttr.get("OS").toString() and isEmpty()
-
-                    if (oText.getText() != null) {
-                        if (oText.getId() == R.id.txtOS)
-                            oText.setText(formatValCampoDB(oAttr.get("OS")));
-                        else if (oText.getId() == R.id.txtNumMedidor)
-                            oText.setText(formatValCampoDB(oAttr.get("NUMERO_MEDIDOR")));
-                    }
-
+                        oMapPoste.put("ID_POSTE", oText.getIdObjeto());
+                        oMapPoste.put("ROTULO", oText.getText().toString());
+                        oMapUbicacion.put("POSTE_POINT", oText.getPoint());
+                    }*/
                 }
+
+            } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                EditText oText = (EditText) view;
+
+                if (oText.getText() != null) {
+                    if (oText.getId() == R.id.txtNumMedidor)
+                        oText.setText(formatValCampoDB(oAttr.get("NUMERO_MEDIDOR")));
+                }
+
             }
-
-        } else if (idRes == R.layout.dialog_cliente_cnr) {
-
         }
     }
 
@@ -479,11 +469,23 @@ public class Util {
 
             outStr.append("POSTE");
             if (oAttrAbrev.containsKey("rotulo") && !oAttrAbrev.get("rotulo").toString().trim().isEmpty())
-                outStr.append(". " + oAttrAbrev.get("rotulo").toString());
+                outStr.append(": " + oAttrAbrev.get("rotulo").toString());
             outStr.append(LSP); outStr.append(LSP);
 
             String[] keys = {"id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
+        } else if (numBusq == -1) {
+
+            outStr.append("INSPECCION LECTURA");
+            outStr.append(LSP); outStr.append(LSP);
+            if (oAttrAbrev.containsKey("OBJECTID") && !oAttrAbrev.get("OBJECTID").toString().trim().isEmpty())
+                outStr.append("OBJECT ID: " + oAttrAbrev.get("OBJECTID").toString());
+            outStr.append(LSP);
+
+            String[] keys = {"nro_medidor", "estado", "tipo_edificacion", "poste", "direccion", "lectura_actual", "inspeccion", "ot", "inspector"};
+            outStr.append(setValuesByKey(keys, oAttrAbrev));
+            outStr.append(LSP); outStr.append(LSP);
+            outStr.append("Presione para cerrar");
         } else {
             //GENERICOS
             for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {

@@ -56,6 +56,13 @@ public class EmpActivity extends AppCompatActivity {
                         goToMainMenu(bundle, "chilquinta");
                     }
                 });
+            } else {
+                btnChilquinta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "No tiene acceso a los módulos de ésta empresa", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             ImageButton btnLitoral = (ImageButton) findViewById(R.id.btnLitoral);
@@ -65,6 +72,13 @@ public class EmpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         goToMainMenu(bundle, "litoral");
+                    }
+                });
+            } else {
+                btnLitoral.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "No tiene acceso a los módulos de ésta empresa", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -78,6 +92,13 @@ public class EmpActivity extends AppCompatActivity {
                         goToMainMenu(bundle, "casablanca");
                     }
                 });
+            } else {
+                btnCasablanca.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "No tiene acceso a los módulos de ésta empresa", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             ImageButton btnLinares = (ImageButton) findViewById(R.id.btnLinares);
@@ -89,6 +110,13 @@ public class EmpActivity extends AppCompatActivity {
                         goToMainMenu(bundle, "linares");
                     }
                 });
+            } else {
+                btnLinares.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "No tiene acceso a los módulos de ésta empresa", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             ImageButton btnParral = (ImageButton) findViewById(R.id.btnParral);
@@ -98,6 +126,13 @@ public class EmpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         goToMainMenu(bundle, "parral");
+                    }
+                });
+            } else {
+                btnParral.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "No tiene acceso a los módulos de ésta empresa", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

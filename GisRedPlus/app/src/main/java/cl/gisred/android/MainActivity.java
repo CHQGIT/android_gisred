@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES", "EH&S"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES", "EH&S", "MICROMEDICION", "REPARTOS"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
@@ -84,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
             adaptador = new AdaptadorMenus(MainActivity.this, datos);
 
             lstOpciones.setAdapter(adaptador);
-        }
-        else {
+        } else {
             Toast.makeText(MainActivity.this, "No hay datos, verifique credenciales", Toast.LENGTH_LONG).show();
             Intent oIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(oIntent);
@@ -144,6 +143,12 @@ public class MainActivity extends AppCompatActivity {
                         oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
                     } else if (datos[position].getTitulo().contains("EH&S")){
                         oIntent = new Intent(MainActivity.this, FormEhysActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MICRO")){
+                        oIntent = new Intent(MainActivity.this, MicroMedidaActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("REPARTOS")){
+                        oIntent = new Intent(MainActivity.this, RepartoActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
@@ -240,6 +245,12 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("EH&S")) {
                 dato.setDescripcion("Módulo EH&S");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+            } else if (dato.getTitulo().contains("MICRO")) {
+                dato.setDescripcion("Visualización e ingreso de catastros de medidores");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("REPARTOS")) {
+                dato.setDescripcion("Ingreso de correspondencia repartida");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
             }
             return dato;
         }

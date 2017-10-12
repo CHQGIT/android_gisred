@@ -36,7 +36,7 @@ public class FormLectActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("LECTORES_NIS", "LECTORES_AP"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("LECTORES_NIS", "LECTORES_AP", "LECTORES_INSPECCION"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -106,6 +106,8 @@ public class FormLectActivity extends AppCompatActivity {
                     Intent oIntent;
                     if (datos[position].getTitulo().contains("AP"))
                         oIntent = new Intent(FormLectActivity.this, LectorActivity.class);
+                    else if (datos[position].getTitulo().contains("INSPECCION"))
+                        oIntent = new Intent(FormLectActivity.this, InspLectActivity.class);
                     else
                         oIntent = new Intent(FormLectActivity.this, LectorActivity.class);
 
@@ -149,6 +151,8 @@ public class FormLectActivity extends AppCompatActivity {
                 dato.setDescripcion("Módulo lectura NIS");
             } else if (dato.getTitulo().contains("AP")) {
                 dato.setDescripcion("Módulo lectura AP");
+            } else if (dato.getTitulo().contains("INSPECCION")) {
+                dato.setDescripcion("Módulo de inspección de lecturas asignadas");
             }
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_lectores : R.mipmap.ic_menu_ing_lectores_g);
             return dato;

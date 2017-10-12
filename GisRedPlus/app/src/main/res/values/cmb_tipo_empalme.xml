@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tipo_empalme">
+        <item>AAT</item>
         <item>A-6</item>
         <item>A-9</item>
         <item>A-18</item>

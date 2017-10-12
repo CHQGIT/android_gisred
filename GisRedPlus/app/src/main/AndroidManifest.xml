@@ -80,10 +80,25 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".FormActivity" />
         <activity
+            android:name=".InspLectActivity"
+            android:label="Inspección Lecturas"
+            android:screenOrientation="locked"
+            android:parentActivityName=".FormLectActivity" />
+        <activity
             android:name=".LectorActivity"
             android:label="Lectura Nis"
             android:screenOrientation="locked"
             android:parentActivityName=".FormLectActivity" />
+        <activity
+            android:name=".LectorInspActivity"
+            android:label="Inspección Lecturas"
+            android:screenOrientation="locked"
+            android:parentActivityName=".InspLectActivity" />
+        <activity
+            android:name=".MicroMedidaActivity"
+            android:label="Micromedición"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".TelemedidaActivity"
             android:label="Telemedidas"
@@ -97,6 +112,11 @@
         <activity
             android:name=".PowerOnActivity"
             android:label="Interrupciones"
+            android:screenOrientation="locked"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".RepartoActivity"
+            android:label="Repartos"
             android:screenOrientation="locked"
             android:parentActivityName=".MainActivity" />
     </application>

@@ -3,45 +3,256 @@
     <string-array name="tipo_marca">
         <item></item>
         <item>80</item>
+        <item>7400</item>
+        <item>8650</item>
+        <item>4173646</item>
+        <item> MF31</item>
+        <item>155XA</item>
+        <item>162MX3</item>
         <item>2113DCM</item>
+        <item>2113DSM</item>
+        <item>2113ICM</item>
+        <item>2113ISM</item>
+        <item>2AO</item>
+        <item>8600A</item>
+        <item>8600C</item>
+        <item>A1000CB</item>
         <item>A102C</item>
+        <item>A1350</item>
+        <item>A150</item>
+        <item>A150AR</item>
+        <item>A1D</item>
         <item>A1R</item>
+        <item>A1R+</item>
+        <item>A1R+L</item>
+        <item>A1RAL</item>
+        <item>AB2YYA</item>
+        <item>AB5P</item>
+        <item>ABO30</item>
+        <item>AC1000SMO</item>
+        <item>AC2MYA</item>
+        <item>AC5000</item>
+        <item>ACE1000</item>
+        <item>ACE3000</item>
+        <item>ACE6000</item>
+        <item>AD2MYA</item>
+        <item>AS1440</item>
+        <item>AS150</item>
+        <item>AS220</item>
+        <item>ATLASMK10AWC</item>
+        <item>ATLASMK9</item>
+        <item>B61P</item>
+        <item>BA0MDR</item>
+        <item>BD2MYA2</item>
+        <item>BE0MDA</item>
+        <item>BE1YDA</item>
+        <item>BE1YDA1</item>
+        <item>BF0MDA</item>
+        <item>BF0YDA</item>
+        <item>BF1MDA</item>
+        <item>BF1MPA2</item>
+        <item>BF1YDA</item>
+        <item>BF1YYA</item>
+        <item>BF2MYA</item>
+        <item>BG1MPA1</item>
+        <item>BG1MPA2</item>
+        <item>BG2MYA</item>
+        <item>BI0MDA</item>
+        <item>C1B</item>
+        <item>CA</item>
+        <item>CCD</item>
+        <item>CE</item>
+        <item>CE1</item>
+        <item>CG1</item>
+        <item>CG101</item>
+        <item>CL710N195</item>
+        <item>CL710N2</item>
+        <item>CL710N23</item>
+        <item>CM08CH</item>
+        <item>CYRP</item>
         <item>D2S4RH</item>
+        <item>D58</item>
+        <item>D58 JF</item>
+        <item>D58JF</item>
+        <item>D58JG</item>
+        <item>D8LR</item>
+        <item>DD50</item>
         <item>DD862</item>
-        <item>DD862-4</item>
-        <item>DD862-5</item>
-        <item>DDS-71</item>
+        <item>DD8624</item>
+        <item>DD8625</item>
+        <item>DDS01A</item>
+        <item>DDS01AA</item>
+        <item>DDS2013</item>
+        <item>DDS253</item>
+        <item>DDS26B</item>
+        <item>DDS450</item>
+        <item>DDS607</item>
+        <item>DDS608</item>
+        <item>DDS71</item>
+        <item>DDS71NE</item>
+        <item>DDS72</item>
+        <item>DDS74</item>
+        <item>DDS75</item>
+        <item>DDS77</item>
+        <item>DDS81</item>
+        <item>DDS83</item>
+        <item>DDS86</item>
+        <item>DDS862</item>
+        <item>DDS87</item>
+        <item>DDS88</item>
+        <item>DDS994</item>
+        <item>DSM63</item>
+        <item>DTS</item>
+        <item>DTS2013</item>
+        <item>DTS27</item>
+        <item>DTS28</item>
+        <item>E11</item>
+        <item>E2</item>
         <item>E2Y6</item>
+        <item>E71G</item>
+        <item>E90B</item>
+        <item>EI</item>
+        <item>F217900</item>
+        <item>F3</item>
         <item>F72</item>
         <item>F72P</item>
+        <item>FDC</item>
+        <item>FL</item>
+        <item>FL230XH</item>
+        <item>FT2</item>
+        <item>FX221</item>
+        <item>G1Y6UH</item>
+        <item>G7Y6URH</item>
+        <item>GB3924</item>
+        <item>GH46G</item>
+        <item>GYR</item>
+        <item>I14</item>
         <item>I16</item>
+        <item>I27A</item>
         <item>I55XA</item>
+        <item>IP51</item>
+        <item>ITZS1</item>
+        <item>ITZW1</item>
+        <item>ITZW1E</item>
+        <item>J10</item>
+        <item>J6P</item>
+        <item>JA</item>
+        <item>L16</item>
+        <item>L8</item>
+        <item>L9</item>
+        <item>LJG</item>
+        <item>LR</item>
+        <item>LZQJ</item>
+        <item>M10</item>
+        <item>M12M</item>
+        <item>M5S0</item>
         <item>M5S1</item>
+        <item>MAXTRUS</item>
+        <item>MC310R</item>
+        <item>MD</item>
         <item>MDE</item>
-        <item>MEP-PLC</item>
+        <item>MDE2</item>
+        <item>MDO</item>
+        <item>MECP01</item>
+        <item>MECP01H</item>
+        <item>MECT</item>
+        <item>MEP01</item>
+        <item>MEPPLC</item>
         <item>MF31</item>
         <item>MF33K</item>
         <item>MF33KA</item>
+        <item>MF61</item>
         <item>MF63</item>
+        <item>MF79G</item>
+        <item>MF79K</item>
+        <item>ML240AX</item>
+        <item>ML240XH</item>
         <item>ML262XH</item>
         <item>ML272</item>
+        <item>MM2600</item>
+        <item>MM2600X</item>
+        <item>MS51</item>
+        <item>NBP</item>
+        <item>NXT4</item>
         <item>OA11M</item>
         <item>OB91M</item>
         <item>OB91MU</item>
+        <item>OMNI684</item>
+        <item>P20AP</item>
+        <item>P20DAP</item>
+        <item>P2AP</item>
         <item>P30A</item>
         <item>P30DA</item>
+        <item>P3A</item>
+        <item>P3DA</item>
         <item>P40A</item>
         <item>RF</item>
+        <item>S2</item>
+        <item>S2004</item>
         <item>S3</item>
         <item>S3B</item>
+        <item>S3B1</item>
+        <item>S3DA</item>
+        <item>S4A</item>
+        <item>S4DA</item>
         <item>S5N2</item>
         <item>S62</item>
+        <item>SCMR</item>
+        <item>SGM3010</item>
+        <item>SGM3011</item>
+        <item>SGM3031</item>
+        <item>SGM3032</item>
+        <item>SGM30C2</item>
+        <item>SI</item>
+        <item>SK1F</item>
+        <item>SL16</item>
+        <item>SL1621</item>
+        <item>SL3AD</item>
+        <item>SL3AT</item>
+        <item>SL4A</item>
+        <item>SL4AD</item>
+        <item>SL4AT</item>
+        <item>SL7000</item>
+        <item>SMO</item>
         <item>SS4A2L</item>
+        <item>SS4A2L0</item>
+        <item>STS2013</item>
+        <item>SV3ARG</item>
+        <item>SV4AR</item>
+        <item>T2S4RH</item>
+        <item>T4S4RH</item>
         <item>T7S1H</item>
         <item>T8L</item>
+        <item>T8LM</item>
+        <item>T8LR</item>
+        <item>T8MF</item>
+        <item>UVB</item>
+        <item>V5</item>
+        <item>V63A</item>
         <item>V64A</item>
+        <item>V9B</item>
+        <item>VA63A</item>
+        <item>VA64A</item>
+        <item>VEN18G</item>
+        <item>VM63A</item>
         <item>VM64A</item>
+        <item>W9</item>
+        <item>W9C</item>
+        <item>WFN</item>
+        <item>WK</item>
+        <item>Y73</item>
+        <item>ZMB120T</item>
+        <item>ZMB310C</item>
+        <item>ZMB410C</item>
+        <item>ZMD120</item>
+        <item>ZMD120A</item>
         <item>ZMD310</item>
+        <item>ZMD405C</item>
+        <item>ZMD410C</item>
+        <item>ZMG310</item>
+        <item>ZMG310CR4</item>
+        <item>ZMG405C</item>
+        <item>ZMG6310CR4</item>
         <item>Otro</item>
     </string-array>
 </resources>

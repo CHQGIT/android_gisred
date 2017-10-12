@@ -31,12 +31,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -85,6 +88,7 @@ import com.esri.android.map.LocationDisplayManager.AutoPanMode;
 
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
+import cl.gisred.android.entity.BusqClass;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
 
@@ -111,11 +115,11 @@ public class MapsActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "Electro Dependientes"};
 
     public String[] arrayTipoEdif = {};
     public String[] arrayTipoPoste = {};
@@ -126,10 +130,10 @@ public class MapsActivity extends AppCompatActivity {
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
 
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
-    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE;
+    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlElectroDep;
     //url para feature layers
     String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles;
 
@@ -139,7 +143,7 @@ public class MapsActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyELECTRODEP;
     ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle;
 
     //set Extent inicial
@@ -155,6 +159,9 @@ public class MapsActivity extends AppCompatActivity {
     ArrayList<String> arrayWidgets;
     private int choices;
     ProgressDialog progress;
+
+    BusqClass[] datosBusq;
+    ListView lstBusqMedidores;
 
     boolean bAlertGps = false;
 
@@ -181,6 +188,7 @@ public class MapsActivity extends AppCompatActivity {
     private Graphic[] addsUnion = {};
 
     Dialog dialogCrear;
+    Dialog dialogBusq;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
@@ -238,6 +246,7 @@ public class MapsActivity extends AppCompatActivity {
         setLayersURL(this.getResources().getString(R.string.url_medidores), "MEDIDORES");
         setLayersURL(this.getResources().getString(R.string.url_Stx), "STX");
         setLayersURL(this.getResources().getString(R.string.url_ECSE_varios), "ECSE");
+        setLayersURL(this.getResources().getString(R.string.url_Electrodependientes), "ELECTRODEP");
 
         //Agrega layers dinámicos.
         addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
@@ -260,6 +269,7 @@ public class MapsActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "ELECTRODEP", din_urlElectroDep, null, false);
 
         //Añade Layer al Mapa
         myMapView.addLayer(mRoadBaseMaps, 0);
@@ -282,6 +292,7 @@ public class MapsActivity extends AppCompatActivity {
         myMapView.addLayer(LyTORRESSTX, 17);
         myMapView.addLayer(LyENCUESTA, 18);
         myMapView.addLayer(LyREEMPLAZO, 19);
+        myMapView.addLayer(LyELECTRODEP, 20);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
@@ -429,13 +440,13 @@ public class MapsActivity extends AppCompatActivity {
             addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
             addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-            myMapView.addLayer(LyAddPoste, 20);
-            myMapView.addLayer(LyAddDireccion, 21);
-            myMapView.addLayer(LyAddCliente, 22);
-            myMapView.addLayer(LyAddUnion, 23);
-            myMapView.addLayer(LyAsocTramo, 24);
-            myMapView.addLayer(LyAsocCalle, 25);
-            myMapView.addLayer(LyAddClienteCnr, 26);
+            myMapView.addLayer(LyAddPoste, 21);
+            myMapView.addLayer(LyAddDireccion, 22);
+            myMapView.addLayer(LyAddCliente, 23);
+            myMapView.addLayer(LyAddUnion, 24);
+            myMapView.addLayer(LyAsocTramo, 25);
+            myMapView.addLayer(LyAsocCalle, 26);
+            myMapView.addLayer(LyAddClienteCnr, 27);
 
             setLayerAddToggle(false);
 
@@ -856,6 +867,49 @@ public class MapsActivity extends AppCompatActivity {
         return null;
     }
 
+    class AdaptBusqMedidor extends ArrayAdapter<BusqClass> {
+
+        public AdaptBusqMedidor(Context context, BusqClass[] datos) {
+            super(context, R.layout.list_item_busq, datos);
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View item = inflater.inflate(R.layout.list_item_busq, null);
+
+            TextView lblNis = (TextView) item.findViewById(R.id.LblSerieNis);
+            lblNis.setText(datosBusq[position].getSerieNis());
+
+            TextView lblMarca = (TextView) item.findViewById(R.id.LblMarca);
+            lblMarca.setText(datosBusq[position].getMarca());
+
+            TextView lblModelo = (TextView) item.findViewById(R.id.LblModelo);
+            lblModelo.setText(datosBusq[position].getModelo());
+
+            return (item);
+        }
+    }
+
+    private void abrirBusqMedidores() {
+
+        lstBusqMedidores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SpiBusqueda = 0;
+                callQuery(datosBusq[position].getNis(), getValueByEmp("CLIENTES_XY_006.nis"), LyCLIENTES.getUrl().concat("/0"));
+                if (LyCLIENTES.getLayers() != null && LyCLIENTES.getLayers().length > 0)
+                    iBusqScale = LyCLIENTES.getLayers()[0].getLayerServiceInfo().getMinScale();
+                dialogBusq.dismiss();
+            }
+        });
+
+        dialogBusq = new Dialog(this);
+        dialogBusq.setTitle("Lista Búsqueda");
+        dialogBusq.addContentView(lstBusqMedidores, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        dialogBusq.show();
+    }
+
     private void abrirDialogCrear(View view) {
 
         FloatingActionButton fabTemp = (FloatingActionButton) view;
@@ -1025,7 +1079,7 @@ public class MapsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = position;
 
-                if (position != 3) {
+                if (position != 4) {
                     if (llDireccion != null) llDireccion.setVisibility(View.GONE);
                     if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
                 } else {
@@ -1048,7 +1102,7 @@ public class MapsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (SpiBusqueda == 3) {
+                if (SpiBusqueda == 4) {
                     txtBusqueda = new String();
                     if (!eStreet.getText().toString().isEmpty())
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
@@ -1080,6 +1134,11 @@ public class MapsActivity extends AppCompatActivity {
                                 iBusqScale = LyPOSTES.getLayers()[0].getLayerServiceInfo().getMinScale();
                             break;
                         case 3:
+                            callQuery(txtBusqueda, "serie_medidor", LyMEDIDORES.getUrl().concat("/1"));
+                            if (LyMEDIDORES.getLayers() != null && LyMEDIDORES.getLayers().length > 1)
+                                iBusqScale = LyMEDIDORES.getLayers()[1].getLayerServiceInfo().getMinScale();
+                            break;
+                        case 4:
                             iBusqScale = 5000;
                             String[] sBuscar = {eStreet.getText().toString(), eNumber.getText().toString()};
                             String[] sFields = {"nombre_calle", "numero"};
@@ -1377,8 +1436,6 @@ public class MapsActivity extends AppCompatActivity {
             } else if (mSelectedItems.contains(i)) {
                 mSelectedItems.remove(Integer.valueOf(i));
             }
-
-            Log.w("LayerVisible", (i + 1) + " = " + fool[i] + " " + listadoCapas[i]);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
@@ -1405,8 +1462,6 @@ public class MapsActivity extends AppCompatActivity {
                         setLayerOff();
 
                         for (Integer i : mSelectedItems) {
-
-                            Log.w("mSelectedItems", "Visible " + i + " " + listadoCapas[i]);
                             myMapView.getLayer(i + 1).setVisible(true);
                         }
                     }
@@ -1491,6 +1546,9 @@ public class MapsActivity extends AppCompatActivity {
             case "ECSE":
                 din_urlECSE = layerURL;
                 break;
+            case "ELECTRODEP":
+                din_urlElectroDep = layerURL;
+                break;
             case "SRV_POSTES":
                 srv_urlPostes = layerURL;
                 break;
@@ -1517,7 +1575,6 @@ public class MapsActivity extends AppCompatActivity {
 
     public void addLayersToMap(UserCredentials credencial, String tipoLayer, String nombreCapa, String url, String mode, boolean visibilidad) {
 
-        // tipo layer feature
         if (tipoLayer.equals("FEATURE")) {
 
             switch (nombreCapa) {
@@ -1658,7 +1715,7 @@ public class MapsActivity extends AppCompatActivity {
                     case "MEDIDORES":
                         int array11[]; //declaracion arreglo de tipo numerico
                         array11 = new int[1];
-                        array11[0] = 0;
+                        array11[0] = 1;
                         LyMEDIDORES = new ArcGISDynamicMapServiceLayer(url, array11, credencial);
                         LyMEDIDORES.setVisible(visibilidad);
                         break;
@@ -1723,6 +1780,13 @@ public class MapsActivity extends AppCompatActivity {
                         array19[0] = 1;
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
                         LyREEMPLAZO.setVisible(visibilidad);
+                        break;
+                    case "ELECTRODEP":
+                        int array20[];
+                        array20 = new int[1];
+                        array20[0] = 0;
+                        LyELECTRODEP = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
+                        LyELECTRODEP.setVisible(visibilidad);
                         break;
                     default:
                         Toast.makeText(MapsActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
@@ -1997,6 +2061,7 @@ public class MapsActivity extends AppCompatActivity {
                             LyEMPALMES.reinitializeLayer(creds);
                             LyENCUESTA.reinitializeLayer(creds);
                             LyREEMPLAZO.reinitializeLayer(creds);
+                            LyELECTRODEP.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -2106,6 +2171,7 @@ public class MapsActivity extends AppCompatActivity {
     private class AsyncQueryTask extends AsyncTask<String, Void, FeatureResult> {
 
         FeatureResult oResultTramos;
+        FeatureResult oResultNis;
 
         @Override
         protected void onPreExecute() {
@@ -2145,6 +2211,29 @@ public class MapsActivity extends AppCompatActivity {
 
                     QueryTask oQueryTramos = new QueryTask(urlTramos, credenciales);
                     oResultTramos = oQueryTramos.execute(oParam);
+                } else if (SpiBusqueda == 3) {
+
+                    if (results != null && results.featureCount() == 1) {
+                        for (Object element : results) {
+                            Feature feature = (Feature) element;
+                            String sNis = feature.getAttributeValue("nis").toString();
+
+                            String sWhere = getValueByEmp("CLIENTES_XY_006.nis = '") + sNis + "'";
+
+                            QueryParameters oParam = new QueryParameters();
+                            oParam.setWhere(sWhere);
+
+                            oParam.setReturnGeometry(true);
+                            oParam.setOutFields(new String[]{"*"});
+
+                            String urlClientes = LyCLIENTES.getUrl().concat("/0");
+
+                            QueryTask oQueryNis = new QueryTask(urlClientes, credenciales);
+                            oResultNis = oQueryNis.execute(oParam);
+
+                            if (oResultNis.featureCount() > 0) break;
+                        }
+                    }
                 }
 
                 return results;
@@ -2169,67 +2258,145 @@ public class MapsActivity extends AppCompatActivity {
 
                 myMapView.setScale(iBusqScale);
 
-                for (Object element : results) {
-                    progress.incrementProgressBy(numResult / 100);
+                if (SpiBusqueda == 3) {
 
-                    if (element instanceof Feature) {
+                    try {
 
-                        Feature feature = (Feature) element;
-                        myMapView.setExtent(feature.getGeometry(), 0, true);
+                        if (results.featureCount() > 1){
+                            lstBusqMedidores = new ListView(getApplicationContext());
+                            datosBusq = new BusqClass[numResult];
+                            int cont = 0;
 
-                        if (feature.getSymbol() == null) {
-                            SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
-                            Graphic resultLocGraphic = new Graphic(feature.getGeometry(), resultSymbol);
-                            mBusquedaLayer.addGraphic(resultLocGraphic);
+                            for (Object element : results) {
+                                Feature feature = (Feature) element;
 
-                            try {
+                                String sNis = feature.getAttributeValue("nis").toString();
+                                String sSerie = feature.getAttributeValue("serie_medidor").toString();
+                                String sMarca = feature.getAttributeValue("marca_medidor").toString();
+                                String sModelo = feature.getAttributeValue("modelo").toString();
 
-                                for (Object tramo : oResultTramos) {
-                                    Feature oTramo = (Feature) tramo;
-
-                                    SimpleLineSymbol oLine = new SimpleLineSymbol(Color.RED, 1f, SimpleLineSymbol.STYLE.SOLID);
-                                    Graphic resGraph = new Graphic(oTramo.getGeometry(), oLine);
-
-                                    mBusquedaLayer.addGraphic(resGraph);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                BusqClass oMedidor = new BusqClass(sSerie+"-"+sNis, sMarca, sModelo);
+                                datosBusq[cont] = oMedidor;
+                                cont++;
                             }
 
-                        } else {
-                            Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
-                            mBusquedaLayer.addGraphic(resultLocGraphic);
+                            AdaptBusqMedidor adaptador;
+                            adaptador = new AdaptBusqMedidor(MapsActivity.this, datosBusq);
+
+                            lstBusqMedidores.setAdapter(adaptador);
+
+                            abrirBusqMedidores();
+
+                        } else if (results.featureCount() == 1) {
+                            for (Object oNis : oResultNis) {
+                                Feature fNis = (Feature) oNis;
+
+                                myMapView.setExtent(fNis.getGeometry(), 0, true);
+
+                                SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
+                                Graphic resultLocGraphic = new Graphic(fNis.getGeometry(), resultSymbol);
+                                mBusquedaLayer.addGraphic(resultLocGraphic);
+
+                                Callout mapCallout = myMapView.getCallout();
+                                fabNavRoute.setVisibility(View.GONE);
+                                mapCallout.hide();
+
+                                StringBuilder outStr;
+                                Util oUtil = new Util();
+                                outStr = oUtil.getStringByAttrClass(0, fNis.getAttributes());
+                                GisTextView tv = new GisTextView(MapsActivity.this);
+                                tv.setText(outStr.toString());
+                                tv.setPoint((Point) fNis.getGeometry());
+                                tv.setTextColor(Color.WHITE);
+
+                                tv.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        myMapView.getCallout().hide();
+                                        fabNavRoute.setVisibility(View.GONE);
+                                    }
+                                });
+
+                                mapCallout.setOffset(0, -3);
+                                mapCallout.setCoordinates(tv.getPoint());
+                                mapCallout.setMaxHeight(100);
+                                mapCallout.setMaxWidth(400);
+                                mapCallout.setStyle(R.xml.mycalloutprefs);
+                                mapCallout.setContent(tv);
+
+                                mapCallout.show();
+                                fabNavRoute.setVisibility(View.VISIBLE);
+                            }
                         }
 
-                        Callout mapCallout = myMapView.getCallout();
-                        fabNavRoute.setVisibility(View.GONE);
-                        mapCallout.hide();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                        StringBuilder outStr;
-                        Util oUtil = new Util();
-                        outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
-                        GisTextView tv = new GisTextView(MapsActivity.this);
-                        tv.setText(outStr.toString());
-                        tv.setPoint((Point) feature.getGeometry());
-                        tv.setTextColor(Color.WHITE);
+                } else {
 
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                myMapView.getCallout().hide();
-                                fabNavRoute.setVisibility(View.GONE);
+                    for (Object element : results) {
+                        progress.incrementProgressBy(numResult / 100);
+
+                        if (element instanceof Feature) {
+
+                            Feature feature = (Feature) element;
+                            myMapView.setExtent(feature.getGeometry(), 0, true);
+
+                            if (feature.getSymbol() == null) {
+                                SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
+                                Graphic resultLocGraphic = new Graphic(feature.getGeometry(), resultSymbol);
+                                mBusquedaLayer.addGraphic(resultLocGraphic);
+
+                                try {
+
+                                    for (Object tramo : oResultTramos) {
+                                        Feature oTramo = (Feature) tramo;
+
+                                        SimpleLineSymbol oLine = new SimpleLineSymbol(Color.RED, 1f, SimpleLineSymbol.STYLE.SOLID);
+                                        Graphic resGraph = new Graphic(oTramo.getGeometry(), oLine);
+
+                                        mBusquedaLayer.addGraphic(resGraph);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                Graphic resultLocGraphic = new Graphic(feature.getGeometry(), feature.getSymbol());
+                                mBusquedaLayer.addGraphic(resultLocGraphic);
                             }
-                        });
 
-                        mapCallout.setOffset(0, -3);
-                        mapCallout.setCoordinates(tv.getPoint());
-                        mapCallout.setMaxHeight(100);
-                        mapCallout.setMaxWidth(400);
-                        mapCallout.setStyle(R.xml.mycalloutprefs);
-                        mapCallout.setContent(tv);
+                            Callout mapCallout = myMapView.getCallout();
+                            fabNavRoute.setVisibility(View.GONE);
+                            mapCallout.hide();
 
-                        mapCallout.show();
-                        fabNavRoute.setVisibility(View.VISIBLE);
+                            StringBuilder outStr;
+                            Util oUtil = new Util();
+                            outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
+                            GisTextView tv = new GisTextView(MapsActivity.this);
+                            tv.setText(outStr.toString());
+                            tv.setPoint((Point) feature.getGeometry());
+                            tv.setTextColor(Color.WHITE);
+
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myMapView.getCallout().hide();
+                                    fabNavRoute.setVisibility(View.GONE);
+                                }
+                            });
+
+                            mapCallout.setOffset(0, -3);
+                            mapCallout.setCoordinates(tv.getPoint());
+                            mapCallout.setMaxHeight(100);
+                            mapCallout.setMaxWidth(400);
+                            mapCallout.setStyle(R.xml.mycalloutprefs);
+                            mapCallout.setContent(tv);
+
+                            mapCallout.show();
+                            fabNavRoute.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 

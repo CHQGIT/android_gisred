@@ -2,12 +2,9 @@
 <resources>
     <string-array name="estado_lectura">
         <item></item>
-        <item>LECTURA VERIFICADA</item>
-        <item>CNR</item>
-        <item>POSIBLE ADULTERACION</item>
         <item>CLIENTE FUERA RUTA</item>
         <item>MEDIDOR NO EXISTE</item>
-        <item>NO LO LEO</item>
         <item>MEDIDOR CAMBIADO</item>
+        <item>POSIBLE ADULTERACION</item>
     </string-array>
 </resources>

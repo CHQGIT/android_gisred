@@ -111,7 +111,8 @@
                         android:id="@+id/txtPoste"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textShortMessage"
+                        android:inputType="none"
+                        android:editable="false"
                         android:hint="Poste" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -142,7 +143,8 @@
                         android:id="@+id/txtDireccion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textShortMessage"
+                        android:inputType="none"
+                        android:editable="false"
                         android:hint="Dirección" />
 
                 </android.support.design.widget.TextInputLayout>

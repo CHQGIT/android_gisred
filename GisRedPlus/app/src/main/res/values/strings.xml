@@ -25,6 +25,7 @@
     <string name="action_search">Buscar</string>
     <string name="action_layers">Capas</string>
     <string name="action_maps">Mapas</string>
+    <string name="action_refresh">Actualizar</string>
 
     <!-- Servicios para dynamicLayer-->
     <string name="url_EquiposLinea">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
@@ -40,6 +41,10 @@
     <string name="url_Stx">http://gisred.chilquinta.cl:5555/arcgis/rest/services/STx/STx/MapServer</string>
     <string name="url_interrupciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Interrupciones/PO/MapServer</string>
     <string name="url_ECSE_varios">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Varios/ECSE/MapServer</string>
+
+    <!-- Test Services dynamic -->
+    <string name="url_Electrodependientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
+
     <!-- Mapabase -->
     <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
     <!-- Urls Values Spinners Dialogs -->
@@ -57,6 +62,8 @@
     <string name="srv_Lectores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_movil_lectores/FeatureServer/0</string>
     <!-- Telemedida FeatureLayer -->
     <string name="srv_Telemedida">http://gisred.chilquinta.cl:5555/arcgis/rest/services/TELEMEDIDA/TELEMEDIDA_OLCA/FeatureServer/0</string>
+    <!-- MicroMedida FeatureLayer -->
+    <string name="srv_MicroMed">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/0</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

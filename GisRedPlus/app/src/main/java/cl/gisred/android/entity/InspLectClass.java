@@ -9,11 +9,13 @@ public class InspLectClass {
     private String estado;
     private int res;
     private boolean leida;
+    private String ot;
 
-    public InspLectClass(String objId, String est, String rev){
+    public InspLectClass(String objId, String est, String rev, String sOt){
         objectId = objId;
         setEstado(est);
         setLeida(rev.equals("leida"));
+        ot = sOt;
     }
 
     public String getObjectId(){
@@ -42,5 +44,13 @@ public class InspLectClass {
 
     public void setLeida(boolean leida) {
         this.leida = leida;
+    }
+
+    public String getOt() {
+        return ot;
+    }
+
+    public void setOt(String ot) {
+        this.ot = ot;
     }
 }

@@ -817,14 +817,14 @@ public class LectorInspActivity extends AppCompatActivity {
         LyAddLectores.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
             @Override
             public void onCallback(FeatureEditResult[][] featureEditResults) {
-                if (featureEditResults[0] != null) {
-                    if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+                if (featureEditResults[2] != null) {
+                    if (featureEditResults[2][0] != null && featureEditResults[2][0].isSuccess()) {
 
                         runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
-                                Util.showConfirmation(LectorInspActivity.this, "Denuncio leído");
+                                Toast.makeText(getApplicationContext(), "Denuncio leído", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

@@ -53,34 +53,39 @@
                         android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/imgTest"
+                        android:layout_below="@+id/textView11"
                         android:text="Modo de uso: Mantenga encendido GPS y active dispositivo bluetooth"
                         android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/tvContadorSesion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView12"
+                        android:textSize="16sp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:text="Cantidad repartos: 0"
+                        android:layout_marginTop="8dp"/>
 
                     <EditText
                         android:id="@+id/txtListen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView12"/>
+                        android:hint="Listo para escanear"
+                        android:textColorHint="@color/green"
+                        android:layout_below="@+id/tvContadorSesion"/>
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/tvContador"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/txtListen"
                         android:textSize="10sp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
-                        android:text="Escuchando dispositivo Bluetooth"
+                        android:text="Contador repartos por actualizar: 0"
                         android:layout_marginTop="10dp"/>
-
-                    <ImageView
-                        android:id="@+id/imgTest"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView11"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/chilquinta"/>
 
                 </RelativeLayout>
 
@@ -115,19 +120,6 @@
                 android:layout_margin="8dp"
                 app:fab_size="mini"
                 app:fab_icon="@drawable/ic_gps_fixed_white_24dp"
-                fab:fab_colorNormal="@color/colorPrimaryDark"
-                fab:fab_colorPressed="@color/colorAccent"/>
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/action_nav_route"
-                android:elevation="8dp"
-                android:layout_below="@id/action_gps"
-                android:layout_gravity="start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:fab_size="mini"
-                app:fab_icon="@drawable/ic_directions_white_24dp"
                 fab:fab_colorNormal="@color/colorPrimaryDark"
                 fab:fab_colorPressed="@color/colorAccent"/>
 

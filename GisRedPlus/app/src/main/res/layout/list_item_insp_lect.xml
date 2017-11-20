@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/imageMenu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="8dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:padding="6dp"
         android:layout_gravity="center_vertical"
         android:elevation="2dp"
         android:src="@mipmap/ic_menu_standard"/>
@@ -30,13 +30,23 @@
             android:text="LECTURA DENUNCIO"
             android:layout_toRightOf="@id/imageMenu"/>
 
+        <TextView android:id="@+id/LblEstDenuncio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:text="Estado denuncio"
+            android:layout_below="@id/LblTitulo"
+            android:layout_toRightOf="@id/imageMenu"/>
+
         <TextView android:id="@+id/LblOT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textStyle="normal"
             android:textSize="12sp"
-            android:text="OT TEST"
+            android:text="OT"
             android:layout_below="@id/LblTitulo"
             android:layout_toRightOf="@id/imageMenu"/>
 

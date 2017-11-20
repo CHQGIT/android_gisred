@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import cl.gisred.android.entity.InspLectClass;
 import cl.gisred.android.entity.MenuClass;
@@ -73,7 +74,7 @@ public class InspLectActivity extends AppCompatActivity {
     {
         try {
             lstOpciones = (ListView) findViewById(R.id.LstOpciones);
-            lstOpciones.removeAllViews();
+            //lstOpciones.removeAllViews();
 
             AsyncQueryTask queryTask = new AsyncQueryTask();
             String sBackSlash = String.valueOf("\\\\");
@@ -152,6 +153,13 @@ public class InspLectActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getInspecciones();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.insp_menu, menu);
@@ -172,6 +180,8 @@ public class InspLectActivity extends AppCompatActivity {
 
     private void cierraDenuncio(final Feature oFeature) {
 
+        final AtomicReference<String> resp = new AtomicReference<>("");
+
         Map<String, Object> objectMap = oFeature.getAttributes();
         Map<String, Object> updMap = new HashMap<>();
 
@@ -183,14 +193,16 @@ public class InspLectActivity extends AppCompatActivity {
         LyAddLectores.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
             @Override
             public void onCallback(FeatureEditResult[][] featureEditResults) {
-                if (featureEditResults[0] != null) {
-                    if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+                if (featureEditResults[2] != null) {
+                    if (featureEditResults[2][0] != null && featureEditResults[2][0].isSuccess()) {
+
+                        resp.set("Denuncio " + oFeature.getId() + " atendido");
 
                         runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "Denuncio " + oFeature.getId() + " atendido", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), resp.get(), Toast.LENGTH_SHORT).show();
                                 getInspecciones();
                             }
                         });
@@ -228,8 +240,11 @@ public class InspLectActivity extends AppCompatActivity {
 
             datos[position] = getDataByState(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblOT);
+            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblEstDenuncio);
             lblDescripcion.setText("Estado denuncio: " + datos[position].getEstado());
+
+            TextView lblOt = (TextView)item.findViewById(R.id.LblOT);
+            lblOt.setText("OT: " + datos[position].getOt());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);
             oImage.setImageResource(datos[position].getRes());
@@ -294,8 +309,9 @@ public class InspLectActivity extends AppCompatActivity {
                         String sObjId = feature.getAttributeValue("OBJECTID").toString();
                         String sEstado = feature.getAttributeValue("estado").toString();
                         String sRev = feature.getAttributeValue("estado_revision").toString();
+                        String sOt = feature.getAttributeValue("ot").toString();
 
-                        InspLectClass oInsp = new InspLectClass(sObjId, sEstado, sRev);
+                        InspLectClass oInsp = new InspLectClass(sObjId, sEstado, sRev, sOt);
                         datos[cont] = oInsp;
                         cont++;
                     }
@@ -312,6 +328,8 @@ public class InspLectActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(getApplicationContext(), "Usted no tiene inspecciones asignadas", Toast.LENGTH_LONG).show();
+                if (lstOpciones != null && lstOpciones.getCount() > 0)
+                    lstOpciones.setAdapter(null);
                 progress.dismiss();
             }
         }

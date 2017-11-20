@@ -2,19 +2,29 @@ package cl.gisred.android;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,19 +39,26 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.LocationDisplayManager.AutoPanMode;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
+import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.bing.BingMapsLayer;
+import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.runtime.ArcGISRuntime;
+import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.io.UserCredentials;
+import com.esri.core.map.CallbackListener;
+import com.esri.core.map.FeatureEditResult;
+import com.esri.core.map.Graphic;
 import com.esri.core.runtime.LicenseLevel;
 import com.esri.core.runtime.LicenseResult;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -54,7 +71,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 
+import cl.gisred.android.entity.RepartoClass;
 import cl.gisred.android.util.Util;
 
 public class RepartoActivity extends AppCompatActivity {
@@ -76,7 +99,8 @@ public class RepartoActivity extends AppCompatActivity {
     //url para feature layers
     String srv_reparto;
 
-    ArcGISDynamicMapServiceLayer LyReparto, LyMapabase;
+    ArcGISDynamicMapServiceLayer LyMapabase;
+    ArcGISFeatureLayer LyReparto;
 
     //Set bing Maps
     String BingKey = "Asrn2IMtRwnOdIRPf-7q30XVUrZuOK7K2tzhCACMg7QZbJ4EPsOcLk6mE9-sNvUe";
@@ -87,22 +111,31 @@ public class RepartoActivity extends AppCompatActivity {
     //Sets
     ArrayList<String> arrayWidgets;
 
-    boolean bAlertGps = false;
-
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
     private MyLocationListener oLocList;
 
-    //set Extent inicial
-    Polygon mCurrentMapExtent = null;
     // Spatial references used for projecting points
     final SpatialReference wm = SpatialReference.create(102100);
     final SpatialReference egs = SpatialReference.create(4326);
 
     EditText txtListen;
+    TextView txtContador;
+    TextView txtContSesion;
     int iContRep = 0;
+    int iContRepSesion = 0;
+    boolean bGpsActive = false;
+    boolean bBlueActive = true;
 
     public RepartoSQLiteHelper sqlReparto;
     final String dbName = "DbRepartos.db";
+
+    ArrayList<RepartoClass> arrayDatos;
+
+    RepartoService mService;
+    boolean mBound = false;
+
+    private BluetoothAdapter bAdapter;
+    private ArrayList<BluetoothDevice> arrayDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,16 +173,26 @@ public class RepartoActivity extends AppCompatActivity {
 
         setLayersURL(this.getResources().getString(R.string.url_Mapabase), "MAPABASE");
         setLayersURL(this.getResources().getString(R.string.url_token), "TOKENSRV");
-        setLayersURL(this.getResources().getString(R.string.url_EquiposLinea), "SRV_REPARTO");
+        setLayersURL(this.getResources().getString(R.string.srv_Repartos), "SRV_REPARTO");
 
         LyMapabase = new ArcGISDynamicMapServiceLayer(din_urlMapaBase, null, credenciales);
         LyMapabase.setVisible(true);
 
+        LyReparto = new ArcGISFeatureLayer(srv_reparto, ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
+        LyReparto.setDefinitionExpression(String.format("empresa = '%s'", empresa));
+        LyReparto.setMinScale(8000);
+        LyReparto.setVisible(true);
+
         myMapView.addLayer(mRoadBaseMaps, 0);
+        myMapView.addLayer(LyReparto, 1);
 
         sqlReparto =  new RepartoSQLiteHelper(RepartoActivity.this, dbName, null, 2);
 
+        txtContador = (TextView) findViewById(R.id.tvContador);
+        txtContSesion = (TextView) findViewById(R.id.tvContadorSesion);
+
         txtListen = (EditText) findViewById(R.id.txtListen);
+        txtListen.setEnabled(bGpsActive);
         if (!txtListen.hasFocus()) txtListen.requestFocus();
         txtListen.addTextChangedListener(new TextWatcher() {
             @Override
@@ -165,21 +208,89 @@ public class RepartoActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().contains("\n")) {
-                    iContRep++;
                     guardarRegistro(s.toString().trim());
                     s.clear();
                 }
             }
         });
 
-        Toast.makeText(RepartoActivity.this, getDatabasePath(dbName).toString(), Toast.LENGTH_LONG).show();
+        final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
+        btnGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    myMapView.setExtent(ldm.getPoint());
+                    myMapView.setScale(4000, true);
+                }
+            }
+        });
+
+        myMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
+            @Override
+            public void onStatusChanged(Object o, STATUS status) {
+                if (ldm != null) {
+                    Point oPoint = ldm.getPoint();
+                    myMapView.centerAndZoom(oPoint.getX(), oPoint.getY(), 0.003f);
+                    myMapView.zoomin(true);
+                }
+            }
+        });
+
+        readCountData();
+        updDashboard();
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run(){
+                        if (iContRep > 0) {
+                            Toast.makeText(getApplicationContext(), "Sincronizando datos...", Toast.LENGTH_SHORT).show();
+                            readData();
+                            enviarDatos();
+                        }
+                    }
+                });
+
+            }
+        }, 0, 120000);
+    }
+
+    private void updDashboard(){
+
+        String sTextCont = getResources().getString(R.string.tvCont);
+        sTextCont = sTextCont + " " + String.valueOf(iContRep);
+
+        txtContador.setText(sTextCont);
+
+        String sTextSesion = getResources().getString(R.string.tvContSesion);
+        sTextSesion = sTextSesion + " " + String.valueOf(iContRepSesion);
+
+        txtContSesion.setText(sTextSesion);
     }
 
     private void guardarRegistro(String sValue) {
-        if (insertData(sValue))
-            Toast.makeText(RepartoActivity.this, iContRep + " value: " + sValue, Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(RepartoActivity.this, "Error: registro " + sValue+ " no guardado", Toast.LENGTH_SHORT).show();
+        if (RepartoClass.valCode(sValue)) {
+            if (insertData(sValue)){
+                iContRep++;
+                iContRepSesion++;
+                updDashboard();
+            }
+            else
+                Toast.makeText(RepartoActivity.this, "Error: registro " + sValue+ " no guardado", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(RepartoActivity.this, "Lectura con valor no válido: " + sValue, Toast.LENGTH_SHORT).show();
+            playToneFail();
+        }
+    }
+
+    private void playToneFail() {
+        ToneGenerator tgFail = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+        tgFail.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 200);
     }
 
     private void verifPermisos() {
@@ -218,6 +329,19 @@ public class RepartoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        Intent intent = new Intent(this, RepartoService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     @Override
@@ -231,33 +355,62 @@ public class RepartoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                copiarBaseDatos();
+                //copiarBaseDatos();
                 readData();
+                enviarDatos();
+                //queryService();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to RepartoService, cast the IBinder and get RepartoService instance
+            RepartoService.RepartoBinder binder = (RepartoService.RepartoBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    private void queryService() {
+        if (mBound) {
+            // Call a method from the RepartoService.
+            // However, if this call were something that might hang, then this request should
+            // occur in a separate thread to avoid slowing down the activity performance.
+            int num = mService.getRandomNumber();
+        }
+    }
+
     private void startGPS() {
         oLocList = new MyLocationListener();
         ldm = myMapView.getLocationDisplayManager();
-        ldm.setLocationListener(oLocList);
+        ldm.setLocationListener(new MyLocationListener());
         ldm.start();
         ldm.setAutoPanMode(AutoPanMode.LOCATION);
 
         setStateGPS();
     }
 
-    private void verifGPS() {
+    private boolean verifGPS() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             alertNoGps();
+            return false;
         }
+        return true;
     }
 
     private void setStateGPS() {
-        verifGPS();
+        bGpsActive = verifGPS();
         //Marcar estado
     }
 
@@ -305,6 +458,21 @@ public class RepartoActivity extends AppCompatActivity {
         }
     }
 
+    private void toogleBlockReader(boolean bActive, int iReason) {
+        txtListen.setEnabled(bActive);
+        if (!bActive) {
+            txtListen.setHint(iReason);
+            txtListen.setHintTextColor(Color.RED);
+        }
+        else if (bGpsActive && bBlueActive){
+            txtListen.setHint(iReason);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                txtListen.setHintTextColor(getResources().getColor(R.color.green, getTheme()));
+            else
+                txtListen.setHintTextColor(getResources().getColor(R.color.green));
+        }
+    }
+
     private void alertNoGps() {
         final AlertDialog alertGps;
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -347,20 +515,94 @@ public class RepartoActivity extends AppCompatActivity {
         SQLiteDatabase db = sqlReparto.getWritableDatabase();
         db.delete("repartos", "id=" + id, null);
         db.close();
+
+        if (iContRep > 0) {
+            iContRep--;
+            updDashboard();
+        }
+
     }
 
-    public void readData() {
+    public void enviarDatos() {
+        final AtomicReference<String> resp = new AtomicReference<>("");
+
+        for (RepartoClass rep: arrayDatos) {
+
+            final RepartoClass repActual = rep;
+            Map<String, Object> objectMap = new HashMap<>();
+
+            objectMap.put("nis", rep.getNis());
+            objectMap.put("valor_captura", rep.getCodigo());
+            objectMap.put("empresa", empresa);
+            objectMap.put("modulo", modulo);
+
+            Point oUbicacion = new Point(rep.getX(), rep.getY());
+
+            Graphic newFeatureGraphic = new Graphic(oUbicacion, null, objectMap);
+            Graphic[] adds = {newFeatureGraphic};
+            LyReparto.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+                @Override
+                public void onCallback(FeatureEditResult[][] featureEditResults) {
+                    if (featureEditResults[0] != null) {
+                        if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    deleteData(repActual.getId());
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    resp.set("Error al ingresar: " + throwable.getLocalizedMessage());
+
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(RepartoActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public void readCountData() {
+
         SQLiteDatabase db = sqlReparto.getReadableDatabase();
         String[] sValues = {"id", "codigo", "x", "y"};
         Cursor cData = db.query("repartos", sValues, null, null, null, null, null, null);
 
-        if (cData != null && cData.getCount() > 0) {
+        if (cData != null && cData.getCount() >= 0) {
+            iContRep = cData.getCount();
+            cData.close();
+        }
 
-            Toast.makeText(RepartoActivity.this, "Count: "+cData.getCount(), Toast.LENGTH_SHORT).show();
+        db.close();
+    }
+
+    public void readData() {
+
+        SQLiteDatabase db = sqlReparto.getReadableDatabase();
+        String[] sValues = {"id", "codigo", "x", "y"};
+        Cursor cData = db.query("repartos", sValues, null, null, null, null, null, null);
+        arrayDatos = new ArrayList<>();
+
+        if (cData != null && cData.getCount() > 0) {
+            iContRep = cData.getCount();
+
             cData.moveToFirst();
 
             do {
-                Toast.makeText(RepartoActivity.this, "id: " + cData.getInt(0) + " value: " + cData.getString(1), Toast.LENGTH_SHORT).show();
+                RepartoClass oRep = new RepartoClass(cData.getInt(0), cData.getString(1), cData.getDouble(2), cData.getDouble(3));
+
+                arrayDatos.add(oRep);
             } while (cData.moveToNext());
 
             cData.close();
@@ -442,23 +684,57 @@ public class RepartoActivity extends AppCompatActivity {
             if (loc == null)
                 return;
 
+            boolean zoomToMe = (mLocation == null);
             mLocation = new Point(loc.getLongitude(), loc.getLatitude());
             oUbicActual = (Point) GeometryEngine.project(mLocation, egs, wm);
+            if (zoomToMe)
+                myMapView.zoomToResolution(oUbicActual, 5.0);
+            else
+                myMapView.centerAt(oUbicActual, true);
         }
 
         public void onProviderDisabled(String provider) {
             Toast.makeText(getApplicationContext(), "GPS Deshabilitado", Toast.LENGTH_SHORT).show();
+            bGpsActive = false;
+            toogleBlockReader(bGpsActive, R.string.txtListenGps);
             alertNoGps();
         }
 
         public void onProviderEnabled(String provider) {
             Toast.makeText(getApplicationContext(), "GPS Habilitado", Toast.LENGTH_SHORT).show();
-            bAlertGps = false;
+            bGpsActive = true;
+            toogleBlockReader(bGpsActive, R.string.txtListen);
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
+
+    private final RepartoReceiver bReceiver = new RepartoReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            final String action = intent.getAction();
+
+            // Filtramos por la accion. Nos interesa detectar BluetoothAdapter.ACTION_STATE_CHANGED
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "Action: " + action, Toast.LENGTH_SHORT).show();
+            }
+            // Nuevo dispositivo por Bluetooth, se ejecutara este fragmento de codigo
+            else if (BluetoothDevice.ACTION_FOUND.equals(action))
+            {
+                // Acciones a realizar al descubrir un nuevo dispositivo
+            }
+
+            // Codigo que se ejecutara cuando el Bluetooth finalice la busqueda de dispositivos.
+            else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
+            {
+                // Acciones a realizar al finalizar el proceso de descubrimiento
+            }
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

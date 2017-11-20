@@ -5,22 +5,25 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
@@ -35,90 +38,100 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".EmpActivity"
-            android:label="Menú Empresas"
             android:configChanges="orientation"
-            android:screenOrientation="sensor">
-        </activity>
+            android:label="Menú Empresas"
+            android:screenOrientation="sensor" />
         <activity
             android:name=".MainActivity"
             android:label="Menú GISRED"
-            android:screenOrientation="sensor"
-            android:parentActivityName=".EmpActivity"/>
+            android:parentActivityName=".EmpActivity"
+            android:screenOrientation="sensor" />
         <activity
             android:name=".FormActivity"
             android:label="Menú Protocolos"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FormLectActivity"
             android:label="Menú Lectores"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FormEhysActivity"
             android:label="Menú EH and S"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StandardActivity"
             android:label="Standard"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".MapsActivity"
             android:label="Ingreso Clientes"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".InspActivity"
             android:label="Inspecciones"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".FormActivity" />
+            android:parentActivityName=".FormActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".InspLectActivity"
             android:label="Inspección Lecturas"
-            android:screenOrientation="locked"
-            android:parentActivityName=".FormLectActivity" />
+            android:parentActivityName=".FormLectActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".LectorActivity"
             android:label="Lectura Nis"
-            android:screenOrientation="locked"
-            android:parentActivityName=".FormLectActivity" />
+            android:parentActivityName=".FormLectActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".LectorInspActivity"
             android:label="Inspección Lecturas"
-            android:screenOrientation="locked"
-            android:parentActivityName=".InspLectActivity" />
+            android:parentActivityName=".InspLectActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".MicroMedidaActivity"
             android:label="Micromedición"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".TelemedidaActivity"
             android:label="Telemedidas"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".CatastroActivity"
             android:label="Catastro AP"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".PowerOnActivity"
             android:label="Interrupciones"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".RepartoActivity"
             android:label="Repartos"
-            android:screenOrientation="locked"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
+
+        <service
+            android:name=".RepartoService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".RepartoReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

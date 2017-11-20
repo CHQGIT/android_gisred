@@ -64,6 +64,9 @@
     <string name="srv_Telemedida">http://gisred.chilquinta.cl:5555/arcgis/rest/services/TELEMEDIDA/TELEMEDIDA_OLCA/FeatureServer/0</string>
     <!-- MicroMedida FeatureLayer -->
     <string name="srv_MicroMed">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/0</string>
+    <string name="srv_ZoneLimit">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/1</string>
+    <!-- Reparto FeatureLayer -->
+    <string name="srv_Repartos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
 
     <string name="btnBuscarMap">Buscar</string>
 
@@ -137,5 +140,12 @@
     <!-- Telemedida -->
     <string name="chkCcp">Cumple corriente partida</string>
     <string name="chkGev">Giro en vacío</string>
+
+    <!-- Repartos -->
+    <string name="tvCont">Contador repartos por actualizar: </string>
+    <string name="tvContSesion">Cantidad repartos: </string>
+    <string name="txtListen">Listo para escanear</string>
+    <string name="txtListenGps">Error: Active GPS</string>
+    <string name="txtListenBlue">Error: Bluetooth offline</string>
 
 </resources>

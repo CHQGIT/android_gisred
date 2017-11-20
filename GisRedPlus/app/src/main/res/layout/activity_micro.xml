@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 app:fab_size="mini"
                 fab:fab_colorNormal="@color/white"
-                fab:fab_title="Ingresar Limite Zonal"
+                fab:fab_title="Ingresar Limite de Zona"
                 fab:fab_colorPressed="@color/white_pressed"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton

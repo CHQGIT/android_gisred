@@ -139,7 +139,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
     //url para dinamyc layers
     String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlElectroDep;
     //url para feature layers
-    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_microMedida;
+    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_microMedida, srv_zoneLimit;
 
     //Set bing Maps
     String BingKey = "Asrn2IMtRwnOdIRPf-7q30XVUrZuOK7K2tzhCACMg7QZbJ4EPsOcLk6mE9-sNvUe";
@@ -148,7 +148,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
     ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyELECTRODEP;
-    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddMicroMed;
+    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddMicroMed, LyAddZoneLimit;
 
     //set Extent inicial
     Polygon mCurrentMapExtent = null;
@@ -387,16 +387,17 @@ public class MicroMedidaActivity extends AppCompatActivity {
             setLayersURL(this.getResources().getString(R.string.srv_MicroMed), "SRV_MICROMED");
             setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
             setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
-
-
+            setLayersURL(this.getResources().getString(R.string.srv_ZoneLimit), "SRV_ZONELIMIT");
 
             addLayersToMap(credenciales, "FEATURE", "ADDMICROMED", srv_microMedida, null, true);
             addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
             addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDZONELIMIT", srv_zoneLimit, null, true);
 
             myMapView.addLayer(LyAddMicroMed, 21);
             myMapView.addLayer(LyAddPoste, 22);
             myMapView.addLayer(LyAddDireccion, 23);
+            myMapView.addLayer(LyAddZoneLimit, 24);
 
             arrayfaseConex = getResources().getStringArray(R.array.fase_conexion_insp);
             arrayObservacion = getResources().getStringArray(R.array.observacion_mm);
@@ -426,8 +427,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
             oFabLimit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //abrirFormLimit(v);
-                    Toast.makeText(getApplicationContext(), "Construccion en progreso", Toast.LENGTH_LONG).show();
+                    abrirFormLimite(v);
                 }
             });
 
@@ -509,11 +509,11 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
                 addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-                myMapView.addLayer(LyAddCliente, 24);
-                myMapView.addLayer(LyAddUnion, 25);
-                myMapView.addLayer(LyAsocTramo, 26);
-                myMapView.addLayer(LyAsocCalle, 27);
-                myMapView.addLayer(LyAddClienteCnr, 28);
+                myMapView.addLayer(LyAddCliente, 25);
+                myMapView.addLayer(LyAddUnion, 26);
+                myMapView.addLayer(LyAsocTramo, 27);
+                myMapView.addLayer(LyAsocCalle, 28);
+                myMapView.addLayer(LyAddClienteCnr, 29);
 
                 setLayerAddToggle(false);
             } else {
@@ -866,7 +866,97 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 oTextInput.setHint(oTextInput.getHint().toString().concat("*"));
             }
         }
+    }
 
+    private void cerrarFormLimit(boolean bSave, View v) {
+        if (bSave) {
+
+            final AtomicReference<String> resp = new AtomicReference<>("");
+
+            if (!validarZoneLimit(v)) {
+                DialogoConfirmacion oDialog = new DialogoConfirmacion();
+                oDialog.show(getFragmentManager(), "tagAlert");
+                return;
+            } else {
+                View vAction = getLayoutValidate(v);
+                Map<String, Object> objectMap = new HashMap<>();
+                for (View view : vAction.getTouchables()) {
+
+                    if (view.getClass().equals(GisEditText.class)) {
+                        GisEditText oText = (GisEditText) view;
+
+                        if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
+                            if (oText.getId() == R.id.txtPoste){
+                                objectMap.put("id_poste", oText.getIdObjeto());
+                                oUbicacion = oText.getPoint();
+                            } else if (oText.getId() == R.id.txtTramoBt) {
+                                objectMap.put("id_tramo", oText.getText().toString());
+                            }
+                        }
+                    }
+                }
+
+                objectMap.put("empresa", empresa);
+                objectMap.put("modulo", modulo);
+
+                Graphic newFeatureGraphic = new Graphic(oUbicacion, null, objectMap);
+                Graphic[] adds = {newFeatureGraphic};
+                LyAddZoneLimit.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+                    @Override
+                    public void onCallback(FeatureEditResult[][] featureEditResults) {
+                        if (featureEditResults[0] != null) {
+                            if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+
+                                resp.set("Guardado Correctamente Id: " + featureEditResults[0][0].getObjectId());
+
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Util.showConfirmation(MicroMedidaActivity.this, resp.get());
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        resp.set("Error al ingresar: " + throwable.getLocalizedMessage());
+                        Log.w("onError", resp.get());
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Toast.makeText(MicroMedidaActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        bMapTap = false;
+        oUbicacion = null;
+
+        if (mBusquedaLayer != null && myMapView.getLayerByID(mBusquedaLayer.getID()) != null)
+            myMapView.removeLayer(mBusquedaLayer);
+
+        if (mUbicacionLayer != null && myMapView.getLayerByID(mUbicacionLayer.getID()) != null)
+            myMapView.removeLayer(mUbicacionLayer);
+
+        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+            myMapView.removeLayer(mSeleccionLayer);
+
+        if (bVerCapas) toogleCapas(fabVerCapas);
+
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
+        menuMicroActions.setVisibility(View.VISIBLE);
+        fabShowForm.setVisibility(View.GONE);
+        formCrear.dismiss();
+
+        if (LyAddZoneLimit != null) LyAddZoneLimit.setVisible(true);
     }
 
     private void cerrarFormCrear(boolean bSave, View v){
@@ -1149,6 +1239,23 @@ public class MicroMedidaActivity extends AppCompatActivity {
         dialogBusq.show();
     }
 
+    private void abrirFormLimite(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsFormLimit(R.layout.form_limite_zona, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+    }
+
     private void abrirFormIngreso(View view) {
 
         FloatingActionButton fabTemp = (FloatingActionButton) view;
@@ -1193,6 +1300,12 @@ public class MicroMedidaActivity extends AppCompatActivity {
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(true);
+    }
+
+    private boolean validarZoneLimit(View view) {
+        View vAction = getLayoutValidate(view);
+        int iReq = recorrerForm(vAction);
+        return (iReq == 0);
     }
 
     private boolean validarForm(View view) {
@@ -1446,6 +1559,71 @@ public class MicroMedidaActivity extends AppCompatActivity {
         }
 
         return s;
+    }
+
+    public void setActionsFormLimit(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (int) ((widthSize * 3) / 4);
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        ImageButton btnTramoBt = (ImageButton) v.findViewById(R.id.btnTramoBt);
+        btnTramoBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                nIndentify = 2; //2 = valor para tramo
+                oLySelectAsoc = LyAsocTramo;
+                setValueToAsoc(getLayoutContenedor(v));
+            }
+        });
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormLimit(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormLimit(true, v);
+            }
+        });
+
+        formCrear.show();
+        dialogCur = formCrear;
     }
 
     public void setActionsForm(final int idRes, String sNombre) {
@@ -1949,6 +2127,9 @@ public class MicroMedidaActivity extends AppCompatActivity {
             case "SRV_MICROMED":
                 srv_microMedida = layerURL;
                 break;
+            case "SRV_ZONELIMIT":
+                srv_zoneLimit = layerURL;
+                break;
             default:
                 Toast.makeText(MicroMedidaActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
                 break;
@@ -2017,8 +2198,15 @@ public class MicroMedidaActivity extends AppCompatActivity {
                     break;
                 case "ADDMICROMED":
                     LyAddMicroMed = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddMicroMed.setDefinitionExpression(String.format("empresa = '%s'", empresa));
                     LyAddMicroMed.setMinScale(8000);
                     LyAddMicroMed.setVisible(visibilidad);
+                    break;
+                case "ADDZONELIMIT":
+                    LyAddZoneLimit = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddZoneLimit.setDefinitionExpression(String.format("empresa = '%s'", empresa));
+                    LyAddZoneLimit.setMinScale(6000);
+                    LyAddZoneLimit.setVisible(visibilidad);
                     break;
                 default:
                     Toast.makeText(MicroMedidaActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
@@ -2226,7 +2414,6 @@ public class MicroMedidaActivity extends AppCompatActivity {
                             // select the features
                             oLySelectAsoc.clearSelection();
                             oLySelectAsoc.setSelectedGraphics(selectedFeatures, true);
-                            Log.w("MapsActivity", "Selected Graphics " + selectedFeatures.length);
 
                             if (selectedFeatures.length > 0) {
                                 Graphic[] results = oLySelectAsoc.getSelectedFeatures();
@@ -3119,7 +3306,6 @@ public class MicroMedidaActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
 
-                    Log.w("LectorActivity", "No hay permisos de ACCESS_FINE_LOCATION");
                 }
                 break;
             }

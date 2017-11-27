@@ -75,6 +75,9 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import cl.gisred.android.classes.GisEditText;
@@ -171,6 +174,8 @@ public class StandardActivity extends AppCompatActivity {
     FloatingActionButton fabNavRoute;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
+
+    HashMap<Integer, String> layerDefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -683,6 +688,10 @@ public class StandardActivity extends AppCompatActivity {
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
 
+            layerDefs = new HashMap<>();
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+
             //Set eventos mapa
             singleTapOnMap();
             changesOnMap();
@@ -1164,6 +1173,7 @@ public class StandardActivity extends AppCompatActivity {
                         array18 = new int[1];
                         array18[0] = 0;
                         LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
+                        LyENCUESTA.setLayerDefinitions(layerDefs);
                         LyENCUESTA.setVisible(visibilidad);
                         break;
                     case "REEMPLAZO":
@@ -1171,6 +1181,7 @@ public class StandardActivity extends AppCompatActivity {
                         array19 = new int[1];
                         array19[0] = 1;
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
+                        LyREEMPLAZO.setLayerDefinitions(layerDefs);
                         LyREEMPLAZO.setVisible(visibilidad);
                         break;
                     case "ELECTRODEP":

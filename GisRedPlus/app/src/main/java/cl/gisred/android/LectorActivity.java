@@ -81,6 +81,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -1259,6 +1260,12 @@ public class LectorActivity extends AppCompatActivity {
             myMapView.setMapBackground(color1, color2, gridSize, gridLine);
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
+
+            HashMap<Integer, String> layerDefs;
+
+            layerDefs = new HashMap<>();
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
 
             //Set eventos mapa
             singleTapOnMap();

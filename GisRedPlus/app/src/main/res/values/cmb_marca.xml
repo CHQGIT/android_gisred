@@ -152,4 +152,9 @@
         <item>WES</item>
         <item>Otro</item>
     </string-array>
+    <string-array name="marca_tm">
+        <item></item>
+        <item>GEN</item>
+        <item>ION</item>
+    </string-array>
 </resources>

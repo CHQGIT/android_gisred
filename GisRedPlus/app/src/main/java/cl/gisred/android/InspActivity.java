@@ -104,6 +104,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -157,6 +158,9 @@ public class InspActivity extends AppCompatActivity {
     public String[] arrayTipoMarca = {};
     public String[] arrayFirmante = {};
     public String[] arrayTipoFaseInsp = {};
+
+    public String[] arrayMarcaTM = {};
+    public String[] arrayTipoMarcaTM = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -428,6 +432,11 @@ public class InspActivity extends AppCompatActivity {
             arrayMarca = getResources().getStringArray(R.array.marca);
             arrayTipoMarca = getResources().getStringArray(R.array.tipo_marca);
             arrayFirmante = getResources().getStringArray(R.array.situacion_firmante);
+
+            if (modulo.contains("TELEMEDIDA")) {
+                arrayMarcaTM = getResources().getStringArray(R.array.marca_tm);
+                arrayTipoMarcaTM = getResources().getStringArray(R.array.tipo_marca_tm);
+            }
 
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
@@ -1082,8 +1091,10 @@ public class InspActivity extends AppCompatActivity {
                     if (Util.isPackageExisted("com.android.chrome", this)) {
                         String url = oHtml.getPathHtml();
 
-                        Uri uri = Uri.parse("googlechrome://navigate?url=" + url);
+                        Uri uri = Uri.parse("googlechrome://navigate?file=" + url);
+                        //Uri uri = Uri.parse(url);
                         Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                        //i.addCategory("android.intent.category.BROWSABLE");
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
                     } else {
@@ -1306,6 +1317,8 @@ public class InspActivity extends AppCompatActivity {
             setActionsForm(R.layout.form_inspec_mant_correctivo, fabTemp.getTitle());
         } else if (form.contains("EMPALMES")) {
             setActionsForm(R.layout.form_inspec_cons_empalme, fabTemp.getTitle());
+        } else if (form.contains("TELEMEDIDA")) {
+            setActionsForm(R.layout.form_inspec_telemedida, fabTemp.getTitle());
         }
         //setActionsForm(R.layout.form_inspec_masiva, fabTemp.getTitle());
 
@@ -1509,6 +1522,12 @@ public class InspActivity extends AppCompatActivity {
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
 
+            HashMap<Integer, String> layerDefs;
+
+            layerDefs = new HashMap<>();
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+
             //Set eventos mapa
             singleTapOnMap();
             changesOnMap();
@@ -1664,16 +1683,18 @@ public class InspActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
+        boolean bSpinnerMedidor = (idRes == R.layout.form_inspec_telemedida);
+
         Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFase);
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFaseInsp);
         spTipoFase.setAdapter(adapter);
 
         Spinner spTipoMarca = (Spinner) v.findViewById(R.id.spinnerTipo);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoMarca);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, (bSpinnerMedidor) ? arrayTipoMarcaTM : arrayTipoMarca);
         spTipoMarca.setAdapter(adapter);
 
         Spinner spMarca = (Spinner) v.findViewById(R.id.spinnerMarca);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayMarca);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, (bSpinnerMedidor) ? arrayMarcaTM :arrayMarca);
         spMarca.setAdapter(adapter);
 
         final GisEditText txtPoste = (GisEditText) v.findViewById(R.id.txtPoste);
@@ -1712,12 +1733,12 @@ public class InspActivity extends AppCompatActivity {
                 oLyExistAsoc = LyPOSTES;
                 oLyExistAsoc.setVisible(true);
                 myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
-                Log.w("[InspActivity]", "HIDE FORM POSTE and Zoom");
                 setValueToAsoc(getLayoutContenedor(view));
             }
         });
 
         final EditText txtFecha = (EditText) v.findViewById(R.id.txtFechaEjec);
+        txtFecha.setText(dateFormatter.format(Calendar.getInstance().getTime()));
         txtFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

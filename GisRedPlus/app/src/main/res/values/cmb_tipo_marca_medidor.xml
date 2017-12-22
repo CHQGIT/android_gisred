@@ -255,6 +255,13 @@
         <item>ZMG6310CR4</item>
         <item>Otro</item>
     </string-array>
+    <string-array name="tipo_marca_tm">
+        <item></item>
+        <item>7400</item>
+        <item>SGM3011</item>
+        <item>SGM3031</item>
+        <item>SGM30C2</item>
+    </string-array>
 </resources>
 
 

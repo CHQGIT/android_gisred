@@ -486,6 +486,18 @@ public class Util {
             outStr.append(setValuesByKey(keys, oAttrAbrev));
             outStr.append(LSP); outStr.append(LSP);
             outStr.append("Presione para cerrar");
+        } else if (numBusq == -2) {
+
+            outStr.append("INSPECCION OT");
+            outStr.append(LSP); outStr.append(LSP);
+            if (oAttrAbrev.containsKey("OT") && !oAttrAbrev.get("OT").toString().trim().isEmpty())
+                outStr.append("OT: " + oAttrAbrev.get("OT").toString());
+            outStr.append(LSP);
+
+            String[] keys = {"ZONA", "COMUNA"};
+            outStr.append(setValuesByKey(keys, oAttrAbrev));
+            outStr.append(LSP); outStr.append(LSP);
+            outStr.append("Presione para cerrar");
         } else {
             //GENERICOS
             for (Map.Entry<String, Object> oKeyVal : oAtrr.entrySet()) {

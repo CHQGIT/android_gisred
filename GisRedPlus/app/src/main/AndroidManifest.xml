@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -116,6 +117,16 @@
             android:name=".PowerOnActivity"
             android:label="Interrupciones"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".OtListActivity"
+            android:label="Ordenes de Trabajo"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".OtRouteActivity"
+            android:label="Ordenes de Trabajo"
+            android:parentActivityName=".OtListActivity"
             android:screenOrientation="locked" />
         <activity
             android:name=".RepartoActivity"

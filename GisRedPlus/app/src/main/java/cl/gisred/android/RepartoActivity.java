@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,6 +23,7 @@ import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,12 +31,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,10 +46,8 @@ import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.bing.BingMapsLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.runtime.ArcGISRuntime;
-import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
-import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
@@ -284,13 +278,16 @@ public class RepartoActivity extends AppCompatActivity {
         }
         else {
             Toast.makeText(RepartoActivity.this, "Lectura con valor no válido: " + sValue, Toast.LENGTH_SHORT).show();
-            playToneFail();
+            alertFail();
         }
     }
 
-    private void playToneFail() {
+    private void alertFail() {
         ToneGenerator tgFail = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
         tgFail.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 200);
+
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(1000);
     }
 
     private void verifPermisos() {

@@ -139,7 +139,7 @@ public class PhotoUtils {
         }
         catch (Exception ex)
         {
-            Toast.makeText(mContext, "No es posible acceder a la imagen, intente nuevamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "No es posible acceder a la imagen, intente nuevamente", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -155,6 +155,7 @@ public class PhotoUtils {
         }
         catch (Exception ex)
         {
+            Toast.makeText(mContext, "Error al escribir fichero a memoria interna", Toast.LENGTH_LONG).show();
             Log.e("Ficheros", "Error al escribir fichero a memoria interna: " +ex.getMessage());
         }
     }

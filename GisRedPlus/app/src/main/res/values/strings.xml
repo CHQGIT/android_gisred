@@ -67,6 +67,8 @@
     <string name="srv_ZoneLimit">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/1</string>
     <!-- Reparto FeatureLayer -->
     <string name="srv_Repartos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
+    <!-- OT Inspecciones -->
+    <string name="url_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/MapServer/0</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

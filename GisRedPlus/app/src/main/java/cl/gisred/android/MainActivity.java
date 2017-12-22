@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "ALUMBRADO_PUBLICO", "INTERRUPCIONES", "EH&S", "MICROMEDICION", "REPARTOS"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
 
     public void setCredenciales(String usuario , String password) {
@@ -130,14 +130,11 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("LECTORES")){
+                    } else if (datos[position].getTitulo().contains("OT")){
+                        oIntent = new Intent(MainActivity.this, OtListActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    }  else if (datos[position].getTitulo().contains("LECTORES")){
                         oIntent = new Intent(MainActivity.this, FormLectActivity.class);
-                        oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
-                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
-                        oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("CATASTRO")){
-                        oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("INTERRUPCIONES")){
                         oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
@@ -149,6 +146,12 @@ public class MainActivity extends AppCompatActivity {
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("REPARTOS")){
                         oIntent = new Intent(MainActivity.this, RepartoActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
+                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("CATASTRO")){
+                        oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
@@ -233,6 +236,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("LECTORES")) {
                 dato.setDescripcion("Visualización e ingreso de lecturas");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_lectores : R.mipmap.ic_menu_ing_lectores_g);
+            } else if (dato.getTitulo().contains("OT")) {
+                dato.setDescripcion("Ordenes de trabajo");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             } else if (dato.getTitulo().contains("TELEMEDIDA")) {
                 dato.setDescripcion("Visualización e ingreso de telemedidas");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);

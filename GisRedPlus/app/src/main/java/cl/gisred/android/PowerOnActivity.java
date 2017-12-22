@@ -74,6 +74,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import cl.gisred.android.classes.GisEditText;
@@ -173,6 +175,8 @@ public class PowerOnActivity extends AppCompatActivity {
     FloatingActionButton fabNavRoute;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
+
+    HashMap<Integer, String> layerDefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -684,6 +688,10 @@ public class PowerOnActivity extends AppCompatActivity {
             myMapView.setMapBackground(color1, color2, gridSize, gridLine);
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
+
+            layerDefs = new HashMap<>();
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
 
             //Set eventos mapa
             singleTapOnMap();

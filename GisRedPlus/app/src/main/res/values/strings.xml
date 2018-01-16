@@ -44,6 +44,8 @@
 
     <!-- Test Services dynamic -->
     <string name="url_Electrodependientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
+    <string name="url_viaOpen">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES_MAP/MapServer</string>
+    <string name="url_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/MapServer</string>
 
     <!-- Mapabase -->
     <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
@@ -68,7 +70,9 @@
     <!-- Reparto FeatureLayer -->
     <string name="srv_Repartos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
     <!-- OT Inspecciones -->
-    <string name="url_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/MapServer/0</string>
+    <string name="srv_micromed_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
+    <string name="srv_viaopen_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
+    <string name="srv_denuncio_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

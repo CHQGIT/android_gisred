@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,10 +29,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -43,6 +46,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -252,6 +256,8 @@ public class InspActivity extends AppCompatActivity {
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
     private boolean bFallo = false;
 
+    HashMap<Integer, String> layerDefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -433,14 +439,14 @@ public class InspActivity extends AppCompatActivity {
             arrayTipoMarca = getResources().getStringArray(R.array.tipo_marca);
             arrayFirmante = getResources().getStringArray(R.array.situacion_firmante);
 
-            if (modulo.contains("TELEMEDIDA")) {
-                arrayMarcaTM = getResources().getStringArray(R.array.marca_tm);
-                arrayTipoMarcaTM = getResources().getStringArray(R.array.tipo_marca_tm);
-            }
-
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
             final String sForm = bundle.getString("form");
+
+            if (sForm.contains("TELEMEDIDA")) {
+                arrayMarcaTM = getResources().getStringArray(R.array.marca_tm);
+                arrayTipoMarcaTM = getResources().getStringArray(R.array.tipo_marca_tm);
+            }
 
             formCrear = new Dialog(InspActivity.this);
             fabShowForm.setOnClickListener(new View.OnClickListener() {
@@ -1087,16 +1093,36 @@ public class InspActivity extends AppCompatActivity {
                     //guardar en disco
                     oHtml.createHtml(sHtmlFinal);
 
+                    //VIA CustomTabs
+                    /*String url = oHtml.getPathHtml();
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.launchUrl(this, Uri.parse(url));*/
+
                     //VIA CHROME scheme
                     if (Util.isPackageExisted("com.android.chrome", this)) {
                         String url = oHtml.getPathHtml();
 
-                        Uri uri = Uri.parse("googlechrome://navigate?file=" + url);
-                        //Uri uri = Uri.parse(url);
-                        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-                        //i.addCategory("android.intent.category.BROWSABLE");
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
+                        File f = new File(url);
+
+                        MimeTypeMap mime = MimeTypeMap.getSingleton();
+                        String ext = f.getName().substring(f.getName().lastIndexOf(".") + 1);
+                        String type = mime.getMimeTypeFromExtension(ext);
+
+                        Uri uri = Uri.parse("googlechrome://navigate?url=" + url);
+
+                        Intent in = new Intent(Intent.ACTION_VIEW);
+                        //in.setDataAndType(uri, "text/html");
+
+                        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        in.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        //Uri uriExternal = FileProvider.getUriForFile(getApplicationContext(), "cl.gisred.android", f);
+
+                        in.setDataAndType(uri, type);
+
+                        //startActivity(in);
+                        startActivity(Intent.createChooser(in, "Escoja Chrome"));
                     } else {
                         Toast.makeText(this, "Debe instalar Chrome, solo preview disponible", Toast.LENGTH_LONG).show();
                         Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(oHtml.getPathHtml()));
@@ -1522,8 +1548,6 @@ public class InspActivity extends AppCompatActivity {
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
 
-            HashMap<Integer, String> layerDefs;
-
             layerDefs = new HashMap<>();
             layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
             layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
@@ -1683,7 +1707,7 @@ public class InspActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
-        boolean bSpinnerMedidor = (idRes == R.layout.form_inspec_telemedida);
+        boolean bSpinnerMedidor = (idRes == R.layout.form_inspec_telemedida) ? true : false;
 
         Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFase);
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFaseInsp);
@@ -1694,7 +1718,7 @@ public class InspActivity extends AppCompatActivity {
         spTipoMarca.setAdapter(adapter);
 
         Spinner spMarca = (Spinner) v.findViewById(R.id.spinnerMarca);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, (bSpinnerMedidor) ? arrayMarcaTM :arrayMarca);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, (bSpinnerMedidor) ? arrayMarcaTM : arrayMarca);
         spMarca.setAdapter(adapter);
 
         final GisEditText txtPoste = (GisEditText) v.findViewById(R.id.txtPoste);
@@ -2678,6 +2702,7 @@ public class InspActivity extends AppCompatActivity {
                         array18 = new int[1];
                         array18[0] = 0;
                         LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
+                        LyENCUESTA.setLayerDefinitions(layerDefs);
                         LyENCUESTA.setVisible(visibilidad);
                         break;
                     case "REEMPLAZO":
@@ -2685,6 +2710,7 @@ public class InspActivity extends AppCompatActivity {
                         array19 = new int[1];
                         array19[0] = 1;
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
+                        LyREEMPLAZO.setLayerDefinitions(layerDefs);
                         LyREEMPLAZO.setVisible(visibilidad);
                         break;
                     case "ELECTRODEP":

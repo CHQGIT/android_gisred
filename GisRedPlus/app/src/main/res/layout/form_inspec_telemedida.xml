@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:tag="txt_lectura"
                     android:inputType="numberDecimal"
-                    android:hint="Lectura *"/>
+                    android:hint="Lectura"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -186,7 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:hint="ICP (A) *"/>
+                    android:hint="ICP (A)"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -264,7 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:hint="Voltaje F1 - N (V) *"/>
+                    android:hint="Voltaje F1 - N (V) "/>
 
             </android.support.design.widget.TextInputLayout>
 

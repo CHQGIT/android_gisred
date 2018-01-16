@@ -3,12 +3,14 @@ package cl.gisred.android;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,16 +26,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.esri.core.map.FeatureResult;
+import com.esri.core.tasks.query.OutStatistics;
+import com.esri.core.tasks.query.QueryParameters;
+import com.esri.core.tasks.query.QueryTask;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import cl.gisred.android.classes.GifView;
+import cl.gisred.android.util.Util;
 
 public class EmpActivity extends AppCompatActivity {
 
     ArrayList<String> aEmpresas;
     Dialog formNews;
+
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,10 @@ public class EmpActivity extends AppCompatActivity {
         try {
             final Bundle bundle = getIntent().getExtras();
             aEmpresas = bundle.getStringArrayList("empresas");
+
+            //TODO activar statistics
+            //StatisticsTask queryTask = new StatisticsTask();
+            //queryTask.execute(getResources().getString(R.string.url_ECSE_varios));
 
             ImageButton btnChilquinta = (ImageButton) findViewById(R.id.btnChilquinta);
             if (aEmpresas.contains("chilquinta")) {
@@ -275,4 +289,56 @@ public class EmpActivity extends AppCompatActivity {
             editor.apply();
         }
     }
+
+    private class StatisticsTask extends AsyncTask<String, Void, FeatureResult> {
+
+        FeatureResult featureEncuesta;
+        FeatureResult featureReemplazo;
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(EmpActivity.this);
+
+            progress = ProgressDialog.show(EmpActivity.this, "",
+                    "Cargando preferencias...");
+        }
+
+        @Override
+        protected FeatureResult doInBackground(String... strings) {
+            if (strings == null || strings.length < 1) return null;
+
+            String url = strings[0].concat("/0");
+            QueryParameters qParameters = new QueryParameters();
+            OutStatistics[] outStatistics = new OutStatistics[]{new OutStatistics(OutStatistics.Type.MAX, "ARCGIS.DBO.ECSE.ano", "anoMax")};
+            qParameters.setReturnGeometry(false);
+            qParameters.setOutStatistics(outStatistics);
+
+            QueryTask qTask = new QueryTask(url);
+
+            try {
+                featureEncuesta = qTask.execute(qParameters);
+
+                url = url.replace("/0", "/1");
+                qTask = new QueryTask(url);
+                featureReemplazo = qTask.execute(qParameters);
+
+                return featureEncuesta;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(FeatureResult results) {
+
+            for (Object result : results) {
+                Map<String, Object> recordAsMap = (Map<String, Object>) result;
+                double maxAno = (Double) (recordAsMap.get("maxAno"));
+            }
+
+            progress.dismiss();
+        }
+    }
+
 }

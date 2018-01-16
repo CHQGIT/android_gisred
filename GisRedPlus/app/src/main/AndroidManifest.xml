@@ -82,7 +82,8 @@
             android:name=".InspActivity"
             android:label="Inspecciones"
             android:parentActivityName=".FormActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".InspLectActivity"
             android:label="Inspección Lecturas"
@@ -143,6 +144,17 @@
             android:name=".RepartoReceiver"
             android:enabled="true"
             android:exported="true" />
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="cl.gisred.android"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>

@@ -106,6 +106,7 @@ public class OtRouteActivity extends AppCompatActivity {
     int SpiBusqueda;
     String txtBusqueda;
     String objId;
+    String sCapa;
 
     //ArrayList MapsType
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
@@ -115,7 +116,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "OT Open", "OT Micromedicion", "OT Denuncios"};
 
     public String[] arrayTipoEdif = {};
     public String[] arrayTipoPoste = {};
@@ -128,12 +129,12 @@ public class OtRouteActivity extends AppCompatActivity {
     public String[] arrayEstado = {};
     public String[] arrayUserCosenza = {};
 
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true};
 
     //url para dinamyc layers
-    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE;
+    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlOpen, din_urlOT;
     //url para feature layers
-    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_lectores;
+    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_lectores, srv_otMicro, srv_otOpen, srv_otDenuncio;
 
     //Set bing Maps
     String BingKey = "Asrn2IMtRwnOdIRPf-7q30XVUrZuOK7K2tzhCACMg7QZbJ4EPsOcLk6mE9-sNvUe";
@@ -141,8 +142,8 @@ public class OtRouteActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO;
-    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddLectores;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyOTOPEN, LyOTMICRO, LyOTDENUNCIO;
+    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddMicroOt, LyAddOpenOt, LyAddDenuncioOt;
 
     //set Extent inicial
     Polygon mCurrentMapExtent = null;
@@ -178,6 +179,7 @@ public class OtRouteActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLySelectAsoc;
     private ArcGISDynamicMapServiceLayer oLyExistAsoc;
     private ArcGISFeatureLayer oLyAddGraphs;
+    private ArcGISFeatureLayer oLyAddOt;
     private int idResLayoutSelect;
     private Point oUbicacion;
 
@@ -197,7 +199,9 @@ public class OtRouteActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
-    HashMap<Integer, String> layerDefs;
+    HashMap<Integer, String> layerDefsECSE;
+    HashMap<Integer, String> layerDefsOpen;
+    HashMap<Integer, String> layerDefsOT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,6 +228,7 @@ public class OtRouteActivity extends AppCompatActivity {
         modulo = bundle.getString("modulo");
         empresa = bundle.getString("empresa");
         objId = bundle.getString("objID");
+        sCapa = bundle.getString("typFeat");
 
         //Set Credenciales
         setCredenciales(usuar, passw);
@@ -248,6 +253,8 @@ public class OtRouteActivity extends AppCompatActivity {
         setLayersURL(this.getResources().getString(R.string.url_medidores), "MEDIDORES");
         setLayersURL(this.getResources().getString(R.string.url_Stx), "STX");
         setLayersURL(this.getResources().getString(R.string.url_ECSE_varios), "ECSE");
+        setLayersURL(this.getResources().getString(R.string.url_viaOpen), "OTOPEN");
+        setLayersURL(this.getResources().getString(R.string.url_OT), "OT");
 
         //Agrega layers dinámicos.
         addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
@@ -270,6 +277,9 @@ public class OtRouteActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "OTOPEN", din_urlOpen, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "OTMICRO", din_urlOT, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "OTDENUNCIO", din_urlOT, null, true);
 
         //Añade Layer al Mapa
         myMapView.addLayer(mRoadBaseMaps, 0);
@@ -292,6 +302,9 @@ public class OtRouteActivity extends AppCompatActivity {
         myMapView.addLayer(LyTORRESSTX, 17);
         myMapView.addLayer(LyENCUESTA, 18);
         myMapView.addLayer(LyREEMPLAZO, 19);
+        myMapView.addLayer(LyOTOPEN, 20);
+        myMapView.addLayer(LyOTMICRO, 21);
+        myMapView.addLayer(LyOTDENUNCIO, 22);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
@@ -372,19 +385,23 @@ public class OtRouteActivity extends AppCompatActivity {
             });
         }
 
-        setLayersURL(this.getResources().getString(R.string.srv_Lectores), "SRV_LECTORES");
+        setLayersURL(this.getResources().getString(R.string.srv_micromed_OT), "SRV_OTMICRO");
+        setLayersURL(this.getResources().getString(R.string.srv_viaopen_OT), "SRV_OTOPEN");
+        setLayersURL(this.getResources().getString(R.string.srv_denuncio_OT), "SRV_OTDENUNCIO");
         setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
         setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
 
-        addLayersToMap(credenciales, "FEATURE", "ADDLECTOR", srv_lectores, null, true);
+        addLayersToMap(credenciales, "FEATURE", "ADDOTMICRO", srv_otMicro, null, false);
+        addLayersToMap(credenciales, "FEATURE", "ADDOTOPEN", srv_otOpen, null, false);
+        addLayersToMap(credenciales, "FEATURE", "ADDOTDENUNCIO", srv_otDenuncio, null, false);
         addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
         addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
 
-        myMapView.addLayer(LyAddLectores, 20);
-        myMapView.addLayer(LyAddPoste, 21);
-        myMapView.addLayer(LyAddDireccion, 22);
-
-        if (LyAddLectores != null) LyAddLectores.setVisible(true);
+        myMapView.addLayer(LyAddMicroOt, 23);
+        myMapView.addLayer(LyAddOpenOt, 24);
+        myMapView.addLayer(LyAddDenuncioOt, 25);
+        myMapView.addLayer(LyAddPoste, 26);
+        myMapView.addLayer(LyAddDireccion, 27);
 
         arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
         arrayEstado = getResources().getStringArray(R.array.estado_lectura);
@@ -461,11 +478,11 @@ public class OtRouteActivity extends AppCompatActivity {
             addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
             addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
 
-            myMapView.addLayer(LyAddCliente, 23);
-            myMapView.addLayer(LyAddUnion, 24);
-            myMapView.addLayer(LyAsocTramo, 25);
-            myMapView.addLayer(LyAsocCalle, 26);
-            myMapView.addLayer(LyAddClienteCnr, 27);
+            myMapView.addLayer(LyAddCliente, 28);
+            myMapView.addLayer(LyAddUnion, 29);
+            myMapView.addLayer(LyAsocTramo, 30);
+            myMapView.addLayer(LyAsocCalle, 31);
+            myMapView.addLayer(LyAddClienteCnr, 32);
 
             setLayerAddToggle(false);
         } else {
@@ -811,12 +828,23 @@ public class OtRouteActivity extends AppCompatActivity {
         Map<String, Object> objectMap = oFeature.getAttributes();
         Map<String, Object> updMap = new HashMap<>();
 
-        updMap.put("OBJECTID", objectMap.get("OBJECTID"));
-        updMap.put("estado_revision", "leida");
+        if (sCapa.equals("Micromedicion")) {
+            oLyAddOt = LyAddMicroOt;
+            updMap.put("OBJECTID", objectMap.get("OBJECTID"));
+            updMap.put("estado_ot", "leida");
+        } else if (sCapa.equals("Denuncio")) {
+            oLyAddOt = LyAddDenuncioOt;
+            updMap.put("OBJECTID", objectMap.get("OBJECTID"));
+            updMap.put("estado_revision", "leida");
+        } else {
+            oLyAddOt = LyAddOpenOt;
+            updMap.put("OBJECTID", objectMap.get("ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID"));
+            updMap.put("estado", "leida");
+        }
 
         Graphic newFeatureGraphic = new Graphic(oFeature.getGeometry(), null, updMap);
         Graphic[] upds = {newFeatureGraphic};
-        LyAddLectores.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
+        oLyAddOt.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
             @Override
             public void onCallback(FeatureEditResult[][] featureEditResults) {
                 if (featureEditResults[2] != null) {
@@ -1095,9 +1123,17 @@ public class OtRouteActivity extends AppCompatActivity {
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
 
-            layerDefs = new HashMap<>();
-            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
-            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+            layerDefsECSE = new HashMap<>();
+            layerDefsOT = new HashMap<>();
+            layerDefsOpen = new HashMap<>();
+
+            layerDefsECSE.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefsECSE.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+
+            layerDefsOT.put(0, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");
+            layerDefsOT.put(1, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");
+
+            layerDefsOpen.put(0, "INSPECTOR = '" + Util.getUserWithoutDomain(usuar) + "'");
 
             //Set eventos mapa
             singleTapOnMap();
@@ -1536,7 +1572,9 @@ public class OtRouteActivity extends AppCompatActivity {
     public void setLayerAddToggle(boolean visible) {
         LyAddPoste.setVisible(visible);
         LyAddDireccion.setVisible(visible);
-        LyAddLectores.setVisible(visible);
+        LyAddMicroOt.setVisible(visible);
+        LyAddOpenOt.setVisible(visible);
+        LyAddDenuncioOt.setVisible(visible);
 
         if (bIngCliente) {
             LyAddCliente.setVisible(visible);
@@ -1606,6 +1644,12 @@ public class OtRouteActivity extends AppCompatActivity {
             case "ECSE":
                 din_urlECSE = layerURL;
                 break;
+            case "OTOPEN":
+                din_urlOpen = layerURL;
+                break;
+            case "OT":
+                din_urlOT = layerURL;
+                break;
             case "SRV_POSTES":
                 srv_urlPostes = layerURL;
                 break;
@@ -1626,6 +1670,15 @@ public class OtRouteActivity extends AppCompatActivity {
                 break;
             case "SRV_LECTORES":
                 srv_lectores = layerURL;
+                break;
+            case "SRV_OTMICRO":
+                srv_otMicro = layerURL;
+                break;
+            case "SRV_OTOPEN":
+                srv_otOpen = layerURL;
+                break;
+            case "SRV_OTDENUNCIO":
+                srv_otDenuncio = layerURL;
                 break;
             default:
                 Toast.makeText(OtRouteActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
@@ -1693,10 +1746,23 @@ public class OtRouteActivity extends AppCompatActivity {
                     LyAsocCalle.setMinScale(6000);
                     LyAsocCalle.setVisible(visibilidad);
                     break;
-                case "ADDLECTOR":
-                    LyAddLectores = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddLectores.setMinScale(8000);
-                    LyAddLectores.setVisible(visibilidad);
+                case "ADDOTMICRO":
+                    LyAddMicroOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    //LyAddMicroOt.setDefinitionExpression("where ESTADO IS null");
+                    LyAddMicroOt.setMinScale(6000);
+                    LyAddMicroOt.setVisible(visibilidad);
+                    break;
+                case "ADDOTOPEN":
+                    LyAddOpenOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    //LyAddOpenOt.setDefinitionExpression("where ESTADO IS null");
+                    LyAddOpenOt.setMinScale(6000);
+                    LyAddOpenOt.setVisible(visibilidad);
+                    break;
+                case "ADDOTDENUNCIO":
+                    LyAddDenuncioOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    //LyAddDenuncioOt.setDefinitionExpression("where ESTADO IS null");
+                    LyAddDenuncioOt.setMinScale(6000);
+                    LyAddDenuncioOt.setVisible(visibilidad);
                     break;
                 default:
                     Toast.makeText(OtRouteActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
@@ -1747,7 +1813,7 @@ public class OtRouteActivity extends AppCompatActivity {
                         int array6[]; //declaracion arreglo de tipo numerico
                         array6 = new int[1];
                         array6[0] = 2;
-                        LyPOSTES = new ArcGISDynamicMapServiceLayer(url, null, credencial);
+                        LyPOSTES = new ArcGISDynamicMapServiceLayer(url, array6, credencial);
                         LyPOSTES.setVisible(visibilidad);
                         break;
                     case "EQUIPOS_LINEA":
@@ -1838,6 +1904,7 @@ public class OtRouteActivity extends AppCompatActivity {
                         array18 = new int[1];
                         array18[0] = 0;
                         LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
+                        LyENCUESTA.setLayerDefinitions(layerDefsECSE);
                         LyENCUESTA.setVisible(visibilidad);
                         break;
                     case "REEMPLAZO":
@@ -1845,7 +1912,32 @@ public class OtRouteActivity extends AppCompatActivity {
                         array19 = new int[1];
                         array19[0] = 1;
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
+                        LyREEMPLAZO.setLayerDefinitions(layerDefsECSE);
                         LyREEMPLAZO.setVisible(visibilidad);
+                        break;
+                    case "OTOPEN":
+                        int array20[];
+                        array20 = new int[1];
+                        array20[0] = 0;
+                        LyOTOPEN = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
+                        LyOTOPEN.setLayerDefinitions(layerDefsOpen);
+                        LyOTOPEN.setVisible(visibilidad);
+                        break;
+                    case "OTMICRO":
+                        int array21[];
+                        array21 = new int[1];
+                        array21[0] = 0;
+                        LyOTMICRO = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
+                        LyOTMICRO.setLayerDefinitions(layerDefsOT);
+                        LyOTMICRO.setVisible(visibilidad);
+                        break;
+                    case "OTDENUNCIO":
+                        int array22[];
+                        array22 = new int[1];
+                        array22[0] = 1;
+                        LyOTDENUNCIO = new ArcGISDynamicMapServiceLayer(url, array22, credencial);
+                        LyOTDENUNCIO.setLayerDefinitions(layerDefsOT);
+                        LyOTDENUNCIO.setVisible(visibilidad);
                         break;
                     default:
                         Toast.makeText(OtRouteActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
@@ -2117,6 +2209,7 @@ public class OtRouteActivity extends AppCompatActivity {
                             LyEMPALMES.reinitializeLayer(creds);
                             LyENCUESTA.reinitializeLayer(creds);
                             LyREEMPLAZO.reinitializeLayer(creds);
+                            LyOTOPEN.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -2702,7 +2795,21 @@ public class OtRouteActivity extends AppCompatActivity {
 
         @Override
         protected FeatureResult doInBackground(String... params) {
-            String whereClause = "OBJECTID = " + params[0];
+
+            String whereClause, sUrl;
+
+            if (sCapa.equals("Micromedicion")) {
+                whereClause = "OBJECTID = " + params[0];
+                sUrl = LyAddMicroOt.getUrl();
+            } else if (sCapa.equals("Denuncio")) {
+                whereClause = "OBJECTID = " + params[0];
+                sUrl = LyAddDenuncioOt.getUrl();
+            } else {
+                whereClause = "ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID = " + params[0];
+                sUrl = LyOTOPEN.getUrl().concat("/0");
+            }
+
+            //whereClause = "OBJECTID = " + params[0];
             QueryParameters myParameters = new QueryParameters();
             myParameters.setWhere(whereClause);
             myParameters.setReturnGeometry(true);
@@ -2711,7 +2818,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
             FeatureResult results;
             try {
-                QueryTask queryTask = new QueryTask(getResources().getString(R.string.url_OT), credenciales);
+                QueryTask queryTask = new QueryTask(sUrl, credenciales);
                 results = queryTask.execute(myParameters);
                 return results;
             } catch (Exception e) {
@@ -2735,8 +2842,8 @@ public class OtRouteActivity extends AppCompatActivity {
                         mapCallout.hide();
 
                         StringBuilder outStr;
-                        Util oUtil = new Util();
-                        outStr = oUtil.getStringByAttrClass(-2, feature.getAttributes());
+                        Util oUtil = new Util(sCapa);
+                        outStr = oUtil.getStringByAttrClass(-3, feature.getAttributes());
 
                         GisTextView tv = new GisTextView(OtRouteActivity.this);
                         tv.setText(outStr.toString());
@@ -2752,7 +2859,12 @@ public class OtRouteActivity extends AppCompatActivity {
                         });
 
                         mapCallout.setOffset(0, -3);
-                        mapCallout.setCoordinates(tv.getPoint());
+
+                        if (tv.getPoint() != null)
+                            mapCallout.setCoordinates(tv.getPoint());
+                        else
+                            Toast.makeText(getApplicationContext(), "OT sin geoposición", Toast.LENGTH_SHORT).show();
+
                         mapCallout.setMaxHeight(100);
                         mapCallout.setMaxWidth(400);
                         mapCallout.setStyle(R.xml.mycalloutprefs);
@@ -2762,7 +2874,7 @@ public class OtRouteActivity extends AppCompatActivity {
                         fabNavRoute.setVisibility(View.VISIBLE);
 
                         //set true para probar update
-                        //setOtLeida(feature);
+                        setOtLeida(feature);
                     }
                 }
 

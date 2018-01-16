@@ -60,12 +60,18 @@ public class Util {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 1004;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1005;
     private Point oUbic = null;
+    private String sCapa;
 
     public Util(Point mPoint) {
         oUbic = mPoint;
     }
 
-    public Util() { }
+    public Util(String mCapa) {
+        sCapa = mCapa;
+    }
+
+    public Util() {
+    }
 
     public CalloutTvClass getCalloutValues(Map<String, Object> map) {
         String value = "";
@@ -233,7 +239,7 @@ public class Util {
                     GisEditText oText = (GisEditText) view;
 
                     if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                        if (oText.getId() == R.id.txtAsocAddress){
+                        if (oText.getId() == R.id.txtAsocAddress) {
                             objectMap.put("ID_DIRECCION", oText.getIdObjeto());
                             objectMap.put("TIPO_DIRECCION", oText.getTipo());
 
@@ -253,13 +259,12 @@ public class Util {
                     EditText oText = (EditText) view;
 
                     if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                        if (oText.getId() == R.id.txtNis){
+                        if (oText.getId() == R.id.txtNis) {
                             objectMap.put("NIS", oText.getText().toString());
 
                             oMapDireccion.put("NIS", oText.getText().toString());
                             oMapPoste.put("NIS", oText.getText().toString());
-                        }
-                        else if (oText.getId() == R.id.txtOS)
+                        } else if (oText.getId() == R.id.txtOS)
                             objectMap.put("OS", oText.getText().toString());
                         else if (oText.getId() == R.id.txtNumMedidor)
                             objectMap.put("NUMERO_MEDIDOR", oText.getText().toString());
@@ -287,7 +292,7 @@ public class Util {
                     GisEditText oText = (GisEditText) view;
 
                     if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                        if (oText.getId() == R.id.txtAsocAddress){
+                        if (oText.getId() == R.id.txtAsocAddress) {
                             objectMap.put("ID_DIRECCION", oText.getIdObjeto());
                             objectMap.put("TIPO_DIRECCION", oText.getTipo());
 
@@ -309,13 +314,12 @@ public class Util {
                     EditText oText = (EditText) view;
 
                     if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                        if (oText.getId() == R.id.txtNis){
+                        if (oText.getId() == R.id.txtNis) {
                             objectMap.put("NIS", oText.getText().toString());
 
                             oMapDireccion.put("NIS", oText.getText().toString());
                             oMapPoste.put("NIS", oText.getText().toString());
-                        }
-                        else if (oText.getId() == R.id.txtOS)
+                        } else if (oText.getId() == R.id.txtOS)
                             objectMap.put("OS", oText.getText().toString());
                         else if (oText.getId() == R.id.txtNumMedidor)
                             objectMap.put("NUMERO_MEDIDOR", oText.getText().toString());
@@ -388,8 +392,7 @@ public class Util {
             String resp = splitStr[nLast];
 
             return resp;
-        }
-        else {
+        } else {
             return str;
         }
     }
@@ -402,19 +405,19 @@ public class Util {
         if (splitStr.length > 0) {
             for (String s : splitStr) {
                 String sTemp = s.toUpperCase();
-                s = s.trim().replaceFirst(""+s.charAt(0), ""+sTemp.charAt(0));
+                s = s.trim().replaceFirst("" + s.charAt(0), "" + sTemp.charAt(0));
                 resp += s + " ";
             }
         }
         return resp.trim();
     }
 
-    public String formatValCampoDB(Object o){
+    public String formatValCampoDB(Object o) {
         String sVal = "";
         if (o != null) {
             if (o.getClass().equals(Double.class)) {
                 sVal = String.valueOf(((Double) o).intValue());
-            } else if (o.getClass().equals(Long.class)){
+            } else if (o.getClass().equals(Long.class)) {
                 Date date = new Date(Long.valueOf(o.toString()));
                 sVal = date.toGMTString();
             } else {
@@ -461,7 +464,8 @@ public class Util {
             outStr.append("SED");
             if (oAttrAbrev.containsKey("codigo") && !oAttrAbrev.get("codigo").toString().trim().isEmpty())
                 outStr.append(": " + oAttrAbrev.get("codigo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"nombre", "montaje", "alimentador", "comuna", "propiedad", "kva", "fecha"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
@@ -470,33 +474,50 @@ public class Util {
             outStr.append("POSTE");
             if (oAttrAbrev.containsKey("rotulo") && !oAttrAbrev.get("rotulo").toString().trim().isEmpty())
                 outStr.append(": " + oAttrAbrev.get("rotulo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
         } else if (numBusq == -1) {
 
             outStr.append("INSPECCION LECTURA");
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
             if (oAttrAbrev.containsKey("OBJECTID") && !oAttrAbrev.get("OBJECTID").toString().trim().isEmpty())
                 outStr.append("OBJECT ID: " + oAttrAbrev.get("OBJECTID").toString());
             outStr.append(LSP);
 
             String[] keys = {"nro_medidor", "estado", "tipo_edificacion", "poste", "direccion", "lectura_actual", "inspeccion", "ot", "inspector"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
             outStr.append("Presione para cerrar");
         } else if (numBusq == -2) {
 
             outStr.append("INSPECCION OT");
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
             if (oAttrAbrev.containsKey("OT") && !oAttrAbrev.get("OT").toString().trim().isEmpty())
                 outStr.append("OT: " + oAttrAbrev.get("OT").toString());
             outStr.append(LSP);
 
             String[] keys = {"ZONA", "COMUNA"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append("Presione para cerrar");
+        } else if (numBusq == -3) {
+
+            outStr.append("INSPECCION OT");
+            outStr.append(LSP);
+            outStr.append(LSP);
+            if (oAttrAbrev.containsKey("ot") && !oAttrAbrev.get("ot").toString().trim().isEmpty())
+                outStr.append("OT: " + oAttrAbrev.get("ot").toString());
+            outStr.append(LSP);
+            outStr.append("Tipo: " + sCapa);
+            outStr.append(LSP);
+            outStr.append(LSP);
             outStr.append("Presione para cerrar");
         } else {
             //GENERICOS
@@ -529,7 +550,8 @@ public class Util {
 
             if (oAtrr.containsKey("tipo_nodo")) {
                 outStr.append("NODO " + oAtrr.get("tipo_nodo").toString().replace("ele!", "").toUpperCase());
-                outStr.append(LSP); outStr.append(LSP);
+                outStr.append(LSP);
+                outStr.append(LSP);
             }
 
             String[] keys = {"rotulo", "id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
@@ -540,7 +562,8 @@ public class Util {
             outStr.append("RED BT");
             if (oAtrr.containsKey("id_tramo") && !oAtrr.get("id_tramo").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("id_tramo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"alimentador", "comuna", "tipo", "propiedad", "sed", "catalogo", "descripcion", "fecha"};
             String sTemp = setValuesByKey(keys, oAtrr);
@@ -553,7 +576,8 @@ public class Util {
             outStr.append("RED AP");
             if (oAtrr.containsKey("id_tramo") && !oAtrr.get("id_tramo").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("id_tramo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"sed", "alimentador", "comuna", "tipo", "tipo_red", "propiedad", "catalogo", "descripcion", "fecha", "id_equipo_ap"};
             String sTemp = setValuesByKey(keys, oAtrr);
@@ -566,7 +590,8 @@ public class Util {
             outStr.append("RED MT");
             if (oAtrr.containsKey("id") && !oAtrr.get("id").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("id").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"alimentador", "comuna", "tipo", "propiedad", "catalogo", "descripcion", "tension", "fecha", "color"};
             outStr.append(setValuesByKey(keys, oAtrr));
@@ -576,7 +601,8 @@ public class Util {
             outStr.append("CLIENTE");
             if (oAtrr.containsKey("nis") && !oAtrr.get("nis").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("nis").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
             String sTemp;
 
             if (identResult.getLayerId() == 0) {
@@ -610,7 +636,8 @@ public class Util {
             outStr.append("STx TORRE");
             if (oAtrr.containsKey("nombre_obj") && !oAtrr.get("nombre_obj").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("nombre_obj").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"empresa"};
             outStr.append(setValuesByKey(keys, oAtrr));
@@ -620,7 +647,8 @@ public class Util {
             outStr.append("STx TRAMO");
             if (oAtrr.containsKey("nm_linea") && !oAtrr.get("nm_linea").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("nm_linea").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"tension", "nm_tramo_l", "largo", "cable_guar", "empresa"};
             String sTemp = setValuesByKey(keys, oAtrr);
@@ -635,7 +663,8 @@ public class Util {
             outStr.append("Alimentador");
             if (!identResult.getValue().toString().trim().isEmpty())
                 outStr.append(": " + identResult.getValue());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"id_alimentador", "color", "tension"};
             outStr.append(setValuesByKey(keys, oAtrr));
@@ -645,7 +674,8 @@ public class Util {
             outStr.append("SED");
             if (oAtrr.containsKey("codigo") && !oAtrr.get("codigo").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("codigo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"nombre", "montaje", "alimentador", "comuna", "propiedad", "kva", "fecha"};
             outStr.append(setValuesByKey(keys, oAtrr));
@@ -655,7 +685,8 @@ public class Util {
             outStr.append("SED");
             if (oAtrr.containsKey("ARCGIS.DBO.SED_006.codigo") && !oAtrr.get("ARCGIS.DBO.SED_006.codigo").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("ARCGIS.DBO.SED_006.codigo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"id_orden", "id_incidencia", "alimentador", "causa", "comentario", "estado_orden", "fecha_creacion", "fecha_asignacion", "fecha_despacho", "fecha_ruta", "fecha_llegada", "TIEMPO_TRA", "etr"};
 
@@ -672,7 +703,8 @@ public class Util {
             outStr.append("Equipo Linea");
             if (oAtrr.containsKey("id_equipo") && !oAtrr.get("id_equipo").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("id_equipo").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"tipo", "nombre", "alimentador", "descripcion", "propiedad", "catalogo", "estado", "estado_normal", "tension", "fecha"};
 
@@ -683,7 +715,8 @@ public class Util {
             outStr.append("Empalme");
             if (oAtrr.containsKey("empalme") && !oAtrr.get("empalme").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("empalme").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"nis", "tipo_nodo"};
 
@@ -694,7 +727,8 @@ public class Util {
             outStr.append("Dirección");
             if (oAtrr.containsKey("id_direccion") && !oAtrr.get("id_direccion").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("id_direccion").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"nombre_calle", "numero", "comuna", "tipo_edificacion"};
 
@@ -708,7 +742,8 @@ public class Util {
             outStr.append("Luminaria");
             if (oAtrr.containsKey("potencia") && !oAtrr.get("potencia").toString().trim().isEmpty())
                 outStr.append(": " + oAtrr.get("potencia").toString());
-            outStr.append(LSP); outStr.append(LSP);
+            outStr.append(LSP);
+            outStr.append(LSP);
 
             String[] keys = {"tipo_cnx", "catalogo", "propiedad", "descripcion", "nm_comuna"};
 
@@ -772,7 +807,7 @@ public class Util {
         return center;
     }
 
-    public static String getVersionPackage(){
+    public static String getVersionPackage() {
         return String.format(" v%sc%s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
     }
 
@@ -790,12 +825,11 @@ public class Util {
                     sImei = telephonyManager.getDeviceId();
                     Log.w("permissionCheck", "sImei: " + sImei);
                 } else {
-                    //TODO
                     Log.w("permissionCheck", "permision null");
                 }
                 return sImei;
             } catch (Exception ex) {
-                Log.w("permissionCheck", "permision error: " +ex.getMessage());
+                Log.w("permissionCheck", "permision error: " + ex.getMessage());
                 return "null";
             }
 
@@ -806,6 +840,16 @@ public class Util {
 
     public static String getImei(Context c) {
         TelephonyManager telephonyManager = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return telephonyManager.getDeviceId();
+        }
         return telephonyManager.getDeviceId();
     }
 

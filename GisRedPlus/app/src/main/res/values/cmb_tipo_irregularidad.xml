@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_irregularidad">
+        <item>Servicio normal</item>
+        <item>Falla de equipo de medida</item>
+        <item>Medidor destruido</item>
+        <item>Intervención de equipo de medida</item>
+        <item>Otros</item>
+    </string-array>
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:foregroundTint="@color/black_overlay">
+
+    <ImageView
+        android:id="@+id/imageMenu"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:padding="6dp"
+        android:layout_gravity="center_vertical"
+        android:elevation="2dp"
+        android:src="@mipmap/ic_menu_standard"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView android:id="@+id/LblTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="LECTURA DENUNCIO"
+            android:layout_toRightOf="@id/imageMenu"/>
+
+        <TextView android:id="@+id/LblEstDenuncio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:text="Estado denuncio"
+            android:layout_below="@id/LblTitulo"
+            android:layout_toRightOf="@id/imageMenu"/>
+
+        <TextView android:id="@+id/LblEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:text="Estado"
+            android:layout_below="@id/LblTitulo"
+            android:layout_toRightOf="@id/imageMenu"/>
+
+        <TextView android:id="@+id/LblOT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:text="OT"
+            android:layout_below="@id/LblTitulo"
+            android:layout_toRightOf="@id/imageMenu"/>
+
+    </LinearLayout>
+
+</LinearLayout>

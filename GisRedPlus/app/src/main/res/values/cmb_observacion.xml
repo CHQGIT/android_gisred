@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="observacion_mm">
+        <item></item>
+        <item>Normal</item>
+        <item>Inspeccionar</item>
+        <item>Riesgo seguridad</item>
+        <item>Colgado</item>
+        <item>CNR</item>
+        <item>Sin acceso al medidor</item>
+        <item>No se ve n° serie</item>
+        <item>AP colgado</item>
+    </string-array>
+</resources>

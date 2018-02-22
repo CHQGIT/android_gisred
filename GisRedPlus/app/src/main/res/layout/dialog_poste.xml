@@ -21,6 +21,7 @@
                 <EditText android:id="@+id/txtRotulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textShortMessage"
                     android:hint="Rótulo *"/>
 
             </android.support.design.widget.TextInputLayout>

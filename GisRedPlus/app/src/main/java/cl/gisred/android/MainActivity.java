@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.core.io.UserCredentials;
+import com.esri.core.map.CallbackListener;
+import com.esri.core.map.FeatureEditResult;
+import com.esri.core.map.Graphic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import cl.gisred.android.entity.MenuClass;
+import cl.gisred.android.util.Util;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,17 +39,22 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> aModulos;
     ArrayList<String> aWidgets;
     private String sEmpresa;
+    private String sImei;
     private Bundle bundle;
 
     String usuario, password;
     UserCredentials credenciales;
 
+    private ArcGISFeatureLayer oLayerAccess;
+
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "INSPECCION"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS"));
+    // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
         credenciales.setUserAccount(usuario, password);
+        //oLayerAccess = new ArcGISFeatureLayer(getResources().getString(R.string.srv_LogAccess), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
     }
 
     public void getWidgets()
@@ -71,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
             adaptador = new AdaptadorMenus(MainActivity.this, datos);
 
             lstOpciones.setAdapter(adaptador);
-        }
-        else {
+        } else {
             Toast.makeText(MainActivity.this, "No hay datos, verifique credenciales", Toast.LENGTH_LONG).show();
             Intent oIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(oIntent);
@@ -95,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         usuario = bundle.getString("usuarioLogin");
         password = bundle.getString("passwordLogin");
         sEmpresa = bundle.getString("empresa");
+        sImei = bundle.getString("imei");
 
         setCredenciales(usuario, password);
 
@@ -108,12 +121,55 @@ public class MainActivity extends AppCompatActivity {
                     Intent oIntent;
                     Bundle oBundle = new Bundle();
 
-                    if (datos[position].getTitulo().equalsIgnoreCase("INSPECCION")){
+                    //String sFecha = DateFormat.format("dd-MM-yyyy HH:mm:ss", new java.util.Date()).toString();
+                    //String sPagina = String.format("Mobile-%s-%s", sEmpresa.toLowerCase(), datos[position].getTitulo().toLowerCase());
+
+                    if (datos[position].getTitulo().contains("CLIENTES")){
+                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("INSPECCION")){
                         oIntent = new Intent(MainActivity.this, FormActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    }
-                    else
-                        oIntent = new Intent(MainActivity.this, MapsActivity.class);
+                    } else if (datos[position].getTitulo().contains("OT")){
+                        oIntent = new Intent(MainActivity.this, OtListActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    }  else if (datos[position].getTitulo().contains("LECTORES")){
+                        oIntent = new Intent(MainActivity.this, FormLectActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("INTERRUPCIONES")){
+                        oIntent = new Intent(MainActivity.this, PowerOnActivity.class);
+                    } else if (datos[position].getTitulo().contains("EH&S")){
+                        oIntent = new Intent(MainActivity.this, FormEhysActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MICRO")){
+                        oIntent = new Intent(MainActivity.this, MicroMedidaActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("REPARTOS")){
+                        oIntent = new Intent(MainActivity.this, RepartoActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
+                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("CATASTRO")){
+                        oIntent = new Intent(MainActivity.this, CatastroActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else
+                        oIntent = new Intent(MainActivity.this, StandardActivity.class);
+
+                    //Comentado el 02/03/17 para optimizar carga de mapa
+                    /*Map<String, Object> attributes = new HashMap<>();
+
+                    attributes.put("usuario", credenciales.getUserName());
+                    attributes.put("fecha", sFecha);
+                    attributes.put("pagina", sPagina);
+                    attributes.put("modulo", "GISRED 2.0" + Util.getVersionPackage());
+                    attributes.put("nom_equipo", Util.getDeviceName());
+                    attributes.put("ip", sImei);
+
+                    Graphic newFeature = new Graphic(null, null, attributes);
+                    Graphic[] addsLogin = {newFeature};
+
+                    oLayerAccess.applyEdits(addsLogin, null, null, callBackUnion());*/
 
                     oBundle.putString("empresa", sEmpresa);
                     oBundle.putString("usuario", usuario);
@@ -128,6 +184,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private CallbackListener<FeatureEditResult[][]> callBackUnion() {
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Módulo cargado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return null;
+    }
+
 
     class AdaptadorMenus extends ArrayAdapter<MenuClass> {
 
@@ -163,7 +232,31 @@ public class MainActivity extends AppCompatActivity {
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             } else if (dato.getTitulo().contains("INSPECCION")) {
                 dato.setDescripcion("Visualización e ingreso de inspecciones");
-                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+            } else if (dato.getTitulo().contains("LECTORES")) {
+                dato.setDescripcion("Visualización e ingreso de lecturas");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_lectores : R.mipmap.ic_menu_ing_lectores_g);
+            } else if (dato.getTitulo().contains("OT")) {
+                dato.setDescripcion("Ordenes de trabajo");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+            } else if (dato.getTitulo().contains("TELEMEDIDA")) {
+                dato.setDescripcion("Visualización e ingreso de telemedidas");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("ALUMBRADO")) {
+                dato.setDescripcion("Visualización e ingreso de alumbrado público");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("INTERRUPCIONES")) {
+                dato.setDescripcion("Visualización de interrupciones");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_power_on : R.mipmap.ic_menu_power_on_g);
+            } else if (dato.getTitulo().contains("EH&S")) {
+                dato.setDescripcion("Módulo EH&S");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
+            } else if (dato.getTitulo().contains("MICRO")) {
+                dato.setDescripcion("Visualización e ingreso de catastros de medidores");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("REPARTOS")) {
+                dato.setDescripcion("Ingreso de correspondencia repartida");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
             }
             return dato;
         }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="estado_medidor">
+        <item>Medidor en altura</item>
+        <item>Normal</item>
+        <item>Sin carga conectada</item>
+    </string-array>
+</resources>

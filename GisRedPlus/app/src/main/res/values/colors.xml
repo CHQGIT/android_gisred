@@ -7,7 +7,7 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="black_semi_transparent">#B2D02010</color>
-
+    <color name="whitie_transparent">#00FFFFFF</color>
     <color name="blackie_semi_transparent">#B2000000</color>
     <color name="background">#e5e5e5</color>
     <color name="half_black">#808080</color>
@@ -18,4 +18,8 @@
     <color name="pink_pressed">#ec407a</color>
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
+
+    <color name="image_border_start">#40990000</color>
+    <color name="image_border_end">#FF660000</color>
+    <color name="image_border_center">#FFFF3333</color>
 </resources>

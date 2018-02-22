@@ -1,0 +1,147 @@
+/* CSS Document */
+body {
+	background-color:#A1A1A1;
+	margin:0;
+	padding:0;
+}
+
+p.breaker
+{
+page-break-after: always;
+}
+
+.container{
+	width:960px;
+	background-color:#FFFFFF;
+	margin:0 auto;
+}
+
+.containerfall{
+	width:960px;
+	background-color:#FFFFFF;
+	margin:0 auto;
+	background-position:center top;
+	background-image: url(image_fallo.png);
+    background-repeat: no-repeat;
+    visibility: visible;
+}
+
+header{
+		padding-top:5px;
+}
+
+header div {
+	border:solid;
+	border-width:3px;
+	padding:5px;
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;
+}
+
+.cont1{
+	border:solid;
+	border-width:3px;
+	padding:5px;
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	align-content:center;
+
+}
+
+.cont2{
+	border:solid;
+	border-width:3px;
+	padding:5px;
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	align-content:center;
+
+}
+.cont3{
+	border:solid;
+	border-width:3px;
+
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	align-content:center;
+
+}
+.cont4{
+	border:solid;
+	border-width:2px;
+
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	align-content:center;
+
+}
+
+#Cont1Left{
+	float:left;
+	padding:5px;
+}
+#Cont1Right{
+	float:right;
+	padding:5px;
+}
+
+#Cont2Left{
+	float:left;
+	padding:5px;
+}
+#Cont2Right{
+	float:right;
+	padding:5px;
+}
+
+#Cont3Left{
+	float:left;
+
+}
+#Cont3Right{
+	float:right;
+
+}
+
+._tablas{
+	border-collapse:collapse;
+	border:1px solid;
+	font-size:10px;
+}
+._tablas tr td{
+	border:1px solid;
+	height:11px;
+}
+
+.esquema_conexion{
+	border:solid;
+	border-width:3px;
+	padding:5px;
+	text-align:center;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	align-content:center;
+}
+
+#txt_anexo{
+	padding:5px;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	border:solid 3px;
+}
+
+#txt_anexo_foto{
+	padding:5px;
+	margin:25px;
+	font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;	overflow:hidden;
+	border:solid 3px;
+}
+
+.photo_anexo{
+    width: 28em;
+}

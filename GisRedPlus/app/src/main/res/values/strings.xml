@@ -21,43 +21,138 @@
     <string name="selecciona_una_opcion">Selecciona una opción</string>
     <string name="title_activity_main2">Main Activity</string>
     <string name="action_logout">Cerrar Sesión</string>
+    <string name="action_news">Novedades</string>
     <string name="action_search">Buscar</string>
     <string name="action_layers">Capas</string>
     <string name="action_maps">Mapas</string>
+    <string name="action_refresh">Actualizar</string>
 
     <!-- Servicios para dynamicLayer-->
-    <string name="url_EquiposLinea">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
-    <string name="url_token">http://gisred.chilquinta.cl:5555/arcgis/tokens/</string>
-    <string name="url_TRAMOS">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Tramos_006/MapServer</string>
-    <string name="url_EquiposPTO">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_pto_006/MapServer</string>
-    <string name="url_Nodos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Nodos_006/MapServer</string>
-    <string name="url_Luminarias">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Luminarias/MapServer</string>
-    <string name="url_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/ClientesV2/MapServer</string>
-    <string name="url_Concesiones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Concesiones006/MapServer</string>
-    <string name="url_medidores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
-    <string name="url_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
-    <string name="url_Stx">http://gisred.chilquinta.cl:5555/arcgis/rest/services/STx/STx/MapServer</string>
+    <string name="url_permisos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Admin/LogAccesos/MapServer/2</string>
+    <string name="url_EquiposLinea">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
+    <string name="url_token">https://gisred.chilquinta.cl:6443/arcgis/tokens/</string>
+    <string name="url_TRAMOS">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Tramos_006/MapServer</string>
+    <string name="url_EquiposPTO">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Equipos_pto_006/MapServer</string>
+    <string name="url_Nodos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Nodos_006/MapServer</string>
+    <string name="url_Luminarias">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Luminarias/MapServer</string>
+    <string name="url_Clientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/ClientesV2/MapServer</string>
+    <string name="url_Concesiones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Concesiones006/MapServer</string>
+    <string name="url_medidores">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
+    <string name="url_Direcciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
+    <string name="url_Stx">https://gisred.chilquinta.cl:6443/arcgis/rest/services/STx/STx/MapServer</string>
+    <string name="url_interrupciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Interrupciones/PO/MapServer</string>
+    <string name="url_ECSE_varios">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Varios/ECSE/MapServer</string>
+
+    <!-- Test Services dynamic -->
+    <string name="url_Electrodependientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
+    <string name="url_viaOpen">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES_MAP/MapServer</string>
+    <string name="url_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/MapServer</string>
+
     <!-- Mapabase -->
-    <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
+    <string name="url_Mapabase">https://gisred.chilquinta.cl:6443/Arcgis/rest/services/MapaBase/MapServer</string>
     <!-- Urls Values Spinners Dialogs -->
-    <string name="url_tipos_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/MapServer</string>
-    <string name="url_cnr_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/MapServer/</string>
+    <string name="url_tipos_spinner">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/MapServer</string>
+    <string name="url_cnr_spinner">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/MapServer/</string>
     <!-- Servicios para featureLayer-->
-    <string name="srv_Postes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/1</string>
-    <string name="srv_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/2</string>
-    <string name="srv_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/0</string>
-    <string name="srv_ClientesCnr">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/FeatureServer/0</string>
-    <string name="srv_Union_012">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
+    <string name="srv_Postes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/1</string>
+    <string name="srv_Direcciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/2</string>
+    <string name="srv_Clientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/0</string>
+    <string name="srv_ClientesCnr">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/FeatureServer/0</string>
+    <string name="srv_Union_012">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
     <!-- LogAccesos Feature Layer -->
-    <string name="srv_LogAccess">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
+    <string name="srv_LogAccess">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
+    <!-- Lectores FeatureLayer -->
+    <string name="srv_Lectores">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_movil_lectores/FeatureServer/0</string>
+    <!-- Telemedida FeatureLayer -->
+    <string name="srv_Telemedida">https://gisred.chilquinta.cl:6443/arcgis/rest/services/TELEMEDIDA/TELEMEDIDA_OLCA/FeatureServer/0</string>
+    <!-- MicroMedida FeatureLayer -->
+    <string name="srv_MicroMed">https://gisred.chilquinta.cl:6443/arcgis/rest/services/CNR/Micromedicion/FeatureServer/0</string>
+    <string name="srv_ZoneLimit">https://gisred.chilquinta.cl:6443/arcgis/rest/services/CNR/Micromedicion/FeatureServer/1</string>
+    <!-- Reparto FeatureLayer -->
+    <string name="srv_Repartos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
+    <!-- OT Inspecciones -->
+    <string name="srv_micromed_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
+    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
+    <string name="srv_denuncio_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
 
     <string name="btnBuscarMap">Buscar</string>
 
     <!-- Inspecciones -->
     <string name="nota_verificaciones">Si en esta lista de verificaciones hay alguna desmarcada, la empresa distribuidora no conectará el empalme a sus redes, comunicará al cliente que no se podrá conectar hasta que subsanen las observaciones e informará del hecho al SEC.</string>
-    <string name="verif_1">Instalación cliente cuenta con la camara de registro y su tierra servicio</string>
-    <string name="verif_2">Instalación cliente cuenta con la camara de registro y su tierra protección</string>
-    <string name="verif_3">Tablero cliente cuenta con diferencial</string>
-    <string name="verif_4">Tablero cliente cuenta con protección automática</string>
+    <string name="verif_1">Instalación cliente cuenta con camara de registro</string>
+    <string name="verif_2">Instalación cliente cuenta con tierra servicio</string>
+    <string name="verif_3">Instalación cliente cuenta con tierra protección</string>
+    <string name="verif_4">Tablero cliente cuenta con diferencial</string>
+    <string name="verif_5">Tablero cliente cuenta con protección automática</string>
+
+    <!-- Control Preventivo -->
+    <string name="eval_1">Contacto Eléctrico</string>
+    <string name="eval_2">Atrapamiento</string>
+    <string name="eval_3">Golpeado por/contra</string>
+    <string name="eval_4">Caída de objetos, herramientas, materiales desde altura</string>
+    <string name="eval_5">Sobreesfuerzo</string>
+    <string name="eval_6">Caída mismo/distinto nivel</string>
+    <string name="eval_7">Fuego - incendio - explosión</string>
+    <string name="eval_8">Inhalación gases tóxicos, polvos, vapores</string>
+    <string name="eval_9">Proyección de partículas</string>
+    <string name="eval_10">Ruido/vibración/radiación</string>
+    <string name="eval_11">Cortes/heridas</string>
+    <string name="eval_12">Derrames/emisiones/impactos ambientales</string>
+    <string name="eval_13">Casco (barboquejo)</string>
+    <string name="eval_14">Lentes con filtro UV - UVB</string>
+    <string name="eval_15">Sistema de protección de caídas (SPDC)</string>
+    <string name="eval_16">Mensajero, morral</string>
+    <string name="eval_17">Calzado de seguridad (metatarzal)</string>
+    <string name="eval_18">Ropa de algodón/FR</string>
+    <string name="eval_19">Guantes (dialéctricos, otros)</string>
+    <string name="eval_20">Protección auditiva</string>
+    <string name="eval_21">Chaleco reflectante</string>
+    <string name="eval_22">Protección respiratoria: trompas/filtro/mascarillas</string>
+    <string name="eval_23">EPP soldador: máscara/coleto/pantalón/polainas</string>
+    <string name="eval_25">Herramientas manuales</string>
+    <string name="eval_26">Herramientas y equipo de levante</string>
+    <string name="eval_27">Equipos y elementos de puesta a tierra</string>
+    <string name="eval_28">Elementos de canalización y señalización vial</string>
+    <string name="eval_29">Equipos y elementos de señalización de excavaciones</string>
+    <string name="eval_30">Elementos de izaje</string>
+    <string name="eval_31">Camiones y vehiculos</string>
+    <string name="eval_32">Equipos contra incendios</string>
+    <string name="eval_33">Letreros de advertencia/peligro</string>
+    <string name="eval_34">Escala/andamio/plataforma transitoria</string>
+    <string name="eval_35">Estación de emergencia y zona de seguridad</string>
+    <string name="eval_37">Plan de maniobras despacho</string>
+    <string name="eval_38">PTS (procedimiento de trabajo seguro)</string>
+    <string name="eval_39">Permisos y trabajos preventivos</string>
+    <string name="eval_40">Manejo de residuos domésticos, industriales y peligrosos</string>
+    <string name="eval_41">Programa de código de colores</string>
+    <string name="eval_42">Certificación equipos críticos, instructivos específicos</string>
+    <string name="eval_43">Condiciones sanitarias DS594: baños, agua potable, comedores</string>
+    <string name="eval_44">Charla-ART, hoja de control de riesgos (HCR)</string>
+    <string name="eval_45">Toma conocimiento procedimiento instructivo</string>
+    <string name="eval_46">Procedimientos/prácticas ambientales</string>
+    <string name="eval_47">Almacenamiento de materiales y combustibles peligrosos</string>
+    <string name="eval_48">Efectividad de la capacitación técnica preventiva</string>
+    <string name="eval_49">Espacios confinados</string>
+    <string name="eval_50">Trabajos en equipos y lineas energizadas</string>
+    <string name="eval_51">Soldadura y corte</string>
+    <string name="eval_52">Bloqueo de equipos</string>
+    <string name="eval_53">Almacenamiento en bodegas y pañoles</string>
+    <string name="eval_54">Obras civiles</string>
+    <string name="eval_55">Montajes de estructuras</string>
+    <string name="eval_56">Montaje de equipos</string>
+    <string name="eval_57">Trabajos con equipo de levante</string>
+    <string name="eval_58">Trabajos de AP-CyR-LyR-Emp-CNR</string>
+    <string name="eval_59">Trabajos en linea AP-MT-BT</string>
+
+    <!-- Telemedida -->
+    <string name="chkCcp">Cumple corriente partida</string>
+    <string name="chkGev">Giro en vacío</string>
+
+    <!-- Repartos -->
+    <string name="tvCont">Contador repartos por actualizar: </string>
+    <string name="tvContSesion">Cantidad repartos: </string>
+    <string name="txtListen">Listo para escanear</string>
+    <string name="txtListenGps">Error: Active GPS</string>
+    <string name="txtListenBlue">Error: Bluetooth offline</string>
 
 </resources>

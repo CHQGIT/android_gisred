@@ -182,7 +182,7 @@ public class SplashActivity extends AppCompatActivity {
 
             FeatureResult results;
             try {
-                QueryTask queryTask = new QueryTask("http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/MapServer/2", credenciales);
+                QueryTask queryTask = new QueryTask(getResources().getString(R.string.url_permisos), credenciales);
                 results = queryTask.execute(myParameters);
 
                 return results;

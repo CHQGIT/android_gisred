@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,17 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.android.map.ags.ArcGISFeatureLayer;
+import com.esri.core.geometry.Geometry;
 import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureEditResult;
 import com.esri.core.map.FeatureResult;
 import com.esri.core.map.Graphic;
+import com.esri.core.tasks.query.Order;
 import com.esri.core.tasks.query.QueryParameters;
 import com.esri.core.tasks.query.QueryTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -145,7 +150,7 @@ public class OtListActivity extends AppCompatActivity {
 
                 Intent oIntent = new Intent(OtListActivity.this, OtRouteActivity.class);
                 bundle.putString("objID", datos[position].getObjectId());
-                bundle.putString("typFeat", datos[position].getEstado());
+                bundle.putString("typFeat", datos[position].getTipo());
                 oIntent.putExtras(bundle);
                 startActivity(oIntent);
             }
@@ -163,7 +168,7 @@ public class OtListActivity extends AppCompatActivity {
                         .setTitle("Confirmacion")
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                cierraOT(features[pos], datos[pos].getEstado());
+                                cierraOT(datos[pos]);
                                 dialog.cancel();
                             }
                         })
@@ -205,27 +210,24 @@ public class OtListActivity extends AppCompatActivity {
         }
     }
 
-    private void cierraOT(final Feature oFeature, String sCapa) {
+    private void cierraOT(final InspLectClass oDato) {
 
         final AtomicReference<String> resp = new AtomicReference<>("");
 
-        Map<String, Object> objectMap = oFeature.getAttributes();
         Map<String, Object> updMap = new HashMap<>();
 
-        updMap.put("OBJECTID", objectMap.get("OBJECTID"));
+        updMap.put("OBJECTID", Integer.valueOf(oDato.getObjectId()));
+        updMap.put("estado_revision", "atendida");
 
-        if (sCapa.equals("Micromedicion")) {
+        if (oDato.getTipo().equals("Micromedicion")) {
             LySelectOt = LyAddMicroOt;
-            updMap.put("estado_ot", "atendida");
-        } else if (sCapa.equals("Denuncio")) {
+        } else if (oDato.getTipo().equals("Denuncio")) {
             LySelectOt = LyAddDenuncioOt;
-            updMap.put("estado_revision", "atendida");
         } else {
             LySelectOt = LyAddOpenOt;
-            updMap.put("estado", "atendida");
         }
 
-        Graphic newFeatureGraphic = new Graphic(oFeature.getGeometry(), null, updMap);
+        Graphic newFeatureGraphic = new Graphic(null, null, updMap);
         Graphic[] upds = {newFeatureGraphic};
         LySelectOt.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
             @Override
@@ -233,7 +235,7 @@ public class OtListActivity extends AppCompatActivity {
                 if (featureEditResults[2] != null) {
                     if (featureEditResults[2][0] != null && featureEditResults[2][0].isSuccess()) {
 
-                        resp.set("OT id " + oFeature.getId() + " atendida");
+                        resp.set("OT " + oDato.getOt() + " atendida");
 
                         runOnUiThread(new Runnable() {
 
@@ -278,7 +280,10 @@ public class OtListActivity extends AppCompatActivity {
             datos[position] = getDataByState(datos[position]);
 
             TextView lblDescripcion = (TextView)item.findViewById(R.id.LblEstDenuncio);
-            lblDescripcion.setText("Tipo: " + datos[position].getEstado());
+            lblDescripcion.setText("Tipo: " + datos[position].getTipo());
+
+            TextView lblEstado = (TextView)item.findViewById(R.id.LblEstado);
+            lblEstado.setText("Estado: " + datos[position].getEstado());
 
             TextView lblOt = (TextView)item.findViewById(R.id.LblOT);
             lblOt.setText("Id: " + datos[position].getObjectId());
@@ -309,6 +314,9 @@ public class OtListActivity extends AppCompatActivity {
 
             progress = ProgressDialog.show(OtListActivity.this, "",
                     "Consultando asignaciones");
+
+            progress.setCancelable(true);
+            progress.setCanceledOnTouchOutside(true);
         }
 
         @Override
@@ -347,26 +355,45 @@ public class OtListActivity extends AppCompatActivity {
 
                             featuresTotales.add(feature);
 
-                            String sObjId, sRev, sEstado, sOt;
+                            String sObjId, sRev, sTipo;
+                            String sEstado = "";
+                            String sOt = "";
+                            int iSec = 0;
 
                             if (feature.getAttributes().containsKey("estado_ot")) {
-                                sRev = feature.getAttributeValue("estado_ot").toString();
-                                sEstado = "Micromedicion";
-                            } else if (feature.getAttributes().containsKey("estado_revision")) {
-                                sRev = feature.getAttributeValue("estado_revision").toString();
-                                sEstado = "Micromedicion";
+                                sTipo = "Micromedicion";
+                            } else if (feature.getAttributes().containsKey("estado_open")) {
+                                sTipo = "Via Open";
                             } else {
-                                sRev = feature.getAttributeValue("estado").toString();
-                                sEstado = "Via Open";
+                                sTipo = "Denuncio";
                             }
 
+                            sRev = feature.getAttributeValue("estado_revision").toString();
                             sObjId = feature.getAttributeValue("OBJECTID").toString();
-                            sOt = feature.getAttributeValue("ot").toString();
 
-                            InspLectClass oInsp = new InspLectClass(sObjId, sEstado, sRev, sOt);
+                            try {
+                                if (feature.getAttributeValue("ot") != null)
+                                    sOt = feature.getAttributeValue("ot").toString();
+
+                                if (feature.getAttributeValue("estado") != null)
+                                    sEstado = feature.getAttributeValue("estado").toString();
+
+                                iSec = (int) feature.getAttributeValue("secuencia");
+
+                            } catch (Exception e) {
+                                Log.e("iSecuencia", "Null Value");
+                            }
+
+                            InspLectClass oInsp = new InspLectClass(sObjId, sEstado, sRev, sOt, sTipo, iSec);
                             datosTotales.add(oInsp);
                         }
                     }
+                }
+
+                try {
+                    Collections.sort(datosTotales, InspLectClass.InspSec);
+                } catch (Exception e) {
+                    Log.e("SortArray", "Error al ordenar por secuencia");
                 }
 
                 drawListaOT();
@@ -384,18 +411,13 @@ public class OtListActivity extends AppCompatActivity {
         String whereClause;
         String[] outfields;
 
-        if (sCapa.equals("0")) {
-            whereClause = "inspector = '" + sInspector + "' and estado_ot in ('asignada', 'leida')";
-            outfields = new String[]{"OBJECTID", "estado_ot", "ot"};
-        } else if (sCapa.equals("2")) {
-            whereClause = "inspector = '" + sInspector + "' and estado in ('asignada', 'leida')";
-            outfields = new String[]{"OBJECTID", "estado", "ot"};
-        } else {
-            whereClause = "inspector = '" + sInspector + "' and estado_revision in ('asignada', 'leida')";
-            outfields = new String[]{"OBJECTID", "estado_revision", "ot"};
-        }
+        whereClause = "inspector = '" + sInspector + "' AND inspeccion = 'SI' AND estado_denuncio = 'EN GESTION' AND estado_revision in ('asignada', 'leida')";
+        outfields = new String[]{"*"};
 
+        Map<String, Order> orderFields = new LinkedHashMap<>();
+        orderFields.put("secuencia", Order.ASC);
         QueryParameters myParameters = new QueryParameters();
+        myParameters.setOrderByFields(orderFields);
         myParameters.setWhere(whereClause);
         myParameters.setReturnGeometry(false);
         myParameters.setOutFields(outfields);

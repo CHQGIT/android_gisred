@@ -1497,7 +1497,10 @@ public class MicroMedidaActivity extends AppCompatActivity {
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
                     txtBusqueda = txtBusqueda + eStreet.getText().toString();
                 } else {
-                    txtBusqueda = eSearch.getText().toString();
+                    if (SpiBusqueda > 1)
+                        txtBusqueda = eSearch.getText().toString();
+                    else
+                        txtBusqueda = Util.extraerNum(eSearch.getText().toString());
                 }
 
                 if (txtBusqueda.trim().isEmpty()) {

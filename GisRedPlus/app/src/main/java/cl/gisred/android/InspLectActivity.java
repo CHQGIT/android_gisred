@@ -31,6 +31,7 @@ import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureEditResult;
 import com.esri.core.map.FeatureResult;
 import com.esri.core.map.Graphic;
+import com.esri.core.tasks.query.Order;
 import com.esri.core.tasks.query.QueryParameters;
 import com.esri.core.tasks.query.QueryTask;
 
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -271,9 +273,13 @@ public class InspLectActivity extends AppCompatActivity {
 
         @Override
         protected FeatureResult doInBackground(String... params) {
-            String whereClause = "inspector = '" + params[0] + "' AND estado_revision in ('asignada', 'leida')";
+            String whereClause = "inspector = '" + params[0] + "' AND inspeccion = 'SI'  AND estado_denuncio = 'EN GESTION' AND estado_revision in ('asignada', 'leida')";
+            Map<String, Order> orderFields = new LinkedHashMap<>();
+            orderFields.put("secuencia", Order.ASC);
             QueryParameters myParameters = new QueryParameters();
+            myParameters.setOrderByFields(orderFields);
             myParameters.setWhere(whereClause);
+
             myParameters.setReturnGeometry(false);
             String[] outfields = new String[]{"OBJECTID", "estado", "estado_revision", "ot"};
             myParameters.setOutFields(outfields);
@@ -287,6 +293,7 @@ public class InspLectActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return null;
             }
+
         }
 
         protected void onPostExecute(FeatureResult results) {

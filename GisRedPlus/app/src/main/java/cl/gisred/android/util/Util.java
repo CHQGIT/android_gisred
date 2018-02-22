@@ -1200,4 +1200,17 @@ public class Util {
             }
         }
     }
+
+    public static String extraerNum(String cadena){
+
+        String num = "";
+
+        char[] arreglo = cadena.toCharArray();
+        for (char caracter : arreglo){
+            if ( Character.isDigit(caracter) )
+                num += caracter;
+        }
+
+        return num;
+    }
 }

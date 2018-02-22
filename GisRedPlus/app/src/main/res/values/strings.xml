@@ -28,51 +28,52 @@
     <string name="action_refresh">Actualizar</string>
 
     <!-- Servicios para dynamicLayer-->
-    <string name="url_EquiposLinea">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
-    <string name="url_token">http://gisred.chilquinta.cl:5555/arcgis/tokens/</string>
-    <string name="url_TRAMOS">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Tramos_006/MapServer</string>
-    <string name="url_EquiposPTO">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Equipos_pto_006/MapServer</string>
-    <string name="url_Nodos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Nodos_006/MapServer</string>
-    <string name="url_Luminarias">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Luminarias/MapServer</string>
-    <string name="url_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/ClientesV2/MapServer</string>
-    <string name="url_Concesiones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Concesiones006/MapServer</string>
-    <string name="url_medidores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
-    <string name="url_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
-    <string name="url_Stx">http://gisred.chilquinta.cl:5555/arcgis/rest/services/STx/STx/MapServer</string>
-    <string name="url_interrupciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Interrupciones/PO/MapServer</string>
-    <string name="url_ECSE_varios">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Varios/ECSE/MapServer</string>
+    <string name="url_permisos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Admin/LogAccesos/MapServer/2</string>
+    <string name="url_EquiposLinea">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Equipos_Linea_006/MapServer</string>
+    <string name="url_token">https://gisred.chilquinta.cl:6443/arcgis/tokens/</string>
+    <string name="url_TRAMOS">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Tramos_006/MapServer</string>
+    <string name="url_EquiposPTO">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Equipos_pto_006/MapServer</string>
+    <string name="url_Nodos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Nodos_006/MapServer</string>
+    <string name="url_Luminarias">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Luminarias/MapServer</string>
+    <string name="url_Clientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/ClientesV2/MapServer</string>
+    <string name="url_Concesiones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Concesiones006/MapServer</string>
+    <string name="url_medidores">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Chilquinta_006/Medidores/MapServer</string>
+    <string name="url_Direcciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Cartografia/DMPS/MapServer</string>
+    <string name="url_Stx">https://gisred.chilquinta.cl:6443/arcgis/rest/services/STx/STx/MapServer</string>
+    <string name="url_interrupciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Interrupciones/PO/MapServer</string>
+    <string name="url_ECSE_varios">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Varios/ECSE/MapServer</string>
 
     <!-- Test Services dynamic -->
-    <string name="url_Electrodependientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
-    <string name="url_viaOpen">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES_MAP/MapServer</string>
-    <string name="url_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/MapServer</string>
+    <string name="url_Electrodependientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
+    <string name="url_viaOpen">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES_MAP/MapServer</string>
+    <string name="url_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/MapServer</string>
 
     <!-- Mapabase -->
-    <string name="url_Mapabase">http://gisred.chilquinta.cl:5555/Arcgis/rest/services/MapaBase/MapServer</string>
+    <string name="url_Mapabase">https://gisred.chilquinta.cl:6443/Arcgis/rest/services/MapaBase/MapServer</string>
     <!-- Urls Values Spinners Dialogs -->
-    <string name="url_tipos_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/MapServer</string>
-    <string name="url_cnr_spinner">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/MapServer/</string>
+    <string name="url_tipos_spinner">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/MapServer</string>
+    <string name="url_cnr_spinner">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/MapServer/</string>
     <!-- Servicios para featureLayer-->
-    <string name="srv_Postes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/1</string>
-    <string name="srv_Direcciones">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/2</string>
-    <string name="srv_Clientes">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/0</string>
-    <string name="srv_ClientesCnr">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/FeatureServer/0</string>
-    <string name="srv_Union_012">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
+    <string name="srv_Postes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/1</string>
+    <string name="srv_Direcciones">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/2</string>
+    <string name="srv_Clientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/0</string>
+    <string name="srv_ClientesCnr">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo_cnr/FeatureServer/0</string>
+    <string name="srv_Union_012">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_nuevo/FeatureServer/3</string>
     <!-- LogAccesos Feature Layer -->
-    <string name="srv_LogAccess">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
+    <string name="srv_LogAccess">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Admin/LogAccesos/FeatureServer/1</string>
     <!-- Lectores FeatureLayer -->
-    <string name="srv_Lectores">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Ingreso_externo_movil_lectores/FeatureServer/0</string>
+    <string name="srv_Lectores">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Ingreso_externo_movil_lectores/FeatureServer/0</string>
     <!-- Telemedida FeatureLayer -->
-    <string name="srv_Telemedida">http://gisred.chilquinta.cl:5555/arcgis/rest/services/TELEMEDIDA/TELEMEDIDA_OLCA/FeatureServer/0</string>
+    <string name="srv_Telemedida">https://gisred.chilquinta.cl:6443/arcgis/rest/services/TELEMEDIDA/TELEMEDIDA_OLCA/FeatureServer/0</string>
     <!-- MicroMedida FeatureLayer -->
-    <string name="srv_MicroMed">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/0</string>
-    <string name="srv_ZoneLimit">http://gisred.chilquinta.cl:5555/arcgis/rest/services/CNR/Micromedicion/FeatureServer/1</string>
+    <string name="srv_MicroMed">https://gisred.chilquinta.cl:6443/arcgis/rest/services/CNR/Micromedicion/FeatureServer/0</string>
+    <string name="srv_ZoneLimit">https://gisred.chilquinta.cl:6443/arcgis/rest/services/CNR/Micromedicion/FeatureServer/1</string>
     <!-- Reparto FeatureLayer -->
-    <string name="srv_Repartos">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
+    <string name="srv_Repartos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
     <!-- OT Inspecciones -->
-    <string name="srv_micromed_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
-    <string name="srv_viaopen_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
-    <string name="srv_denuncio_OT">http://gisred.chilquinta.cl:5555/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
+    <string name="srv_micromed_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
+    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
+    <string name="srv_denuncio_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

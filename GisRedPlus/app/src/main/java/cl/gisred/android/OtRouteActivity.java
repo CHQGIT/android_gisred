@@ -112,7 +112,7 @@ public class OtRouteActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
@@ -831,16 +831,15 @@ public class OtRouteActivity extends AppCompatActivity {
         if (sCapa.equals("Micromedicion")) {
             oLyAddOt = LyAddMicroOt;
             updMap.put("OBJECTID", objectMap.get("OBJECTID"));
-            updMap.put("estado_ot", "leida");
         } else if (sCapa.equals("Denuncio")) {
             oLyAddOt = LyAddDenuncioOt;
             updMap.put("OBJECTID", objectMap.get("OBJECTID"));
-            updMap.put("estado_revision", "leida");
         } else {
             oLyAddOt = LyAddOpenOt;
             updMap.put("OBJECTID", objectMap.get("ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID"));
-            updMap.put("estado", "leida");
         }
+
+        updMap.put("estado_revision", "leida");
 
         Graphic newFeatureGraphic = new Graphic(oFeature.getGeometry(), null, updMap);
         Graphic[] upds = {newFeatureGraphic};
@@ -1171,7 +1170,7 @@ public class OtRouteActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = position;
 
-                if (position != 3) {
+                if (position != 4) {
                     if (llDireccion != null) llDireccion.setVisibility(View.GONE);
                     if (llBuscar != null) llBuscar.setVisibility(View.VISIBLE);
                 } else {
@@ -1194,13 +1193,16 @@ public class OtRouteActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (SpiBusqueda == 3) {
+                if (SpiBusqueda == 4) {
                     txtBusqueda = new String();
                     if (!eStreet.getText().toString().isEmpty())
                         txtBusqueda = (eNumber.getText().toString().trim().isEmpty()) ? "0 " : eNumber.getText().toString().trim() + " ";
                     txtBusqueda = txtBusqueda + eStreet.getText().toString();
                 } else {
-                    txtBusqueda = eSearch.getText().toString();
+                    if (SpiBusqueda > 1)
+                        txtBusqueda = eSearch.getText().toString();
+                    else
+                        txtBusqueda = Util.extraerNum(eSearch.getText().toString());
                 }
 
                 if (txtBusqueda.trim().isEmpty()) {

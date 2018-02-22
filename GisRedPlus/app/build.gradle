@@ -15,8 +15,8 @@ android {
         applicationId "cl.gisred.android"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 35
-        versionName "1.4.0"
+        versionCode 37
+        versionName "1.4.2"
         signingConfig signingConfigs.config
     }
     packagingOptions {

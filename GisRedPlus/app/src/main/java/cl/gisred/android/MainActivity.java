@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
-    // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS"));
+    // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();

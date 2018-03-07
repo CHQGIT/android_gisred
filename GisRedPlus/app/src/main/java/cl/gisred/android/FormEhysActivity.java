@@ -129,13 +129,13 @@ public class FormEhysActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View item = inflater.inflate(R.layout.list_item_menu, null);
 
-            TextView lblTitulo = (TextView)item.findViewById(R.id.LblTitulo);
+            TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
             lblTitulo.setText(datos[position].getTitulo());
 
             item.setEnabled(datos[position].getEstado());
             datos[position] = getDataByModule(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblDescripcion);
+            TextView lblDescripcion = (TextView) item.findViewById(R.id.LblDescripcion);
             lblDescripcion.setText(datos[position].getDescripcion());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);

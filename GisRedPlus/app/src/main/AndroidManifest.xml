@@ -105,11 +105,6 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="locked" />
         <activity
-            android:name=".TelemedidaActivity"
-            android:label="Telemedidas"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="locked" />
-        <activity
             android:name=".CatastroActivity"
             android:label="Catastro AP"
             android:parentActivityName=".MainActivity"

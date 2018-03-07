@@ -42,9 +42,7 @@ public class RepartoClass {
             int fx = cod.length() - length_code + length_req;
             String sNis = cod.substring(0, fx);
 
-            if (Integer.valueOf(sNis) != null && Integer.valueOf(sNis) > 0) {
-                return true;
-            } else return false;
+            return Integer.valueOf(sNis) != null && Integer.valueOf(sNis) > 0;
         }
     }
 

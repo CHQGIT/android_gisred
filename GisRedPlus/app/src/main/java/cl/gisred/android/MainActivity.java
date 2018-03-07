@@ -147,9 +147,6 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("REPARTOS")){
                         oIntent = new Intent(MainActivity.this, RepartoActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
-                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
-                        oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
@@ -208,13 +205,13 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View item = inflater.inflate(R.layout.list_item_menu, null);
 
-            TextView lblTitulo = (TextView)item.findViewById(R.id.LblTitulo);
+            TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
             lblTitulo.setText(datos[position].getTitulo());
 
             item.setEnabled(datos[position].getEstado());
             datos[position] = getDataByModule(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblDescripcion);
+            TextView lblDescripcion = (TextView) item.findViewById(R.id.LblDescripcion);
             lblDescripcion.setText(datos[position].getDescripcion());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);

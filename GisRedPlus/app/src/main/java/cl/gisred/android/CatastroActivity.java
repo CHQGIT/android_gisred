@@ -86,6 +86,7 @@ import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
+import jcifs.smb.SmbNamedPipe;
 
 public class CatastroActivity extends AppCompatActivity {
 
@@ -957,7 +958,7 @@ public class CatastroActivity extends AppCompatActivity {
                     Graphic[] adds = {newFeatureGraphic};
 
                     if (idResLayoutSelect == R.layout.dialog_cliente_cnr || idResLayoutSelect == R.layout.dialog_cliente) {
-                        addsUnion = oUtil.addAttrUnionPoint(oAttrToSave, oUbicacion);
+                        addsUnion = Util.addAttrUnionPoint(oAttrToSave, oUbicacion);
                     }
 
                     oLyAddGraphs.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
@@ -1225,7 +1226,7 @@ public class CatastroActivity extends AppCompatActivity {
 
         Spinner spinner = (Spinner) v.findViewById(R.id.spinnerBusqueda);
         final LinearLayout llBuscar = (LinearLayout) v.findViewById(R.id.llBuscar);
-        final LinearLayout llDireccion = (LinearLayout) v.findViewById(R.id.llBuscarDir);
+        final LinearLayout llDireccion =(LinearLayout) v.findViewById(R.id.llBuscarDir);
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, searchArray);
 
@@ -1341,7 +1342,7 @@ public class CatastroActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int widthSize = displayMetrics.widthPixels;
-        int widthScale = (int) ((widthSize * 3) / 4);
+        int widthScale = (widthSize * 3) / 4;
         if (topeWidth < widthScale) widthScale = topeWidth;
 
         v.setMinimumWidth(widthScale);

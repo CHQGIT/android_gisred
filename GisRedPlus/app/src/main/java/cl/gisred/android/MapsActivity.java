@@ -792,7 +792,7 @@ public class MapsActivity extends AppCompatActivity {
                     Graphic[] adds = {newFeatureGraphic};
 
                     if (idResLayoutSelect == R.layout.dialog_cliente_cnr || idResLayoutSelect == R.layout.dialog_cliente) {
-                        addsUnion = oUtil.addAttrUnionPoint(oAttrToSave, oUbicacion);
+                        addsUnion = Util.addAttrUnionPoint(oAttrToSave, oUbicacion);
                     }
 
                     oLyAddGraphs.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {

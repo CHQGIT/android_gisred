@@ -791,8 +791,7 @@ public class InspActivity extends AppCompatActivity {
         if (valImg != null) {
             try {
                 int tam = ((BitmapDrawable) valImg.getDrawable()).getBitmap().getByteCount();
-                if (tam > 0) return true;
-                else return false;
+                return tam > 0;
             } catch (Exception e) {
                 return false;
             }
@@ -1176,7 +1175,7 @@ public class InspActivity extends AppCompatActivity {
                     Graphic[] adds = {newFeatureGraphic};
 
                     if (idResLayoutSelect == R.layout.dialog_cliente_cnr || idResLayoutSelect == R.layout.dialog_cliente) {
-                        addsUnion = oUtil.addAttrUnionPoint(oAttrToSave, oUbicacion);
+                        addsUnion = Util.addAttrUnionPoint(oAttrToSave, oUbicacion);
                     }
 
                     oLyAddGraphs.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
@@ -1701,7 +1700,7 @@ public class InspActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int widthSize = displayMetrics.widthPixels;
-        int widthScale = (int) ((widthSize * 3) / 4);
+        int widthScale = (widthSize * 3) / 4;
         if (topeWidth < widthScale) widthScale = topeWidth;
 
         v.setMinimumWidth(widthScale);
@@ -1710,7 +1709,7 @@ public class InspActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
-        boolean bSpinnerMedidor = (idRes == R.layout.form_inspec_telemedida) ? true : false;
+        boolean bSpinnerMedidor = idRes == R.layout.form_inspec_telemedida;
 
         Spinner spTipoFase = (Spinner) v.findViewById(R.id.spinnerFase);
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoFaseInsp);

@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cl.gisred.android.LectorActivity">
+    tools:context="cl.gisred.android.MedidorActivity">
 
     <include android:id="@+id/apptool"
         layout="@layout/toolbar" />
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 app:fab_size="mini"
                 fab:fab_colorNormal="@color/white"
-                fab:fab_title="Ingresar Lectura"
+                fab:fab_title="Ingresar Medidor"
                 fab:fab_colorPressed="@color/white_pressed"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

@@ -479,6 +479,16 @@ public class Util {
 
             String[] keys = {"id_nodo", "tipo_nodo", "alimentador", "comuna", "tipo", "propiedad", "catalogo", "cudn", "fecha", "fabricante", "año_poste", "sed"};
             outStr.append(setValuesByKey(keys, oAttrAbrev));
+        } else if (numBusq == 5) {
+
+            outStr.append("EQUIPO");
+            if (oAttrAbrev.containsKey("id_equipo") && !oAttrAbrev.get("id_equipo").toString().trim().isEmpty())
+                outStr.append(": " + oAttrAbrev.get("id_equipo").toString());
+            outStr.append(LSP);
+            outStr.append(LSP);
+
+            String[] keys = {"nombre", "alimentador", "descripcion", "tipo", "propiedad", "catalogo", "cudn", "fecha", "es_sed", "id_nodo", "id_sed"};
+            outStr.append(setValuesByKey(keys, oAttrAbrev));
         } else if (numBusq == -1) {
 
             outStr.append("INSPECCION LECTURA");

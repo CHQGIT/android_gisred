@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MEDIDORES")){
+                        oIntent = new Intent(MainActivity.this, MedidorActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
 

@@ -3,13 +3,13 @@ package cl.gisred.android.entity;
 /**
  * Created by cramiret on 23-08-2017.
  */
-public class BusqClass {
+public class BusqMedClass {
 
     private String serieNis;
     private String marca;
     private String modelo;
 
-    public BusqClass(String nis, String mar, String mod){
+    public BusqMedClass(String nis, String mar, String mod){
         serieNis = nis;
         setMarca(mar);
         modelo = mod;

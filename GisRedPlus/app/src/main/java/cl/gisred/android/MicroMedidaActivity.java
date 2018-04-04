@@ -88,7 +88,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
-import cl.gisred.android.entity.BusqClass;
+import cl.gisred.android.entity.BusqEquipoClass;
+import cl.gisred.android.entity.BusqMedClass;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
 
@@ -115,7 +116,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
 
     //ArrayList SearchFilter
-    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección"};
+    public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección", "Equipo"};
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
@@ -134,6 +135,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
     public String[] arrayTecMedidor = {};
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
+    public String[] arrayEstado = {};
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -167,8 +169,11 @@ public class MicroMedidaActivity extends AppCompatActivity {
     private int choices;
     ProgressDialog progress;
 
-    BusqClass[] datosBusq;
+    BusqMedClass[] datosBusqMed;
+    BusqEquipoClass[] datosBusqEquipo;
+
     ListView lstBusqMedidores;
+    ListView lstBusqEquipos;
 
     boolean bAlertGps = false;
 
@@ -406,6 +411,8 @@ public class MicroMedidaActivity extends AppCompatActivity {
             arrayObservacion = getResources().getStringArray(R.array.observacion_mm);
             arrayMarcaMed = getResources().getStringArray(R.array.marca_mm);
 
+            arrayEstado = getResources().getStringArray(R.array.estado_lectura);
+
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
 
@@ -443,6 +450,17 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 }
             });
 
+            FloatingActionButton oFabDenuncio = (FloatingActionButton) findViewById(R.id.action_denuncio);
+            oFabDenuncio.setIconDrawable(drawNo);
+            oFabDenuncio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //abrirFormDenuncio(v);
+                    Snackbar.make(v, "No tiene acceso a ésta opción", Snackbar.LENGTH_SHORT).show();
+                    menuMicroActions.collapse();
+                }
+            });
+
             if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
 
                 arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
@@ -453,7 +471,6 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
                 arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
                 arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
-                arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
 
                 dialogCrear = new Dialog(MicroMedidaActivity.this);
 
@@ -1199,24 +1216,47 @@ public class MicroMedidaActivity extends AppCompatActivity {
         return null;
     }
 
-    class AdaptBusqMedidor extends ArrayAdapter<BusqClass> {
+    class AdaptBusqMedidor extends ArrayAdapter<BusqMedClass> {
 
-        public AdaptBusqMedidor(Context context, BusqClass[] datos) {
-            super(context, R.layout.list_item_busq, datos);
+        public AdaptBusqMedidor(Context context, BusqMedClass[] datos) {
+            super(context, R.layout.list_item_busq_med, datos);
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            View item = inflater.inflate(R.layout.list_item_busq, null);
+            View item = inflater.inflate(R.layout.list_item_busq_med, null);
 
             TextView lblNis = (TextView) item.findViewById(R.id.LblSerieNis);
-            lblNis.setText(datosBusq[position].getSerieNis());
+            lblNis.setText(datosBusqMed[position].getSerieNis());
 
             TextView lblMarca = (TextView) item.findViewById(R.id.LblMarca);
-            lblMarca.setText(datosBusq[position].getMarca());
+            lblMarca.setText(datosBusqMed[position].getMarca());
 
             TextView lblModelo = (TextView) item.findViewById(R.id.LblModelo);
-            lblModelo.setText(datosBusq[position].getModelo());
+            lblModelo.setText(datosBusqMed[position].getModelo());
+
+            return (item);
+        }
+    }
+
+    class AdaptBusqEquipo extends ArrayAdapter<BusqEquipoClass> {
+
+        public AdaptBusqEquipo(Context context, BusqEquipoClass[] datos) {
+            super(context, R.layout.list_item_busq_med, datos);
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View item = inflater.inflate(R.layout.list_item_busq_equipo, null);
+
+            TextView lblId = (TextView) item.findViewById(R.id.LblIdEquipo);
+            lblId.setText(datosBusqEquipo[position].getIdEquipo());
+
+            TextView lblNombre = (TextView) item.findViewById(R.id.LblNombre);
+            lblNombre.setText(datosBusqEquipo[position].getNombre());
+
+            TextView lblAlimentador = (TextView) item.findViewById(R.id.LblAlimentador);
+            lblAlimentador.setText(datosBusqEquipo[position].getAlimentador());
 
             return (item);
         }
@@ -1228,7 +1268,7 @@ public class MicroMedidaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SpiBusqueda = 0;
-                callQuery(datosBusq[position].getNis(), getValueByEmp("CLIENTES_XY_006.nis"), LyCLIENTES.getUrl().concat("/0"));
+                callQuery(datosBusqMed[position].getNis(), getValueByEmp("CLIENTES_XY_006.nis"), LyCLIENTES.getUrl().concat("/0"));
                 if (LyCLIENTES.getLayers() != null && LyCLIENTES.getLayers().length > 0)
                     iBusqScale = LyCLIENTES.getLayers()[0].getLayerServiceInfo().getMinScale();
                 dialogBusq.dismiss();
@@ -1240,6 +1280,46 @@ public class MicroMedidaActivity extends AppCompatActivity {
         dialogBusq.addContentView(lstBusqMedidores, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         dialogBusq.show();
+    }
+
+    private void abrirBusqEquipos() {
+
+        lstBusqEquipos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ArcGISDynamicMapServiceLayer oDLEquipo = (datosBusqEquipo[position].getTipo().equals("POINT")) ? LyEQUIPOSPTO : LyEQUIPOSLINEA;
+                int iNumCapa = (datosBusqEquipo[position].getTipo().equals("POINT")) ? 3 : 0;
+
+                callQuery(datosBusqEquipo[position].getIdEquipo(), getValueByEmp("id_equipo"), oDLEquipo.getUrl().concat("/" + iNumCapa));
+                if (oDLEquipo.getLayers() != null && oDLEquipo.getLayers().length > iNumCapa)
+                    iBusqScale = oDLEquipo.getLayers()[iNumCapa].getLayerServiceInfo().getMinScale();
+                dialogBusq.dismiss();
+            }
+        });
+
+        dialogBusq = new Dialog(this);
+        dialogBusq.setTitle("Lista Búsqueda");
+        dialogBusq.addContentView(lstBusqEquipos, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        dialogBusq.show();
+    }
+
+    private void abrirFormDenuncio(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsFormDenuncio(R.layout.form_denuncio, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
     }
 
     private void abrirFormLimite(View view) {
@@ -1536,6 +1616,11 @@ public class MicroMedidaActivity extends AppCompatActivity {
                             String[] sFields = {"nombre_calle", "numero"};
                             callQuery(sBuscar, sFields, LyDIRECCIONES.getUrl().concat("/0"));
                             break;
+                        case 5:
+                            callQuery(txtBusqueda,new String[] {"id_equipo","nombre"}, LyEQUIPOSLINEA.getUrl().concat("/0"));
+                            if (LyEQUIPOSLINEA.getLayers() != null && LyEQUIPOSLINEA.getLayers().length > 0)
+                                iBusqScale = LyEQUIPOSLINEA.getLayers()[0].getLayerServiceInfo().getMinScale();
+                            break;
                     }
                 }
             }
@@ -1631,6 +1716,96 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 cerrarFormLimit(true, v);
             }
         });
+
+        formCrear.show();
+        dialogCur = formCrear;
+    }
+
+    public void setActionsFormDenuncio(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+        ArrayAdapter<CharSequence> adapter;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (widthSize * 3) / 4;
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        Spinner spEstado = (Spinner) v.findViewById(R.id.spinnerEstado);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstado);
+        spEstado.setAdapter(adapter);
+
+        Spinner spTipoEdif = (Spinner) v.findViewById(R.id.spinnerTipoEdific);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoEdif);
+        spTipoEdif.setAdapter(adapter);
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        ImageButton btnIdentDireccion = (ImageButton) v.findViewById(R.id.btnDireccion);
+        btnIdentDireccion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddDireccion;
+                oLyExistAsoc = LyDIRECCIONES;
+                oLyExistAsoc.setVisible(true);
+                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
+                setValueToAsoc(getLayoutContenedor(v));
+            }
+        });
+
+        btnUbicacion = (ImageButton) v.findViewById(R.id.btnUbicacion);
+        btnUbicacion.setColorFilter(Color.RED);
+        btnUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bMapTap = true;
+                formCrear.hide();
+            }
+        });
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(true, v);
+            }
+        });
+
+        arrayTouchs = new ArrayList<>();
+        setEnabledDialog(false);
 
         formCrear.show();
         dialogCur = formCrear;
@@ -1946,6 +2121,18 @@ public class MicroMedidaActivity extends AppCompatActivity {
                 sCampos[0], sBusqueda[0]);
         if (!sBusqueda[1].isEmpty()) {
             sWhere += String.format(" AND %s = '%s'", sCampos[1], sBusqueda[1]);
+        }
+
+        AsyncQueryTask queryTask = new AsyncQueryTask();
+        queryTask.execute(sWhere, dirUrl);
+    }
+
+    public void callQuery(String sBusqueda, String[] sCampos, String dirUrl) {
+        String sIdEquipo = Util.extraerNum(sBusqueda);
+        String sWhere = String.format("%s = '%s'",
+                sCampos[0], (sIdEquipo.isEmpty()) ? "0" : sIdEquipo);
+        if (!sBusqueda.isEmpty()) {
+            sWhere += String.format(" OR %s LIKE '%s'", sCampos[1], "%" + sBusqueda + "%");
         }
 
         AsyncQueryTask queryTask = new AsyncQueryTask();
@@ -2758,6 +2945,9 @@ public class MicroMedidaActivity extends AppCompatActivity {
 
         FeatureResult oResultTramos;
         FeatureResult oResultNis;
+        FeatureResult oResultEquipos;
+        ArrayList<FeatureResult> aResults;
+        int cantEquipos = 0;
 
         @Override
         protected void onPreExecute() {
@@ -2820,6 +3010,32 @@ public class MicroMedidaActivity extends AppCompatActivity {
                             if (oResultNis.featureCount() > 0) break;
                         }
                     }
+                } else if (SpiBusqueda == 5) {
+                    if (results != null) {
+                        cantEquipos += results.featureCount();
+
+                        aResults = new ArrayList<>();
+                        aResults.add(results);
+
+                        //Si encuentra resultados, omite la segunda busqueda
+                        if (results.featureCount() < 1) {
+                            QueryParameters oParam = new QueryParameters();
+                            oParam.setWhere(whereClause);
+
+                            oParam.setReturnGeometry(true);
+                            oParam.setOutFields(new String[]{"*"});
+
+                            String urlEquipos = LyEQUIPOSPTO.getUrl().concat("/3");
+
+                            QueryTask oQueryTramos = new QueryTask(urlEquipos, credenciales);
+                            oResultEquipos = oQueryTramos.execute(oParam);
+
+                            if (oResultEquipos != null) {
+                                cantEquipos += oResultEquipos.featureCount();
+                                aResults.add(oResultEquipos);
+                            }
+                        }
+                    }
                 }
 
                 return results;
@@ -2832,8 +3048,8 @@ public class MicroMedidaActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(FeatureResult results) {
-            if (results != null && results.featureCount() > 0) {
-                int numResult = (int) results.featureCount();
+            if ((results != null && results.featureCount() > 0) || cantEquipos > 0) {
+                int numResult = (results != null) ? (int) results.featureCount() : 0;
 
                 if (mBusquedaLayer != null && myMapView.getLayerByID(mBusquedaLayer.getID()) != null) {
                     myMapView.removeLayer(mBusquedaLayer);
@@ -2848,9 +3064,9 @@ public class MicroMedidaActivity extends AppCompatActivity {
 
                     try {
 
-                        if (results.featureCount() > 1){
+                        if (results.featureCount() > 1) {
                             lstBusqMedidores = new ListView(getApplicationContext());
-                            datosBusq = new BusqClass[numResult];
+                            datosBusqMed = new BusqMedClass[numResult];
                             int cont = 0;
 
                             for (Object element : results) {
@@ -2861,13 +3077,13 @@ public class MicroMedidaActivity extends AppCompatActivity {
                                 String sMarca = feature.getAttributeValue("marca_medidor").toString();
                                 String sModelo = feature.getAttributeValue("modelo").toString();
 
-                                BusqClass oMedidor = new BusqClass(sSerie+"-"+sNis, sMarca, sModelo);
-                                datosBusq[cont] = oMedidor;
+                                BusqMedClass oMedidor = new BusqMedClass(sSerie + "-" + sNis, sMarca, sModelo);
+                                datosBusqMed[cont] = oMedidor;
                                 cont++;
                             }
 
                             AdaptBusqMedidor adaptador;
-                            adaptador = new AdaptBusqMedidor(MicroMedidaActivity.this, datosBusq);
+                            adaptador = new AdaptBusqMedidor(MicroMedidaActivity.this, datosBusqMed);
 
                             lstBusqMedidores.setAdapter(adaptador);
 
@@ -2918,7 +3134,100 @@ public class MicroMedidaActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (SpiBusqueda == 5) {
+                    try {
 
+                        if (cantEquipos > 1) {
+                            lstBusqEquipos = new ListView(getApplicationContext());
+                            datosBusqEquipo = new BusqEquipoClass[cantEquipos];
+                            int cont = 0;
+                            Util oUtil = new Util();
+
+                            for (FeatureResult oResult : aResults) {
+                                for (Object element : oResult) {
+                                    Feature feature = (Feature) element;
+
+
+                                    String sTipo = feature.getGeometry().getType().name();
+                                    String sId = oUtil.formatValCampoDB(feature.getAttributeValue("id_equipo"));
+                                    String sNombre = feature.getAttributeValue("nombre").toString();
+                                    String sAlimentador = feature.getAttributeValue("alimentador").toString();
+
+                                    BusqEquipoClass oEquipo = new BusqEquipoClass(sId, sNombre, sAlimentador, sTipo);
+                                    datosBusqEquipo[cont] = oEquipo;
+                                    cont++;
+                                }
+                            }
+
+
+                            AdaptBusqEquipo adaptador;
+                            adaptador = new AdaptBusqEquipo(MicroMedidaActivity.this, datosBusqEquipo);
+
+                            lstBusqEquipos.setAdapter(adaptador);
+
+                            abrirBusqEquipos();
+
+                        } else if (cantEquipos == 1) {
+                            for (FeatureResult oResult : aResults) {
+                                for (Object oEquipo : oResult) {
+                                    Feature fEquipo = (Feature) oEquipo;
+
+                                    myMapView.setExtent(fEquipo.getGeometry(), 0, true);
+
+
+
+                                    Callout mapCallout = myMapView.getCallout();
+                                    fabNavRoute.setVisibility(View.GONE);
+                                    mapCallout.hide();
+
+                                    StringBuilder outStr;
+                                    Util oUtil = new Util();
+                                    outStr = oUtil.getStringByAttrClass(SpiBusqueda, fEquipo.getAttributes());
+                                    GisTextView tv = new GisTextView(MicroMedidaActivity.this);
+
+                                    if (fEquipo.getGeometry().getClass() != Point.class) {
+                                        if (fEquipo.getGeometry().getClass() == Polyline.class) {
+                                            Polyline oPolyline = (Polyline) fEquipo.getGeometry();
+                                            tv.setPoint(oUtil.calculateCenterPolyline(oPolyline));
+                                            SimpleLineSymbol oLine = new SimpleLineSymbol(Color.RED, 1f, SimpleLineSymbol.STYLE.SOLID);
+                                            Graphic resGraph = new Graphic(fEquipo.getGeometry(), oLine);
+                                            mBusquedaLayer.addGraphic(resGraph);
+                                        }
+                                    } else {
+                                        SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
+                                        Graphic resultLocGraphic = new Graphic(fEquipo.getGeometry(), resultSymbol);
+                                        mBusquedaLayer.addGraphic(resultLocGraphic);
+                                        tv.setPoint((Point) fEquipo.getGeometry());
+                                    }
+
+                                    tv.setText(outStr.toString());
+                                    tv.setTextColor(Color.WHITE);
+
+                                    tv.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            myMapView.getCallout().hide();
+                                            fabNavRoute.setVisibility(View.GONE);
+                                        }
+                                    });
+
+                                    mapCallout.setOffset(0, -3);
+                                    mapCallout.setCoordinates(tv.getPoint());
+                                    mapCallout.setMaxHeight(100);
+                                    mapCallout.setMaxWidth(400);
+                                    mapCallout.setStyle(R.xml.mycalloutprefs);
+                                    mapCallout.setContent(tv);
+
+                                    mapCallout.show();
+                                    fabNavRoute.setVisibility(View.VISIBLE);
+                                    break;
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
 
                     for (Object element : results) {

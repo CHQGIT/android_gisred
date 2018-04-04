@@ -130,6 +130,15 @@
                 fab:fab_title="Ingresar Catastro"
                 fab:fab_colorPressed="@color/white_pressed"/>
 
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_denuncio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_size="mini"
+                fab:fab_colorNormal="@color/white"
+                fab:fab_title="Ingresar Denuncio"
+                fab:fab_colorPressed="@color/white_pressed"/>
+
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu

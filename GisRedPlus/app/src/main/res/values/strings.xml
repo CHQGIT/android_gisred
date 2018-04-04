@@ -25,6 +25,7 @@
     <string name="action_search">Buscar</string>
     <string name="action_layers">Capas</string>
     <string name="action_maps">Mapas</string>
+    <string name="action_denuncio">Denuncio</string>
     <string name="action_refresh">Actualizar</string>
 
     <!-- Servicios para dynamicLayer-->

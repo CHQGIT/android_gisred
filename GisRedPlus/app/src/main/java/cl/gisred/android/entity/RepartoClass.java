@@ -5,7 +5,7 @@ package cl.gisred.android.entity;
  */
 public class RepartoClass {
 
-    private static int length_code = 34;
+    public static int length_code = 34;
     private static int length_req = 6;
 
     private int id;

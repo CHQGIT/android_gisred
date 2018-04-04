@@ -88,7 +88,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import cl.gisred.android.classes.GisEditText;
 import cl.gisred.android.classes.GisTextView;
-import cl.gisred.android.entity.BusqClass;
+import cl.gisred.android.entity.BusqMedClass;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
 
@@ -164,7 +164,7 @@ public class MedidorActivity extends AppCompatActivity {
     private int choices;
     ProgressDialog progress;
 
-    BusqClass[] datosBusq;
+    BusqMedClass[] datosBusq;
     ListView lstBusqMedidores;
 
     boolean bAlertGps = false;
@@ -200,7 +200,7 @@ public class MedidorActivity extends AppCompatActivity {
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
-    FloatingActionsMenu menuLectorActions;
+    FloatingActionsMenu menuMedidorActions;
     FloatingActionButton fabShowDialog;
     FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
@@ -347,7 +347,7 @@ public class MedidorActivity extends AppCompatActivity {
         drawNo = new ShapeDrawable(new OvalShape());
         drawNo.getPaint().setColor(getResources().getColor(R.color.black_overlay));
 
-        menuLectorActions = (FloatingActionsMenu) findViewById(R.id.lector_actions);
+        menuMedidorActions = (FloatingActionsMenu) findViewById(R.id.medidor_actions);
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
 
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
@@ -508,7 +508,7 @@ public class MedidorActivity extends AppCompatActivity {
             }
 
         } else {
-            menuLectorActions.setVisibility(View.GONE);
+            menuMedidorActions.setVisibility(View.GONE);
         }
     }
 
@@ -931,7 +931,7 @@ public class MedidorActivity extends AppCompatActivity {
         if (bVerCapas) toogleCapas(fabVerCapas);
 
         if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
-        menuLectorActions.setVisibility(View.VISIBLE);
+        menuMedidorActions.setVisibility(View.VISIBLE);
         fabShowForm.setVisibility(View.GONE);
         formCrear.dismiss();
 
@@ -1036,7 +1036,7 @@ public class MedidorActivity extends AppCompatActivity {
         if (bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(false);
         if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
-        menuLectorActions.setVisibility(View.VISIBLE);
+        menuMedidorActions.setVisibility(View.VISIBLE);
         fabShowDialog.setVisibility(View.GONE);
         dialogCrear.dismiss();
         if (oLyAddGraphs != null) oLyAddGraphs.setVisible(true);
@@ -1055,15 +1055,15 @@ public class MedidorActivity extends AppCompatActivity {
         return null;
     }
 
-    class AdaptBusqMedidor extends ArrayAdapter<BusqClass> {
+    class AdaptBusqMedidor extends ArrayAdapter<BusqMedClass> {
 
-        public AdaptBusqMedidor(Context context, BusqClass[] datos) {
-            super(context, R.layout.list_item_busq, datos);
+        public AdaptBusqMedidor(Context context, BusqMedClass[] datos) {
+            super(context, R.layout.list_item_busq_med, datos);
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            View item = inflater.inflate(R.layout.list_item_busq, null);
+            View item = inflater.inflate(R.layout.list_item_busq_med, null);
 
             TextView lblNis = (TextView) item.findViewById(R.id.LblSerieNis);
             lblNis.setText(datosBusq[position].getSerieNis());
@@ -1106,8 +1106,8 @@ public class MedidorActivity extends AppCompatActivity {
             menuMultipleActions.setVisibility(View.GONE);
         }
 
-        menuLectorActions.collapse();
-        menuLectorActions.setVisibility(View.GONE);
+        menuMedidorActions.collapse();
+        menuMedidorActions.setVisibility(View.GONE);
         fabShowForm.setVisibility(View.VISIBLE);
 
         setActionsForm(R.layout.form_lectores, fabTemp.getTitle());
@@ -1121,8 +1121,8 @@ public class MedidorActivity extends AppCompatActivity {
         menuMultipleActions.collapse();
         menuMultipleActions.setVisibility(View.GONE);
 
-        menuLectorActions.collapse();
-        menuLectorActions.setVisibility(View.GONE);
+        menuMedidorActions.collapse();
+        menuMedidorActions.setVisibility(View.GONE);
         fabShowDialog.setVisibility(View.VISIBLE);
 
         switch (view.getId()) {
@@ -2600,7 +2600,7 @@ public class MedidorActivity extends AppCompatActivity {
 
                         if (results.featureCount() > 1){
                             lstBusqMedidores = new ListView(getApplicationContext());
-                            datosBusq = new BusqClass[numResult];
+                            datosBusq = new BusqMedClass[numResult];
                             int cont = 0;
 
                             for (Object element : results) {
@@ -2611,7 +2611,7 @@ public class MedidorActivity extends AppCompatActivity {
                                 String sMarca = feature.getAttributeValue("marca_medidor").toString();
                                 String sModelo = feature.getAttributeValue("modelo").toString();
 
-                                BusqClass oMedidor = new BusqClass(sSerie+"-"+sNis, sMarca, sModelo);
+                                BusqMedClass oMedidor = new BusqMedClass(sSerie+"-"+sNis, sMarca, sModelo);
                                 datosBusq[cont] = oMedidor;
                                 cont++;
                             }

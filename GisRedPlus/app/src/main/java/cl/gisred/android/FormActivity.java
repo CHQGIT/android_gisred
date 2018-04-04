@@ -36,7 +36,7 @@ public class FormActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES", "INSPECCION_MANTENIMIENTO_CORRECTIVO", "INSPECCION_CONSTRUCCION_EMPALMES", "INSPECCION_TELEMEDIDA", "INSPECCION_SAT"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES", "INSPECCION_MANTENIMIENTO_CORRECTIVO", "INSPECCION_CONSTRUCCION_EMPALMES", "INSPECCION_TELEMEDIDA"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -154,8 +154,6 @@ public class FormActivity extends AppCompatActivity {
                 dato.setDescripcion("Formulario de inspección y construcción de empalmes");
             } else if (dato.getTitulo().contains("TELEMEDIDA")) {
                 dato.setDescripcion("Formulario de inspección proyecto telemedida");
-            } else if (dato.getTitulo().contains("SAT")) {
-                dato.setDescripcion("Formulario de inspección SAT");
             }
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             return dato;

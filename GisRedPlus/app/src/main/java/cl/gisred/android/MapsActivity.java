@@ -121,7 +121,7 @@ public class MapsActivity extends AppCompatActivity {
     public String[] searchArray = {"Clientes", "SED", "Poste", "Medidor", "Dirección", "Equipo"};
 
     //ArrayList Layer
-    public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Red MT", "Red BT", "Red AP", "Postes", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
+    public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Postes", "Red MT", "Red BT", "Red AP", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
             "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "Electro Dependientes"};
 
     public String[] arrayTipoEdif = {};
@@ -284,10 +284,10 @@ public class MapsActivity extends AppCompatActivity {
         myMapView.addLayer(LySED, 1);
         myMapView.addLayer(LySSEE, 2);
         myMapView.addLayer(LySALIDAALIM, 3);
-        myMapView.addLayer(LyREDMT, 4);
-        myMapView.addLayer(LyREDBT, 5);
-        myMapView.addLayer(LyREDAP, 6);
-        myMapView.addLayer(LyPOSTES, 7);
+        myMapView.addLayer(LyPOSTES, 4);
+        myMapView.addLayer(LyREDMT, 5);
+        myMapView.addLayer(LyREDBT, 6);
+        myMapView.addLayer(LyREDAP, 7);
         myMapView.addLayer(LyEQUIPOSLINEA, 8);
         myMapView.addLayer(LyEQUIPOSPTO, 9);
         myMapView.addLayer(LyLUMINARIAS, 10);
@@ -1176,7 +1176,7 @@ public class MapsActivity extends AppCompatActivity {
                     Toast.makeText(myMapView.getContext(), "Debe ingresar un valor", Toast.LENGTH_SHORT).show();
                 } else {
                     // Escala de calle para busquedas por default
-                    // TODO Asignar a res values o strings
+
                     iBusqScale = 4000;
                     switch (SpiBusqueda) {
                         case 0:
@@ -1758,7 +1758,7 @@ public class MapsActivity extends AppCompatActivity {
                     case "POSTES":
                         int array6[]; //declaracion arreglo de tipo numerico
                         array6 = new int[1];
-                        array6[0] = 2;
+                        array6[0] = 0;
                         LyPOSTES = new ArcGISDynamicMapServiceLayer(url, array6, credencial);
                         LyPOSTES.setVisible(visibilidad);
                         break;
@@ -2928,7 +2928,6 @@ public class MapsActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
 
-                    Log.w("MapsActivity", "No hay permisos de ACCESS_FINE_LOCATION");
                 }
                 break;
             }

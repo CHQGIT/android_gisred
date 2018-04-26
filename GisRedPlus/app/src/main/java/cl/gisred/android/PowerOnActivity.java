@@ -824,7 +824,7 @@ public class PowerOnActivity extends AppCompatActivity {
                     Toast.makeText(myMapView.getContext(), "Debe ingresar un valor", Toast.LENGTH_SHORT).show();
                 } else {
                     // Escala de calle para busquedas por default
-                    // TODO Asignar a res values o strings
+
                     iBusqScale = 4000;
                     switch (SpiBusqueda) {
                         case 0:
@@ -1159,8 +1159,8 @@ public class PowerOnActivity extends AppCompatActivity {
                     case "POSTES":
                         int array6[]; //declaracion arreglo de tipo numerico
                         array6 = new int[1];
-                        array6[0] = 2;
-                        LyPOSTES = new ArcGISDynamicMapServiceLayer(url, null, credencial);
+                        array6[0] = 0;
+                        LyPOSTES = new ArcGISDynamicMapServiceLayer(url, array6, credencial);
                         LyPOSTES.setVisible(visibilidad);
                         break;
                     case "EQUIPOS_LINEA":
@@ -2282,7 +2282,6 @@ public class PowerOnActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
 
-                    Log.w("PowerOnActivity", "No hay permisos de ACCESS_FINE_LOCATION");
                 }
                 break;
             }

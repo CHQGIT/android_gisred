@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mat_cam">
+        <item>Hormigón</item>
+    </string-array>
+    <string-array name="mat_gen_na">
+        <item>No aplica</item>
+    </string-array>
+    <string-array name="mat_poscrucet">
+        <item>Madera</item>
+        <item>Fierro</item>
+        <item>Hormigón</item>
+        <item>NA</item>
+    </string-array>
+    <string-array name="mat_aisla_pos">
+        <item>Loza</item>
+        <item>Polimérico</item>
+        <item>NA</item>
+    </string-array>
+    <string-array name="mat_conduc_pos">
+        <item>Cobre</item>
+        <item>Aluminio</item>
+        <item>Protegido</item>
+        <item>Preensamblado</item>
+        <item>NA</item>
+    </string-array>
+    <string-array name="mat_conect_pos">
+        <item>Bimetálico</item>
+        <item>Cobre</item>
+        <item>Bronce</item>
+        <item>NA</item>
+    </string-array>
+</resources>

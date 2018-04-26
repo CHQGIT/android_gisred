@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "MANTENIMIENTO"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
 
     public void setCredenciales(String usuario , String password) {
@@ -152,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("MEDIDORES")){
                         oIntent = new Intent(MainActivity.this, MedidorActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MANTENIMIENTO")){
+                        oIntent = new Intent(MainActivity.this, FormMantActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
@@ -257,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("REPARTOS")) {
                 dato.setDescripcion("Ingreso de correspondencia repartida");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("MANTENIMIENTO")) {
+                dato.setDescripcion("Ingreso de registros de mantención");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             }
             return dato;
         }

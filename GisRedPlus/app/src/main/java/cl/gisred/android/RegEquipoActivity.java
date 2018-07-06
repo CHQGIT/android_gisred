@@ -25,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -92,7 +93,7 @@ import cl.gisred.android.entity.BusqMedClass;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
 
-public class OtRouteActivity extends AppCompatActivity {
+public class RegEquipoActivity extends AppCompatActivity {
 
     ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();
     MapView myMapView = null;
@@ -110,8 +111,6 @@ public class OtRouteActivity extends AppCompatActivity {
     //variable para guardar spinner seleccionado en Dialog  de Busqueda
     int SpiBusqueda;
     String txtBusqueda;
-    String objId;
-    String sCapa;
 
     //ArrayList MapsType
     public String[] tipoMapas = {"Carreteras", "Aerea", "Aerea Detalles", "Chilquinta"};
@@ -121,25 +120,27 @@ public class OtRouteActivity extends AppCompatActivity {
 
     //ArrayList Layer
     public String[] listadoCapas = {"SED", "SSEE", "Salida Alimentador", "Postes", "Red MT", "Red BT", "Red AP", "Equipos Linea", "Equipos Puntos", "Luminarias", "Clientes", "Medidores",
-            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "OT Open", "OT Micromedicion", "OT Denuncios"};
+            "Concesiones", "Direcciones", "Empalmes", "Red sTX", "Torres sTX", "ECSE Encuestados", "ECSE Reemplazos", "Electro Dependientes"};
 
-    public String[] arrayTipoEdif = {};
+    public String[] arrayfaseConex = {};
+
+    // Arrays Ing Clientes
     public String[] arrayTipoPoste = {};
     public String[] arrayTension = {};
+    public String[] arrayTipoEdif = {};
     public String[] arrayMedidor = {};
     public String[] arrayEmpalme = {};
     public String[] arrayTecMedidor = {};
     public String[] arrayTipoCnr = {};
     public String[] arrayTipoFase = {};
     public String[] arrayEstado = {};
-    public String[] arrayUserCosenza = {};
 
-    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true};
+    public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
-    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlOpen, din_urlOT;
+    String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlElectroDep;
     //url para feature layers
-    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_lectores, srv_otMicro, srv_otOpen, srv_otDenuncio, srv_otWebDenuncio;
+    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_microMedida, srv_zoneLimit;
 
     //Set bing Maps
     String BingKey = "Asrn2IMtRwnOdIRPf-7q30XVUrZuOK7K2tzhCACMg7QZbJ4EPsOcLk6mE9-sNvUe";
@@ -147,8 +148,8 @@ public class OtRouteActivity extends AppCompatActivity {
     final BingMapsLayer mAerialWLabelBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.AERIAL_WITH_LABELS);
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
-    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyOTOPEN, LyOTMICRO, LyOTDENUNCIO;
-    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddMicroOt, LyAddOpenOt, LyAddDenuncioOt, LyAddWebDenuncioOt;
+    ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyELECTRODEP;
+    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAgrRegEquipo, LyRetRegEquipo;
 
     //set Extent inicial
     Polygon mCurrentMapExtent = null;
@@ -158,6 +159,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
     //Constantes
     private static final String modIngreso = "INGRESO_CLIENTES";
+    private static final String modRegEquipo = "REGISTRO_EQUIPOS";
 
     //Sets
     ArrayList<String> arrayWidgets;
@@ -190,20 +192,21 @@ public class OtRouteActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLySelectAsoc;
     private ArcGISDynamicMapServiceLayer oLyExistAsoc;
     private ArcGISFeatureLayer oLyAddGraphs;
-    private ArcGISFeatureLayer oLyAddOt;
     private int idResLayoutSelect;
     private Point oUbicacion;
+    private Point oUbicacionForm;
 
     private Graphic[] addsUnion = {};
 
     Dialog dialogCrear;
-    Dialog dialogCur;
     Dialog dialogBusq;
+    Dialog formCrear;
+    Dialog dialogCur;
     boolean bIngCliente = true;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
-    FloatingActionsMenu menuLectorActions;
+    FloatingActionsMenu menuMicroActions;
     FloatingActionButton fabShowDialog;
     FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
@@ -211,9 +214,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
-    HashMap<Integer, String> layerDefsECSE;
-    HashMap<Integer, String> layerDefsOpen;
-    HashMap<Integer, String> layerDefsOT;
+    HashMap<Integer, String> layerDefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +229,7 @@ public class OtRouteActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "Licencia standard válida", Toast.LENGTH_SHORT).show();
         }
 
-        setContentView(R.layout.activity_lector);
+        setContentView(R.layout.activity_reg_equipo);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.apptool);
         setSupportActionBar(toolbar);
@@ -239,8 +240,6 @@ public class OtRouteActivity extends AppCompatActivity {
         passw = bundle.getString("password");
         modulo = bundle.getString("modulo");
         empresa = bundle.getString("empresa");
-        objId = bundle.getString("objID");
-        sCapa = bundle.getString("typFeat");
 
         //Set Credenciales
         setCredenciales(usuar, passw);
@@ -265,18 +264,17 @@ public class OtRouteActivity extends AppCompatActivity {
         setLayersURL(this.getResources().getString(R.string.url_medidores), "MEDIDORES");
         setLayersURL(this.getResources().getString(R.string.url_Stx), "STX");
         setLayersURL(this.getResources().getString(R.string.url_ECSE_varios), "ECSE");
-        setLayersURL(this.getResources().getString(R.string.url_viaOpen), "OTOPEN");
-        setLayersURL(this.getResources().getString(R.string.url_OT), "OT");
+        setLayersURL(this.getResources().getString(R.string.url_Electrodependientes), "ELECTRODEP");
 
         //Agrega layers dinámicos.
         addLayersToMap(credenciales, "DYNAMIC", "MAPABASECHQ", din_urlMapaBase, null, true);
-        addLayersToMap(credenciales, "DYNAMIC", "SED", din_urlEquiposPunto, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "SED", din_urlEquiposPunto, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "SSEE", din_urlEquiposPunto, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "SALIDAALIM", din_urlEquiposPunto, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDMT", din_urlTramos, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "REDBT", din_urlTramos, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "REDBT", din_urlTramos, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "REDAP", din_urlTramos, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_LINEA", din_urlEquiposLinea, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_PTO", din_urlEquiposPunto, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "LUMINARIAS", din_urlLuminarias, null, false);
@@ -289,9 +287,7 @@ public class OtRouteActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "ENCUESTADO", din_urlECSE, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REEMPLAZO", din_urlECSE, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "OTOPEN", din_urlOpen, null, true);
-        addLayersToMap(credenciales, "DYNAMIC", "OTMICRO", din_urlOT, null, true);
-        addLayersToMap(credenciales, "DYNAMIC", "OTDENUNCIO", din_urlOT, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "ELECTRODEP", din_urlElectroDep, null, false);
 
         //Añade Layer al Mapa
         myMapView.addLayer(mRoadBaseMaps, 0);
@@ -314,9 +310,7 @@ public class OtRouteActivity extends AppCompatActivity {
         myMapView.addLayer(LyTORRESSTX, 17);
         myMapView.addLayer(LyENCUESTA, 18);
         myMapView.addLayer(LyREEMPLAZO, 19);
-        myMapView.addLayer(LyOTOPEN, 20);
-        myMapView.addLayer(LyOTMICRO, 21);
-        myMapView.addLayer(LyOTDENUNCIO, 22);
+        myMapView.addLayer(LyELECTRODEP, 20);
 
 
         final FloatingActionButton btnGps = (FloatingActionButton) findViewById(R.id.action_gps);
@@ -361,9 +355,7 @@ public class OtRouteActivity extends AppCompatActivity {
         drawNo = new ShapeDrawable(new OvalShape());
         drawNo.getPaint().setColor(getResources().getColor(R.color.black_overlay));
 
-        menuLectorActions = (FloatingActionsMenu) findViewById(R.id.lector_actions);
-        menuLectorActions.setVisibility(View.GONE);
-
+        menuMicroActions = (FloatingActionsMenu) findViewById(R.id.reg_equipo_actions);
         menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
 
         fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
@@ -383,7 +375,7 @@ public class OtRouteActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryNavigation(OtRouteActivity.this, p);
+                        Util.QueryNavigation(RegEquipoActivity.this, p);
                     }
                 }
             });
@@ -396,132 +388,172 @@ public class OtRouteActivity extends AppCompatActivity {
                 }
             });
         }
+        if (modulo.replace(" ", "_").equals(modRegEquipo)) {
 
-        setLayersURL(this.getResources().getString(R.string.srv_micromed_OT), "SRV_OTMICRO");
-        setLayersURL(this.getResources().getString(R.string.srv_viaopen_OT), "SRV_OTOPEN");
-        setLayersURL(this.getResources().getString(R.string.srv_denuncio_OT), "SRV_OTDENUNCIO");
-        setLayersURL(this.getResources().getString(R.string.srv_denuncio_web_OT), "SRV_OTWEBDENUNCIO");
-        setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
-        setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
+            setLayersURL(this.getResources().getString(R.string.srv_MicroMed), "SRV_MICROMED");
+            setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
+            setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
+            setLayersURL(this.getResources().getString(R.string.srv_ZoneLimit), "SRV_ZONELIMIT");
 
-        addLayersToMap(credenciales, "FEATURE", "ADDOTMICRO", srv_otMicro, null, false);
-        addLayersToMap(credenciales, "FEATURE", "ADDOTOPEN", srv_otOpen, null, false);
-        addLayersToMap(credenciales, "FEATURE", "ADDOTDENUNCIO", srv_otDenuncio, null, false);
-        addLayersToMap(credenciales, "FEATURE", "ADDOTWEBDENUNCIO", srv_otWebDenuncio, null, false);
-        addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
-        addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDMICROMED", srv_microMedida, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDZONELIMIT", srv_zoneLimit, null, true);
 
-        myMapView.addLayer(LyAddMicroOt, 23);
-        myMapView.addLayer(LyAddOpenOt, 24);
-        myMapView.addLayer(LyAddDenuncioOt, 25);
-        myMapView.addLayer(LyAddDenuncioOt, 26);
-        myMapView.addLayer(LyAddPoste, 27);
-        myMapView.addLayer(LyAddDireccion, 28);
+            myMapView.addLayer(LyAgrRegEquipo, 21);
+            myMapView.addLayer(LyAddPoste, 22);
+            myMapView.addLayer(LyAddDireccion, 23);
+            myMapView.addLayer(LyRetRegEquipo, 24);
 
-        arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
-        arrayEstado = getResources().getStringArray(R.array.estado_lectura);
-        arrayUserCosenza = getResources().getStringArray(R.array.user_cosenza);
+            arrayfaseConex = getResources().getStringArray(R.array.fase_conexion_insp);
 
-        arrayWidgets = bundle.getStringArrayList("widgets");
-        arrayModulos = bundle.getStringArrayList("modulos");
+            arrayWidgets = bundle.getStringArrayList("widgets");
+            arrayModulos = bundle.getStringArrayList("modulos");
 
-        if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
-
-            arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
-            arrayTension = getResources().getStringArray(R.array.tipo_tension);
-            arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
-            arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
-            arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
-            arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
-            arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
-            arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
-
-            dialogCrear = new Dialog(OtRouteActivity.this);
-
-            fabShowDialog.setOnClickListener(new View.OnClickListener() {
+            formCrear = new Dialog(RegEquipoActivity.this);
+            fabShowForm.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     bMapTap = false;
                     bCallOut = false;
                     myMapView.getCallout().hide();
-                    //TODO Restringir datos dialog
+
                     if (oUbicacion != null) {
                         btnUbicacion.setColorFilter(Color.BLACK);
                         setEnabledDialog(true);
                     }
-                    dialogCrear.show();
-                    if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
-                        myMapView.removeLayer(mSeleccionLayer);
+                    formCrear.show();
                 }
             });
 
-            fabVerCapas.setVisibility(View.VISIBLE);
-            fabVerCapas.setOnClickListener(new View.OnClickListener() {
+            FloatingActionButton oFabAgr = (FloatingActionButton) findViewById(R.id.action_agr_equipo);
+            oFabAgr.setIconDrawable(drawOk);
+            oFabAgr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toogleCapas(v);
+                    abrirFormAgr(v);
                 }
             });
 
-            fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
+            FloatingActionButton oFabForm = (FloatingActionButton) findViewById(R.id.action_ret_equipo);
+            oFabForm.setIconDrawable(drawOk);
+            oFabForm.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
-                    return true;
+                public void onClick(View v) {
+                    abrirFormRet(v);
                 }
             });
 
-            final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
-            final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
-            final FloatingActionButton actionC = (FloatingActionButton) findViewById(R.id.action_c);
-            final FloatingActionButton actionD = (FloatingActionButton) findViewById(R.id.action_d);
+            FloatingActionButton oFabDenuncio = (FloatingActionButton) findViewById(R.id.action_denuncio);
+            oFabDenuncio.setIconDrawable(drawNo);
+            oFabDenuncio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //abrirFormDenuncio(v);
+                    Snackbar.make(v, "No tiene acceso a ésta opción", Snackbar.LENGTH_SHORT).show();
+                    menuMicroActions.collapse();
+                }
+            });
 
-            setOpcion(actionA, null);
-            setOpcion(actionB, null);
-            setOpcion(actionC, modIngreso + "_TECNO");
-            setOpcion(actionD, modIngreso + "_CNR");
+            if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
 
-            setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
-            setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
-            setLayersURL(din_urlTramos, "TRAMOS");
-            setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
-            setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
+                arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
+                arrayTension = getResources().getStringArray(R.array.tipo_tension);
+                arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
+                arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
+                arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
+                arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
+                arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
 
-            addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
-            addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
-            addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
+                dialogCrear = new Dialog(RegEquipoActivity.this);
 
-            myMapView.addLayer(LyAddCliente, 29);
-            myMapView.addLayer(LyAddUnion, 30);
-            myMapView.addLayer(LyAsocTramo, 31);
-            myMapView.addLayer(LyAsocCalle, 32);
-            myMapView.addLayer(LyAddClienteCnr, 33);
+                fabShowDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bMapTap = false;
+                        bCallOut = false;
+                        myMapView.getCallout().hide();
 
-            setLayerAddToggle(false);
+                        if (oUbicacion != null) {
+                            btnUbicacion.setColorFilter(Color.BLACK);
+                            setEnabledDialog(true);
+                        }
+                        dialogCrear.show();
+                        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+                            myMapView.removeLayer(mSeleccionLayer);
+                    }
+                });
+
+                fabVerCapas.setVisibility(View.VISIBLE);
+                fabVerCapas.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toogleCapas(v);
+                    }
+                });
+
+                fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+                final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
+                final FloatingActionButton actionC = (FloatingActionButton) findViewById(R.id.action_c);
+                final FloatingActionButton actionD = (FloatingActionButton) findViewById(R.id.action_d);
+
+                setOpcion(actionA, null);
+                setOpcion(actionB, null);
+                setOpcion(actionC, modIngreso + "_TECNO");
+                setOpcion(actionD, modIngreso + "_CNR");
+
+                setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
+                setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
+                setLayersURL(din_urlTramos, "TRAMOS");
+                setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
+                setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
+
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
+                addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
+
+                myMapView.addLayer(LyAddCliente, 25);
+                myMapView.addLayer(LyAddUnion, 26);
+                myMapView.addLayer(LyAsocTramo, 27);
+                myMapView.addLayer(LyAsocCalle, 28);
+                myMapView.addLayer(LyAddClienteCnr, 29);
+
+                setLayerAddToggle(false);
+            } else {
+                bIngCliente = false;
+                menuMultipleActions.setVisibility(View.GONE);
+                //Informar al usuario que carece de permisos para ver y usar la capa de ingreso clientes comun
+            }
+
         } else {
-            bIngCliente = false;
-            menuMultipleActions.setVisibility(View.GONE);
-            //Informar al usuario que carece de permisos para ver y usar la capa de ingreso clientes comun
+            menuMicroActions.setVisibility(View.GONE);
         }
-
-        getUbicacionLectura(objId);
     }
 
     private void verifPermisos() {
-        if (ContextCompat.checkSelfPermission(OtRouteActivity.this,
+        if (ContextCompat.checkSelfPermission(RegEquipoActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(OtRouteActivity.this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(RegEquipoActivity.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             } else {
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(OtRouteActivity.this,
+                ActivityCompat.requestPermissions(RegEquipoActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         Util.REQUEST_ACCESS_FINE_LOCATION);
             }
@@ -641,6 +673,10 @@ public class OtRouteActivity extends AppCompatActivity {
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
 
+                if (oText.getId() == R.id.txtNroMedidor) {
+                    setRequerido(view, R.id.txtAddress, oText.getText().toString().length() > 3);
+                }
+
                 TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
                 if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
                     if (oText.getText().toString().trim().isEmpty()){
@@ -650,9 +686,7 @@ public class OtRouteActivity extends AppCompatActivity {
                         oText.setError(null);
                     }
                 }
-
-            }
-            else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+            } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
                 Spinner oSpinner = (Spinner) view;
                 if (oSpinner.getSelectedItem().toString().isEmpty()) contRequeridos++;
             }
@@ -832,60 +866,231 @@ public class OtRouteActivity extends AppCompatActivity {
         }
     }
 
-    private void getUbicacionLectura(String objId) {
-        AsyncQueryUbic queryTask = new AsyncQueryUbic();
-        queryTask.execute(objId);
+    private void setRequerido(View view, int idRequerido, boolean bool) {
+        if (bool) {
+            EditText oText = (EditText) getLayoutContenedor(view).findViewById(idRequerido);
+            TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+            if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
+                oTextInput.setHint(oTextInput.getHint().toString().replace("*",""));
+            }
+        } else {
+            EditText oText = (EditText) getLayoutContenedor(view).findViewById(idRequerido);
+            TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+            if (oTextInput.getHint() != null && !oTextInput.getHint().toString().contains("*")) {
+                oTextInput.setHint(oTextInput.getHint().toString().concat("*"));
+            }
+        }
     }
 
-    private void setOtLeida(Feature oFeature){
+    private void cerrarFormLimit(boolean bSave, View v) {
+        if (bSave) {
 
-        Map<String, Object> objectMap = oFeature.getAttributes();
-        Map<String, Object> updMap = new HashMap<>();
+            final AtomicReference<String> resp = new AtomicReference<>("");
 
-        if (sCapa.equals("Micromedicion")) {
-            oLyAddOt = LyAddMicroOt;
-            updMap.put("OBJECTID", objectMap.get("OBJECTID"));
-        } else if (sCapa.equals("Denuncio")) {
-            oLyAddOt = LyAddDenuncioOt;
-            updMap.put("OBJECTID", objectMap.get("OBJECTID"));
-        } else {
-            oLyAddOt = LyAddOpenOt;
-            updMap.put("OBJECTID", objectMap.get("ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID"));
-        }
+            if (!validarZoneLimit(v)) {
+                DialogoConfirmacion oDialog = new DialogoConfirmacion();
+                oDialog.show(getFragmentManager(), "tagAlert");
+                return;
+            } else {
+                View vAction = getLayoutValidate(v);
+                Map<String, Object> objectMap = new HashMap<>();
+                for (View view : vAction.getTouchables()) {
 
-        updMap.put("estado_revision", "leida");
+                    if (view.getClass().equals(GisEditText.class)) {
+                        GisEditText oText = (GisEditText) view;
 
-        Graphic newFeatureGraphic = new Graphic(oFeature.getGeometry(), null, updMap);
-        Graphic[] upds = {newFeatureGraphic};
-        oLyAddOt.applyEdits(null, null, upds, new CallbackListener<FeatureEditResult[][]>() {
-            @Override
-            public void onCallback(FeatureEditResult[][] featureEditResults) {
-                if (featureEditResults[2] != null) {
-                    if (featureEditResults[2][0] != null && featureEditResults[2][0].isSuccess()) {
+                        if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
+                            if (oText.getId() == R.id.txtPoste){
+                                objectMap.put("id_poste", oText.getIdObjeto());
+                                oUbicacion = oText.getPoint();
+                            } else if (oText.getId() == R.id.txtTramoBt) {
+                                objectMap.put("id_tramo", oText.getText().toString());
+                            }
+                        }
+                    }
+                }
+
+                objectMap.put("empresa", empresa);
+                objectMap.put("modulo", modulo);
+
+                Graphic newFeatureGraphic = new Graphic(oUbicacion, null, objectMap);
+                Graphic[] adds = {newFeatureGraphic};
+                LyRetRegEquipo.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+                    @Override
+                    public void onCallback(FeatureEditResult[][] featureEditResults) {
+                        if (featureEditResults[0] != null) {
+                            if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+
+                                resp.set("Guardado Correctamente Id: " + featureEditResults[0][0].getObjectId());
+
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Util.showConfirmation(RegEquipoActivity.this, resp.get());
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        resp.set("Error al ingresar: " + throwable.getLocalizedMessage());
+                        Log.w("onError", resp.get());
 
                         runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "OT leída", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegEquipoActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
-                }
+                });
             }
+        }
 
-            @Override
-            public void onError(Throwable throwable) {
+        bMapTap = false;
+        oUbicacion = null;
 
-                runOnUiThread(new Runnable() {
+        if (mBusquedaLayer != null && myMapView.getLayerByID(mBusquedaLayer.getID()) != null)
+            myMapView.removeLayer(mBusquedaLayer);
+
+        if (mUbicacionLayer != null && myMapView.getLayerByID(mUbicacionLayer.getID()) != null)
+            myMapView.removeLayer(mUbicacionLayer);
+
+        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+            myMapView.removeLayer(mSeleccionLayer);
+
+        if (bVerCapas) toogleCapas(fabVerCapas);
+
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
+        menuMicroActions.setVisibility(View.VISIBLE);
+        fabShowForm.setVisibility(View.GONE);
+        formCrear.dismiss();
+
+        if (LyRetRegEquipo != null) LyRetRegEquipo.setVisible(true);
+    }
+
+    private void cerrarFormCrear(boolean bSave, View v){
+        if (bSave) {
+
+            final AtomicReference<String> resp = new AtomicReference<>("");
+
+            if (!validarForm(v)) {
+                DialogoConfirmacion oDialog = new DialogoConfirmacion();
+                oDialog.show(getFragmentManager(), "tagAlert");
+                return;
+            } else {
+                View vAction = getLayoutValidate(v);
+                Map<String, Object> objectMap = new HashMap<>();
+                for (View view : vAction.getTouchables()) {
+
+                    if (view.getClass().equals(GisEditText.class)) {
+                        GisEditText oText = (GisEditText) view;
+
+                        if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
+                            if (oText.getId() == R.id.txtPoste){
+                                objectMap.put("id_poste_camara", oText.getIdObjeto());
+                                objectMap.put("tipo_nodo_conex", oText.getTipo());
+                            } else if (oText.getId() == R.id.txtTramoBt) {
+                                objectMap.put("id_tramo_bt", oText.getText().toString());
+                            } else if (oText.getId() == R.id.txtAddress) {
+                                objectMap.put("id_direccion", oText.getIdObjeto());
+                                objectMap.put("tipo_direccion", oText.getTipo());
+                            }
+                        }
+
+                    } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
+                        EditText oText = (EditText) view;
+
+                        if (oText.getId() == R.id.txtNroMedidor) {
+                            String oVal = (oText.getText().toString().isEmpty()) ? "0" : oText.getText().toString();
+                            objectMap.put("nro_medidor", oVal);
+                        }
+
+                    } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+                        Spinner oSpinner = (Spinner) view;
+                        String sValue = oSpinner.getSelectedItem().toString();
+
+                        if (oSpinner.getId() == R.id.spinnerMarcaMed)
+                            objectMap.put("marca_medidor", sValue);
+                        else if (oSpinner.getId() == R.id.spinnerFaseCon)
+                            objectMap.put("fase_conex", sValue);
+                        else if (oSpinner.getId() == R.id.spinnerObservacion)
+                            objectMap.put("observacion", sValue);
+                    }
+                }
+
+                objectMap.put("empresa", empresa);
+                objectMap.put("modulo", modulo);
+
+                if (mLocation != null){
+                    Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
+
+                    objectMap.put("X", p.getX());
+                    objectMap.put("Y", p.getY());
+                }
+
+                Graphic newFeatureGraphic = new Graphic(oUbicacion, null, objectMap);
+                Graphic[] adds = {newFeatureGraphic};
+                LyAgrRegEquipo.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+                    @Override
+                    public void onCallback(FeatureEditResult[][] featureEditResults) {
+                        if (featureEditResults[0] != null) {
+                            if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+
+                                resp.set("Guardado Correctamente Id: " + featureEditResults[0][0].getObjectId());
+
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Util.showConfirmation(RegEquipoActivity.this, resp.get());
+                                    }
+                                });
+                            }
+                        }
+                    }
 
                     @Override
-                    public void run() {
-                        Toast.makeText(OtRouteActivity.this, "Error al actualizar OT", Toast.LENGTH_SHORT).show();
+                    public void onError(Throwable throwable) {
+                        resp.set("Error al ingresar: " + throwable.getLocalizedMessage());
+                        Log.w("onError", resp.get());
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegEquipoActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
             }
-        });
+        }
+
+        bMapTap = false;
+        oUbicacion = null;
+
+        if (mBusquedaLayer != null && myMapView.getLayerByID(mBusquedaLayer.getID()) != null)
+            myMapView.removeLayer(mBusquedaLayer);
+
+        if (mUbicacionLayer != null && myMapView.getLayerByID(mUbicacionLayer.getID()) != null)
+            myMapView.removeLayer(mUbicacionLayer);
+
+        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+            myMapView.removeLayer(mSeleccionLayer);
+
+        if (bVerCapas) toogleCapas(fabVerCapas);
+
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
+        menuMicroActions.setVisibility(View.VISIBLE);
+        fabShowForm.setVisibility(View.GONE);
+        formCrear.dismiss();
+
+        if (LyAgrRegEquipo != null) LyAgrRegEquipo.setVisible(true);
     }
 
     private void cerrarDialogCrear(boolean bSave, @Nullable View viewDialog) {
@@ -942,7 +1147,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            Util.showConfirmation(OtRouteActivity.this, resp.get());
+                                            Util.showConfirmation(RegEquipoActivity.this, resp.get());
                                         }
                                     });
                                 }
@@ -958,7 +1163,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
                                 @Override
                                 public void run() {
-                                    Toast.makeText(OtRouteActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegEquipoActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -968,7 +1173,7 @@ public class OtRouteActivity extends AppCompatActivity {
             }
         } else {
             resp.set("Cancelado");
-            Toast.makeText(OtRouteActivity.this, resp.get(), Toast.LENGTH_LONG).show();
+            Toast.makeText(RegEquipoActivity.this, resp.get(), Toast.LENGTH_LONG).show();
         }
 
         bMapTap = false;
@@ -986,6 +1191,7 @@ public class OtRouteActivity extends AppCompatActivity {
         if (bVerCapas) toogleCapas(fabVerCapas);
         //setLayerAddToggle(false);
         if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
+        menuMicroActions.setVisibility(View.VISIBLE);
         fabShowDialog.setVisibility(View.GONE);
         dialogCrear.dismiss();
         if (oLyAddGraphs != null) oLyAddGraphs.setVisible(true);
@@ -997,7 +1203,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Toast.makeText(OtRouteActivity.this, "Aplicando uniones", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "Aplicando uniones", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1093,11 +1299,65 @@ public class OtRouteActivity extends AppCompatActivity {
         dialogBusq.show();
     }
 
+    private void abrirFormDenuncio(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsFormDenuncio(R.layout.form_denuncio, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+    }
+
+    private void abrirFormAgr(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsFormAgr(R.layout.form_agr_equipo, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+    }
+
+    private void abrirFormRet(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        if (bIngCliente) {
+            menuMultipleActions.collapse();
+            menuMultipleActions.setVisibility(View.GONE);
+        }
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
+        fabShowForm.setVisibility(View.VISIBLE);
+
+        setActionsFormRet(R.layout.form_ret_equipo, fabTemp.getTitle());
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+    }
+
     private void abrirDialogCrear(View view) {
 
         FloatingActionButton fabTemp = (FloatingActionButton) view;
         menuMultipleActions.collapse();
         menuMultipleActions.setVisibility(View.GONE);
+
+        menuMicroActions.collapse();
+        menuMicroActions.setVisibility(View.GONE);
         fabShowDialog.setVisibility(View.VISIBLE);
 
         switch (view.getId()) {
@@ -1116,6 +1376,23 @@ public class OtRouteActivity extends AppCompatActivity {
         }
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
+        //setLayerAddToggle(true);
+    }
+
+    private boolean validarZoneLimit(View view) {
+        View vAction = getLayoutValidate(view);
+        int iReq = recorrerForm(vAction);
+        return (iReq == 0);
+    }
+
+    private boolean validarForm(View view) {
+        if (oUbicacion == null) {
+            return false;
+        }
+
+        View vAction = getLayoutValidate(view);
+        int iReq = recorrerForm(vAction);
+        return (iReq == 0);
     }
 
     private boolean validarVista(View view) {
@@ -1225,17 +1502,9 @@ public class OtRouteActivity extends AppCompatActivity {
             myMapView.setEsriLogoVisible(logoVisible);
             myMapView.enableWrapAround(wrapAround);
 
-            layerDefsECSE = new HashMap<>();
-            layerDefsOT = new HashMap<>();
-            layerDefsOpen = new HashMap<>();
-
-            layerDefsECSE.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
-            layerDefsECSE.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
-
-            layerDefsOT.put(0, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");
-            layerDefsOT.put(1, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");
-
-            layerDefsOpen.put(0, "INSPECTOR = '" + Util.getUserWithoutDomain(usuar) + "'");
+            layerDefs = new HashMap<>();
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
 
             //Set eventos mapa
             singleTapOnMap();
@@ -1379,6 +1648,245 @@ public class OtRouteActivity extends AppCompatActivity {
         }
 
         return s;
+    }
+
+    public void setActionsFormAgr(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+        ArrayAdapter<CharSequence> adapter;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (widthSize * 3) / 4;
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        Spinner spFaseConex = (Spinner) v.findViewById(R.id.spinnerFaseCon);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayfaseConex);
+        spFaseConex.setAdapter(adapter);
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        ImageButton btnTramoBt = (ImageButton) v.findViewById(R.id.btnTramoBt);
+        btnTramoBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                nIndentify = 2; //2 = valor para tramo
+                oLySelectAsoc = LyAsocTramo;
+                setValueToAsoc(getLayoutContenedor(v));
+            }
+        });
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormLimit(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormLimit(true, v);
+            }
+        });
+
+        formCrear.show();
+        dialogCur = formCrear;
+    }
+
+    public void setActionsFormDenuncio(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+        ArrayAdapter<CharSequence> adapter;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (widthSize * 3) / 4;
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        Spinner spEstado = (Spinner) v.findViewById(R.id.spinnerEstado);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayEstado);
+        spEstado.setAdapter(adapter);
+
+        Spinner spTipoEdif = (Spinner) v.findViewById(R.id.spinnerTipoEdific);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoEdif);
+        spTipoEdif.setAdapter(adapter);
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        ImageButton btnIdentDireccion = (ImageButton) v.findViewById(R.id.btnDireccion);
+        btnIdentDireccion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddDireccion;
+                oLyExistAsoc = LyDIRECCIONES;
+                oLyExistAsoc.setVisible(true);
+                myMapView.zoomToScale(ldm.getPoint(), oLyExistAsoc.getMinScale() * 0.9);
+                setValueToAsoc(getLayoutContenedor(v));
+            }
+        });
+
+        btnUbicacion = (ImageButton) v.findViewById(R.id.btnUbicacion);
+        btnUbicacion.setColorFilter(Color.RED);
+        btnUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bMapTap = true;
+                formCrear.hide();
+            }
+        });
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(true, v);
+            }
+        });
+
+        arrayTouchs = new ArrayList<>();
+        setEnabledDialog(false);
+
+        formCrear.show();
+        dialogCur = formCrear;
+    }
+
+    public void setActionsFormRet(final int idRes, String sNombre) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(idRes, null);
+
+        final int topeWidth = 650;
+        ArrayAdapter<CharSequence> adapter;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthSize = displayMetrics.widthPixels;
+        int widthScale = (widthSize * 3) / 4;
+        if (topeWidth < widthScale) widthScale = topeWidth;
+
+        v.setMinimumWidth(widthScale);
+
+        formCrear.setTitle(sNombre);
+        formCrear.setContentView(v);
+        idResLayoutSelect = idRes;
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                oLySelectAsoc = LyAddPoste;
+                oLyExistAsoc = LyPOSTES;
+                oLyExistAsoc.setVisible(true);
+                setValueToAsoc(getLayoutContenedor(view));
+            }
+        });
+
+        ImageButton btnTramo = (ImageButton) v.findViewById(R.id.btnTramoBt);
+        btnTramo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                formCrear.hide();
+                bMapTap = true;
+                bCallOut = true;
+                nIndentify = 2; //2 = valor para tramo
+                oLySelectAsoc = LyAsocTramo;
+                setValueToAsoc(getLayoutContenedor(v));
+            }
+        });
+
+        btnUbicacion = (ImageButton) v.findViewById(R.id.btnUbicacion);
+        btnUbicacion.setColorFilter(Color.RED);
+        btnUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bMapTap = true;
+                formCrear.hide();
+            }
+        });
+
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(false, v);
+            }
+        });
+
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarFormCrear(true, v);
+            }
+        });
+
+        arrayTouchs = new ArrayList<>();
+        setEnabledDialog(false);
+
+        formCrear.show();
+        dialogCur = formCrear;
     }
 
     public void setActionsDialog(final int idRes, String sNombre) {
@@ -1605,7 +2113,7 @@ public class OtRouteActivity extends AppCompatActivity {
     }
 
     public void choiceMaps(int pos) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(OtRouteActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegEquipoActivity.this);
 
         // set the dialog title
         builder.setTitle("Mapas")
@@ -1653,7 +2161,7 @@ public class OtRouteActivity extends AppCompatActivity {
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(OtRouteActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegEquipoActivity.this);
 
         builder.setTitle("Capas")
 
@@ -1695,9 +2203,7 @@ public class OtRouteActivity extends AppCompatActivity {
     public void setLayerAddToggle(boolean visible) {
         LyAddPoste.setVisible(visible);
         LyAddDireccion.setVisible(visible);
-        LyAddMicroOt.setVisible(visible);
-        LyAddOpenOt.setVisible(visible);
-        LyAddDenuncioOt.setVisible(visible);
+        LyAgrRegEquipo.setVisible(visible);
 
         if (bIngCliente) {
             LyAddCliente.setVisible(visible);
@@ -1767,11 +2273,8 @@ public class OtRouteActivity extends AppCompatActivity {
             case "ECSE":
                 din_urlECSE = layerURL;
                 break;
-            case "OTOPEN":
-                din_urlOpen = layerURL;
-                break;
-            case "OT":
-                din_urlOT = layerURL;
+            case "ELECTRODEP":
+                din_urlElectroDep = layerURL;
                 break;
             case "SRV_POSTES":
                 srv_urlPostes = layerURL;
@@ -1791,29 +2294,21 @@ public class OtRouteActivity extends AppCompatActivity {
             case "SRV_CALLES":
                 srv_calles = layerURL;
                 break;
-            case "SRV_LECTORES":
-                srv_lectores = layerURL;
+            case "SRV_MICROMED":
+                srv_microMedida = layerURL;
                 break;
-            case "SRV_OTMICRO":
-                srv_otMicro = layerURL;
-                break;
-            case "SRV_OTOPEN":
-                srv_otOpen = layerURL;
-                break;
-            case "SRV_OTDENUNCIO":
-                srv_otDenuncio = layerURL;
-                break;
-            case "SRV_OTWEBDENUNCIO":
-                srv_otWebDenuncio = layerURL;
+            case "SRV_ZONELIMIT":
+                srv_zoneLimit = layerURL;
                 break;
             default:
-                Toast.makeText(OtRouteActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     public void addLayersToMap(UserCredentials credencial, String tipoLayer, String nombreCapa, String url, String mode, boolean visibilidad) {
 
+        // tipo layer feature
         if (tipoLayer.equals("FEATURE")) {
 
             switch (nombreCapa) {
@@ -1826,7 +2321,7 @@ public class OtRouteActivity extends AppCompatActivity {
                     } else if (mode.equals("SELECTION")) {
                         // LyAlimentadores = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.SELECTION, credencial);
                     } else {
-                        Toast.makeText(OtRouteActivity.this, "FeatureLayer debe tener un modo.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegEquipoActivity.this, "FeatureLayer debe tener un modo.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     break;
@@ -1867,42 +2362,30 @@ public class OtRouteActivity extends AppCompatActivity {
                     break;
                 case "ASOCCALLE":
                     LyAsocCalle = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAsocCalle.setDefinitionExpression("where ESTADO IS null");
+                    //LyAsocTramo.setDefinitionExpression("where ESTADO IS null");
                     LyAsocCalle.setMinScale(6000);
                     LyAsocCalle.setVisible(visibilidad);
                     break;
-                case "ADDOTMICRO":
-                    LyAddMicroOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddMicroOt.setDefinitionExpression("where ESTADO IS null");
-                    LyAddMicroOt.setMinScale(6000);
-                    LyAddMicroOt.setVisible(visibilidad);
+                case "ADDMICROMED":
+                    LyAgrRegEquipo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAgrRegEquipo.setDefinitionExpression(String.format("empresa = '%s'", empresa));
+                    LyAgrRegEquipo.setMinScale(8000);
+                    LyAgrRegEquipo.setVisible(visibilidad);
                     break;
-                case "ADDOTOPEN":
-                    LyAddOpenOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddOpenOt.setDefinitionExpression("where ESTADO IS null");
-                    LyAddOpenOt.setMinScale(6000);
-                    LyAddOpenOt.setVisible(visibilidad);
-                    break;
-                case "ADDOTDENUNCIO":
-                    LyAddDenuncioOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddDenuncioOt.setDefinitionExpression("where ESTADO IS null");
-                    LyAddDenuncioOt.setMinScale(6000);
-                    LyAddDenuncioOt.setVisible(visibilidad);
-                    break;
-                case "ADDOTWEBDENUNCIO":
-                    LyAddWebDenuncioOt = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    //LyAddWebDenuncioOt.setDefinitionExpression("where ESTADO IS null");
-                    LyAddWebDenuncioOt.setMinScale(6000);
-                    LyAddWebDenuncioOt.setVisible(visibilidad);
+                case "ADDZONELIMIT":
+                    LyRetRegEquipo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyRetRegEquipo.setDefinitionExpression(String.format("empresa = '%s'", empresa));
+                    LyRetRegEquipo.setMinScale(6000);
+                    LyRetRegEquipo.setVisible(visibilidad);
                     break;
                 default:
-                    Toast.makeText(OtRouteActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegEquipoActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
                     break;
             }
 
         } else {
             if (mode != null) {
-                Toast.makeText(OtRouteActivity.this, "Layer dinámico no tiene mode, debe ser null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "Layer dinámico no tiene mode, debe ser null", Toast.LENGTH_SHORT).show();
             } else {
                 switch (nombreCapa) {
                     case "SED":
@@ -2035,7 +2518,6 @@ public class OtRouteActivity extends AppCompatActivity {
                         array18 = new int[1];
                         array18[0] = 0;
                         LyENCUESTA = new ArcGISDynamicMapServiceLayer(url, array18, credencial);
-                        LyENCUESTA.setLayerDefinitions(layerDefsECSE);
                         LyENCUESTA.setVisible(visibilidad);
                         break;
                     case "REEMPLAZO":
@@ -2043,35 +2525,17 @@ public class OtRouteActivity extends AppCompatActivity {
                         array19 = new int[1];
                         array19[0] = 1;
                         LyREEMPLAZO = new ArcGISDynamicMapServiceLayer(url, array19, credencial);
-                        LyREEMPLAZO.setLayerDefinitions(layerDefsECSE);
                         LyREEMPLAZO.setVisible(visibilidad);
                         break;
-                    case "OTOPEN":
+                    case "ELECTRODEP":
                         int array20[];
                         array20 = new int[1];
                         array20[0] = 0;
-                        LyOTOPEN = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
-                        LyOTOPEN.setLayerDefinitions(layerDefsOpen);
-                        LyOTOPEN.setVisible(visibilidad);
-                        break;
-                    case "OTMICRO":
-                        int array21[];
-                        array21 = new int[1];
-                        array21[0] = 0;
-                        LyOTMICRO = new ArcGISDynamicMapServiceLayer(url, array21, credencial);
-                        LyOTMICRO.setLayerDefinitions(layerDefsOT);
-                        LyOTMICRO.setVisible(visibilidad);
-                        break;
-                    case "OTDENUNCIO":
-                        int array22[];
-                        array22 = new int[1];
-                        array22[0] = 1;
-                        LyOTDENUNCIO = new ArcGISDynamicMapServiceLayer(url, array22, credencial);
-                        LyOTDENUNCIO.setLayerDefinitions(layerDefsOT);
-                        LyOTDENUNCIO.setVisible(visibilidad);
+                        LyELECTRODEP = new ArcGISDynamicMapServiceLayer(url, array20, credencial);
+                        LyELECTRODEP.setVisible(visibilidad);
                         break;
                     default:
-                        Toast.makeText(OtRouteActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegEquipoActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -2132,7 +2596,7 @@ public class OtRouteActivity extends AppCompatActivity {
                                     Util oUtil = new Util();
                                     CalloutTvClass oCall = oUtil.getCalloutValues(attr);
 
-                                    GisTextView tv = new GisTextView(OtRouteActivity.this);
+                                    GisTextView tv = new GisTextView(RegEquipoActivity.this);
                                     tv.setText(oCall.getVista());
                                     tv.setHint(oCall.getValor());
                                     tv.setIdObjeto(oCall.getIdObjeto());
@@ -2220,7 +2684,9 @@ public class OtRouteActivity extends AppCompatActivity {
 
                             if (LyPOSTES.getMinScale() < myMapView.getScale())
                                 myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
-                        } else if (R.layout.form_lectores == idResLayoutSelect){
+                        } else if (R.layout.form_micro_med == idResLayoutSelect){
+                            LyPOSTES.setVisible(true);
+                            LyREDBT.setVisible(true);
                             if (LyPOSTES.getMinScale() < myMapView.getScale())
                                 myMapView.zoomToScale(oPoint, LyPOSTES.getMinScale() * 0.9);
                         }
@@ -2258,6 +2724,8 @@ public class OtRouteActivity extends AppCompatActivity {
                                     }
 
                                     layerScala = (layerScala > 0) ? layerScala : nExtendScale;
+
+                                    Log.w("layerScala " + layerScala, "nExtendScale " + nExtendScale);
 
                                     if (nExtendScale <= layerScala) {
                                         arrayLay.add((ArcGISDynamicMapServiceLayer) oLayer);
@@ -2339,7 +2807,7 @@ public class OtRouteActivity extends AppCompatActivity {
                             LyEMPALMES.reinitializeLayer(creds);
                             LyENCUESTA.reinitializeLayer(creds);
                             LyREEMPLAZO.reinitializeLayer(creds);
-                            LyOTOPEN.reinitializeLayer(creds);
+                            LyELECTRODEP.reinitializeLayer(creds);
                         }
                     }
                 }
@@ -2378,8 +2846,8 @@ public class OtRouteActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(OtRouteActivity.this);
-            progress = ProgressDialog.show(OtRouteActivity.this, "",
+            progress = new ProgressDialog(RegEquipoActivity.this);
+            progress = ProgressDialog.show(RegEquipoActivity.this, "",
                     "Verificando NIS.");
         }
 
@@ -2436,11 +2904,11 @@ public class OtRouteActivity extends AppCompatActivity {
 
                     myMapView.zoomin(true);
                 } else {
-                    Toast.makeText(OtRouteActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegEquipoActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(OtRouteActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
             }
             progress.dismiss();
         }
@@ -2456,8 +2924,8 @@ public class OtRouteActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(OtRouteActivity.this);
-            progress = ProgressDialog.show(OtRouteActivity.this, "",
+            progress = new ProgressDialog(RegEquipoActivity.this);
+            progress = ProgressDialog.show(RegEquipoActivity.this, "",
                     "Espere por favor... Obteniendo resultados.");
         }
 
@@ -2588,7 +3056,7 @@ public class OtRouteActivity extends AppCompatActivity {
                             }
 
                             AdaptBusqMedidor adaptador;
-                            adaptador = new AdaptBusqMedidor(OtRouteActivity.this, datosBusqMed);
+                            adaptador = new AdaptBusqMedidor(RegEquipoActivity.this, datosBusqMed);
 
                             lstBusqMedidores.setAdapter(adaptador);
 
@@ -2611,7 +3079,7 @@ public class OtRouteActivity extends AppCompatActivity {
                                 StringBuilder outStr;
                                 Util oUtil = new Util();
                                 outStr = oUtil.getStringByAttrClass(0, fNis.getAttributes());
-                                GisTextView tv = new GisTextView(OtRouteActivity.this);
+                                GisTextView tv = new GisTextView(RegEquipoActivity.this);
                                 tv.setText(outStr.toString());
                                 tv.setPoint((Point) fNis.getGeometry());
                                 tv.setTextColor(Color.WHITE);
@@ -2666,7 +3134,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
 
                             AdaptBusqEquipo adaptador;
-                            adaptador = new AdaptBusqEquipo(OtRouteActivity.this, datosBusqEquipo);
+                            adaptador = new AdaptBusqEquipo(RegEquipoActivity.this, datosBusqEquipo);
 
                             lstBusqEquipos.setAdapter(adaptador);
 
@@ -2688,7 +3156,7 @@ public class OtRouteActivity extends AppCompatActivity {
                                     StringBuilder outStr;
                                     Util oUtil = new Util();
                                     outStr = oUtil.getStringByAttrClass(SpiBusqueda, fEquipo.getAttributes());
-                                    GisTextView tv = new GisTextView(OtRouteActivity.this);
+                                    GisTextView tv = new GisTextView(RegEquipoActivity.this);
 
                                     if (fEquipo.getGeometry().getClass() != Point.class) {
                                         if (fEquipo.getGeometry().getClass() == Polyline.class) {
@@ -2774,7 +3242,7 @@ public class OtRouteActivity extends AppCompatActivity {
                             StringBuilder outStr;
                             Util oUtil = new Util();
                             outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
-                            GisTextView tv = new GisTextView(OtRouteActivity.this);
+                            GisTextView tv = new GisTextView(RegEquipoActivity.this);
                             tv.setText(outStr.toString());
                             tv.setPoint((Point) feature.getGeometry());
                             tv.setTextColor(Color.WHITE);
@@ -2802,7 +3270,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
                 myMapView.zoomin(true);
             } else {
-                Toast.makeText(OtRouteActivity.this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
             }
             progress.dismiss();
         }
@@ -2869,7 +3337,7 @@ public class OtRouteActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = ProgressDialog.show(OtRouteActivity.this, "Identificando sector", "Espere un momento ...");
+            progress = ProgressDialog.show(RegEquipoActivity.this, "Identificando sector", "Espere un momento ...");
             progress.setCancelable(true);
             progress.setCanceledOnTouchOutside(true);
         }
@@ -2929,9 +3397,10 @@ public class OtRouteActivity extends AppCompatActivity {
 
                         if (!bAsoc) {
                             StringBuilder outStr;
+                            Log.w("identifyResult layer " + identifyResult.getLayerName() + " " + identifyResult.getLayerId(), " size Attr: " + identifyResult.getAttributes().size());
                             outStr = oUtil.getStringByClassAttr(identifyResult);
 
-                            GisTextView tv = new GisTextView(OtRouteActivity.this);
+                            GisTextView tv = new GisTextView(RegEquipoActivity.this);
                             tv.setText(outStr.toString());
                             tv.setTextColor(Color.WHITE);
 
@@ -2963,7 +3432,7 @@ public class OtRouteActivity extends AppCompatActivity {
                             Map<String, Object> attr = identifyResult.getAttributes();
                             CalloutTvClass oCall = oUtil.getCalloutValues(attr);
 
-                            GisTextView tv = new GisTextView(OtRouteActivity.this);
+                            GisTextView tv = new GisTextView(RegEquipoActivity.this);
                             tv.setText(oCall.getVista());
                             tv.setHint(oCall.getValor());
                             tv.setIdObjeto(oCall.getIdObjeto());
@@ -3025,7 +3494,7 @@ public class OtRouteActivity extends AppCompatActivity {
                     bMapTap = false;
                     myMapView.getCallout().hide();
                     oLySelectAsoc.clearSelection();
-                    dialogCrear.show();
+                    dialogCur.show();
 
                     if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                         myMapView.removeLayer(mSeleccionLayer);
@@ -3033,7 +3502,7 @@ public class OtRouteActivity extends AppCompatActivity {
                     nIndentify = 0;
                 }
             } else {
-                Toast.makeText(OtRouteActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegEquipoActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
             }
 
             progress.dismiss();
@@ -3128,116 +3597,13 @@ public class OtRouteActivity extends AppCompatActivity {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+
                 }
                 break;
             }
 
             // other 'case' lines to check for other
             // permissions this app might request
-        }
-    }
-
-    private class AsyncQueryUbic extends AsyncTask<String, Void, FeatureResult> {
-
-        @Override
-        protected void onPreExecute() {
-            progress = new ProgressDialog(OtRouteActivity.this);
-
-            progress = ProgressDialog.show(OtRouteActivity.this, "",
-                    "Ubicando OT...");
-        }
-
-        @Override
-        protected FeatureResult doInBackground(String... params) {
-
-            String whereClause, sUrl;
-
-            if (sCapa.equals("Micromedicion")) {
-                whereClause = "OBJECTID = " + params[0];
-                sUrl = LyAddMicroOt.getUrl();
-            } else if (sCapa.equals("Denuncio")) {
-                whereClause = "OBJECTID = " + params[0];
-                sUrl = LyAddDenuncioOt.getUrl();
-            } else {
-                whereClause = "ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID = " + params[0];
-                sUrl = LyOTOPEN.getUrl().concat("/0");
-            }
-
-            //whereClause = "OBJECTID = " + params[0];
-            QueryParameters myParameters = new QueryParameters();
-            myParameters.setWhere(whereClause);
-            myParameters.setReturnGeometry(true);
-            String[] outfields = new String[]{"*"};
-            myParameters.setOutFields(outfields);
-
-            FeatureResult results;
-            try {
-                QueryTask queryTask = new QueryTask(sUrl, credenciales);
-                results = queryTask.execute(myParameters);
-                return results;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        protected void onPostExecute(FeatureResult results) {
-
-            if (results != null && results.featureCount() > 0) {
-
-                for (Object element : results) {
-                    if (element instanceof Feature) {
-                        Feature feature = (Feature) element;
-
-                        myMapView.setExtent(feature.getGeometry(), 0, true);
-
-                        Callout mapCallout = myMapView.getCallout();
-                        fabNavRoute.setVisibility(View.GONE);
-                        mapCallout.hide();
-
-                        StringBuilder outStr;
-                        Util oUtil = new Util(sCapa);
-                        outStr = oUtil.getStringByAttrClass(-3, feature.getAttributes());
-
-                        GisTextView tv = new GisTextView(OtRouteActivity.this);
-                        tv.setText(outStr.toString());
-                        tv.setPoint((Point) feature.getGeometry());
-                        tv.setTextColor(Color.WHITE);
-
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                myMapView.getCallout().hide();
-                                fabNavRoute.setVisibility(View.GONE);
-                            }
-                        });
-
-                        mapCallout.setOffset(0, -3);
-
-                        if (tv.getPoint() != null)
-                            mapCallout.setCoordinates(tv.getPoint());
-                        else
-                            Toast.makeText(getApplicationContext(), "OT sin geoposición", Toast.LENGTH_SHORT).show();
-
-                        mapCallout.setMaxHeight(100);
-                        mapCallout.setMaxWidth(400);
-                        mapCallout.setStyle(R.xml.mycalloutprefs);
-                        mapCallout.setContent(tv);
-
-                        mapCallout.show();
-                        fabNavRoute.setVisibility(View.VISIBLE);
-
-                        //set true para probar update
-                        setOtLeida(feature);
-                    }
-                }
-
-                progress.dismiss();
-
-            } else {
-                Toast.makeText(getApplicationContext(), "No se ha encontrado la OT", Toast.LENGTH_LONG).show();
-                progress.dismiss();
-            }
         }
     }
 }

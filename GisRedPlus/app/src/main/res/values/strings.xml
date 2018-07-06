@@ -73,7 +73,8 @@
     <string name="srv_Repartos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
     <!-- OT Inspecciones -->
     <string name="srv_micromed_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
-    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
+    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/3</string>
+    <string name="srv_denuncio_web_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
     <string name="srv_denuncio_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
     <!-- Mantenciones Catastro -->
     <string name="srv_MantCatastro">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_INSPECCION/FeatureServer/3</string>

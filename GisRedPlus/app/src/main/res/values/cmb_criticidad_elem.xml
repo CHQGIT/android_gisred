@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="crit_ap">
+        <item>No aplica</item>
+    </string-array>
+    <string-array name="crit_gen">
+        <item>Reemplazo inmediato</item>
+        <item>Programar</item>
+        <item>Mantener en observaciones</item>
+    </string-array>
+</resources>

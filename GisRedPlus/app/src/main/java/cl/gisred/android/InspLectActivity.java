@@ -237,15 +237,15 @@ public class InspLectActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View item = inflater.inflate(R.layout.list_item_insp_lect, null);
 
-            TextView lblTitulo = (TextView)item.findViewById(R.id.LblTitulo);
+            TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
             lblTitulo.setText("ID: " + datos[position].getObjectId());
 
             datos[position] = getDataByState(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblEstDenuncio);
+            TextView lblDescripcion = (TextView) item.findViewById(R.id.LblEstDenuncio);
             lblDescripcion.setText("Estado denuncio: " + datos[position].getEstado());
 
-            TextView lblOt = (TextView)item.findViewById(R.id.LblOT);
+            TextView lblOt = (TextView) item.findViewById(R.id.LblOT);
             lblOt.setText("OT: " + datos[position].getOt());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);

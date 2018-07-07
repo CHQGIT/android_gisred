@@ -200,7 +200,7 @@ public class PhotoUtils {
         if (sample <= 0) {
             sample = 1;
         }
-        options.inSampleSize = (int) sample;
+        options.inSampleSize = sample;
         options.inPurgeable = true;
         try {
             InputStream is;

@@ -157,8 +157,7 @@ public class EmpActivity extends AppCompatActivity {
             SharedPreferences oPref = getSharedPreferences("GisRedPrefs", Context.MODE_PRIVATE);
             if (!oPref.contains("news")) { bAbrir = true; }
             else {
-                if (oPref.getBoolean("news", true)) bAbrir = true;
-                else bAbrir = false;
+                bAbrir = oPref.getBoolean("news", true);
             }
 
             if (bAbrir) {
@@ -214,12 +213,12 @@ public class EmpActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT < 21) {
             v = inflater.inflate(R.layout.form_news, null);
-            ImageView imgAbout1 = (ImageView) v.findViewById(R.id.imgAbout1);
+            ImageView imgAbout1 = (ImageButton) v.findViewById(R.id.imgAbout1);
             imgAbout1.setImageResource(R.drawable.img_about_old);
         } else {
             v = inflater.inflate(R.layout.form_news_card, null);
-            ImageView imgAbout1 = (ImageView) v.findViewById(R.id.imgAbout1);
-            ImageView imgAbout2 = (ImageView) v.findViewById(R.id.imgAbout2);
+            ImageView imgAbout1 = (ImageButton) v.findViewById(R.id.imgAbout1);
+            ImageView imgAbout2 = (ImageButton) v.findViewById(R.id.imgAbout2);
 
             if (widthSize <= 540){
                 imgAbout1.setImageResource(R.drawable.img_nov_sma);

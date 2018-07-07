@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISFeatureLayer oLayerAccess;
 
     // Variables de acceso
-    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS"));
+    ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "OT", "LECTORES", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "MANTENIMIENTO"));
     // ArrayList arrayModulos = new ArrayList(Arrays.asList("STANDARD", "INGRESO_CLIENTES", "PROTOCOLO_INSPECCION", "LECTORES", "TELEMEDIDA", "CATASTRO_AP", "INTERRUPCIONES", "MICROMEDICION", "REPARTOS", "ALUMBRADO_PUBLICO", "EH&S"));
 
     public void setCredenciales(String usuario , String password) {
@@ -147,11 +147,14 @@ public class MainActivity extends AppCompatActivity {
                     } else if (datos[position].getTitulo().contains("REPARTOS")){
                         oIntent = new Intent(MainActivity.this, RepartoActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
-                    } else if (datos[position].getTitulo().contains("TELEMEDIDA")){
-                        oIntent = new Intent(MainActivity.this, TelemedidaActivity.class);
-                        oBundle.putStringArrayList("modulos", aModulos);
                     } else if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(MainActivity.this, CatastroActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MEDIDORES")){
+                        oIntent = new Intent(MainActivity.this, MedidorActivity.class);
+                        oBundle.putStringArrayList("modulos", aModulos);
+                    } else if (datos[position].getTitulo().contains("MANTENIMIENTO")){
+                        oIntent = new Intent(MainActivity.this, FormMantActivity.class);
                         oBundle.putStringArrayList("modulos", aModulos);
                     } else
                         oIntent = new Intent(MainActivity.this, StandardActivity.class);
@@ -208,13 +211,13 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View item = inflater.inflate(R.layout.list_item_menu, null);
 
-            TextView lblTitulo = (TextView)item.findViewById(R.id.LblTitulo);
+            TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
             lblTitulo.setText(datos[position].getTitulo());
 
             item.setEnabled(datos[position].getEstado());
             datos[position] = getDataByModule(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblDescripcion);
+            TextView lblDescripcion = (TextView) item.findViewById(R.id.LblDescripcion);
             lblDescripcion.setText(datos[position].getDescripcion());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);
@@ -257,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (dato.getTitulo().contains("REPARTOS")) {
                 dato.setDescripcion("Ingreso de correspondencia repartida");
                 dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_telemedida : R.mipmap.ic_menu_telemedida_g);
+            } else if (dato.getTitulo().contains("MANTENIMIENTO")) {
+                dato.setDescripcion("Ingreso de registros de mantención");
+                dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             }
             return dato;
         }

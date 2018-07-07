@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="elementos_postes">
+        <item>Poste</item>
+        <item>Cruceta</item>
+        <item>Aislador</item>
+        <item>Conductor</item>
+        <item>Conector</item>
+        <item>Diagonal</item>
+        <item>CLBs</item>
+        <item>HLBs</item>
+        <item>PPFs</item>
+        <item>Pararrayos</item>
+        <item>Reguladores</item>
+        <item>Banco de Condensadores</item>
+        <item>Reconectador</item>
+        <item>Transformador</item>
+        <item>Desconectador Fusible BT</item>
+        <item>Tierras Protección</item>
+        <item>Tierras Servicio</item>
+        <item>Tirante</item>
+        <item>Espaciadores</item>
+        <item>Equipo de medida</item>
+        <item>AP</item>
+        <item>Letreros</item>
+        <item>Rótulos</item>
+        <item>Señalética</item>
+        <item>Apoyos</item>
+        <item>Publicidad</item>
+    </string-array>
+    <string-array name="elementos_camaras">
+        <item>Camara</item>
+        <item>Barras Elastimold</item>
+        <item>Barras Chardon</item>
+        <item>SF6</item>
+        <item>MVI</item>
+        <item>Módulo T</item>
+    </string-array>
+</resources>

@@ -36,7 +36,7 @@ public class FormActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES", "INSPECCION_MANTENIMIENTO_CORRECTIVO", "INSPECCION_CONSTRUCCION_EMPALMES", "INSPECCION_TELEMEDIDA", "INSPECCION_SAT"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("INSPECCION_MASIVA", "INSPECCION_AP", "INSPECCION_CLIENTES_ESPECIALES", "INSPECCION_MANTENIMIENTO_CORRECTIVO", "INSPECCION_CONSTRUCCION_EMPALMES", "INSPECCION_TELEMEDIDA"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -125,13 +125,13 @@ public class FormActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View item = inflater.inflate(R.layout.list_item_menu, null);
 
-            TextView lblTitulo = (TextView)item.findViewById(R.id.LblTitulo);
+            TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
             lblTitulo.setText(datos[position].getTitulo());
 
             item.setEnabled(datos[position].getEstado());
             datos[position] = getDataByModule(datos[position]);
 
-            TextView lblDescripcion = (TextView)item.findViewById(R.id.LblDescripcion);
+            TextView lblDescripcion = (TextView) item.findViewById(R.id.LblDescripcion);
             lblDescripcion.setText(datos[position].getDescripcion());
 
             ImageView oImage = (ImageView) item.findViewById(R.id.imageMenu);
@@ -146,7 +146,6 @@ public class FormActivity extends AppCompatActivity {
                 //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             } else if (dato.getTitulo().contains("AP")) {
                 dato.setDescripcion("Formulario de inspección AP");
-                //dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_ing_clientes : R.mipmap.ic_menu_ing_clientes_g);
             } else if (dato.getTitulo().contains("ESPECIALES")) {
                 dato.setDescripcion("Formulario de inspección de clientes especiales");
             } else if (dato.getTitulo().contains("CORRECTIVO")) {
@@ -155,8 +154,6 @@ public class FormActivity extends AppCompatActivity {
                 dato.setDescripcion("Formulario de inspección y construcción de empalmes");
             } else if (dato.getTitulo().contains("TELEMEDIDA")) {
                 dato.setDescripcion("Formulario de inspección proyecto telemedida");
-            } else if (dato.getTitulo().contains("SAT")) {
-                dato.setDescripcion("Formulario de inspección SAT");
             }
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);
             return dato;

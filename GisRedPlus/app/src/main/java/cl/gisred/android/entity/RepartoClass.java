@@ -5,7 +5,7 @@ package cl.gisred.android.entity;
  */
 public class RepartoClass {
 
-    private static int length_code = 34;
+    public static int length_code = 34;
     private static int length_req = 6;
 
     private int id;
@@ -42,9 +42,7 @@ public class RepartoClass {
             int fx = cod.length() - length_code + length_req;
             String sNis = cod.substring(0, fx);
 
-            if (Integer.valueOf(sNis) != null && Integer.valueOf(sNis) > 0) {
-                return true;
-            } else return false;
+            return Integer.valueOf(sNis) != null && Integer.valueOf(sNis) > 0;
         }
     }
 

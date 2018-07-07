@@ -49,10 +49,12 @@ import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
+import com.esri.core.io.EsriSecurityException;
 import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.FeatureEditResult;
 import com.esri.core.map.Graphic;
+import com.esri.core.map.TimeExtent;
 import com.esri.core.runtime.LicenseLevel;
 import com.esri.core.runtime.LicenseResult;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -65,6 +67,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -159,6 +162,16 @@ public class RepartoActivity extends AppCompatActivity {
         modulo = bundle.getString("modulo");
         empresa = bundle.getString("empresa");
 
+        //Crea un intervalo entre primer dia del mes y dia actual
+        Calendar oCalendarStart = Calendar.getInstance();
+        oCalendarStart.set(Calendar.DAY_OF_MONTH, 1);
+        oCalendarStart.set(Calendar.HOUR, 6);
+
+        Calendar oCalendarEnd = Calendar.getInstance();
+        oCalendarEnd.set(Calendar.HOUR, 23);
+
+        TimeExtent oTimeInterval = new TimeExtent(oCalendarStart, oCalendarEnd);
+
         //Set Credenciales
         setCredenciales(usuar, passw);
 
@@ -174,6 +187,7 @@ public class RepartoActivity extends AppCompatActivity {
 
         LyReparto = new ArcGISFeatureLayer(srv_reparto, ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
         LyReparto.setDefinitionExpression(String.format("empresa = '%s'", empresa));
+        LyReparto.setTimeInterval(oTimeInterval);
         LyReparto.setMinScale(8000);
         LyReparto.setVisible(true);
 
@@ -201,7 +215,7 @@ public class RepartoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().contains("\n")) {
+                if (s.toString().contains("\n") || s.toString().length() == RepartoClass.length_code) {
                     guardarRegistro(s.toString().trim());
                     s.clear();
                 }
@@ -227,6 +241,38 @@ public class RepartoActivity extends AppCompatActivity {
                     Point oPoint = ldm.getPoint();
                     myMapView.centerAndZoom(oPoint.getX(), oPoint.getY(), 0.003f);
                     myMapView.zoomin(true);
+                }
+
+                if (status == STATUS.LAYER_LOADING_FAILED) {
+                    // Check if a layer is failed to be loaded due to security
+                    if ((status.getError()) instanceof EsriSecurityException) {
+                        EsriSecurityException securityEx = (EsriSecurityException) status
+                                .getError();
+                        if (securityEx.getCode() == EsriSecurityException.AUTHENTICATION_FAILED)
+                            Toast.makeText(myMapView.getContext(),
+                                    "Su cuenta tiene permisos limitados, contacte con el administrador para solicitar permisos faltantes",
+                                    Toast.LENGTH_SHORT).show();
+                        else if (securityEx.getCode() == EsriSecurityException.TOKEN_INVALID)
+                            Toast.makeText(myMapView.getContext(),
+                                    "Token inválido! Vuelva a iniciar sesión!",
+                                    Toast.LENGTH_SHORT).show();
+                        else if (securityEx.getCode() == EsriSecurityException.TOKEN_SERVICE_NOT_FOUND)
+                            Toast.makeText(myMapView.getContext(),
+                                    "Servicio token no encontrado! Reintente iniciar sesión!",
+                                    Toast.LENGTH_SHORT).show();
+                        else if (securityEx.getCode() == EsriSecurityException.UNTRUSTED_SERVER_CERTIFICATE)
+                            Toast.makeText(myMapView.getContext(),
+                                    "Untrusted Host! Resubmit!",
+                                    Toast.LENGTH_SHORT).show();
+
+                        if (o instanceof ArcGISFeatureLayer) {
+                            // Set user credential through username and password
+                            UserCredentials creds = new UserCredentials();
+                            creds.setUserAccount(usuar, passw);
+
+                            LyMapabase.reinitializeLayer(creds);
+                        }
+                    }
                 }
             }
         });

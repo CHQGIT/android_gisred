@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'gisred'
             keyPassword 'Abril2016'
-            storeFile file('C:/Users/cramiret/Documents/GitHub/android_gisred/storeKeyGisred.jks')
+            storeFile file('StudioProjects/android_gisred/storeKeyGisred.jks')
             storePassword 'Abril2016'
         }
     }
@@ -15,8 +15,8 @@ android {
         applicationId "cl.gisred.android"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 37
-        versionName "1.4.2"
+        versionCode 40
+        versionName "1.4.9"
         signingConfig signingConfigs.config
     }
     packagingOptions {

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="diagnostic_cam">
+        <item>Fierros a la vista</item>
+        <item>Fisurada</item>
+        <item>Quebrada</item>
+        <item>Inundada</item>
+    </string-array>
+    <string-array name="diagnostic_gen_cam">
+        <item>Con temperatura</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Sucio</item>
+    </string-array>
+    <string-array name="diagnostic_pos">
+        <item>Fierros a la vista</item>
+        <item>Fisurado</item>
+        <item>Quebrado</item>
+        <item>En terreno particular</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+        <item>Torcido</item>
+        <item>Oxidado</item>
+        <item>Suelto</item>
+        <item>Ilegible</item>
+        <item>Cercano a edificación</item>
+        <item>Con proyección de árboles</item>
+        <item>Con contacto de vegetación</item>
+    </string-array>
+    <string-array name="diagnostic_cruceta_pos">
+        <item>Con descargas</item>
+        <item>Quemada</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Fuera de norma</item>
+        <item>Cercano a edificación</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_aislador_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Sucio</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_conductor_pos">
+        <item>Con descargas</item>
+        <item>Cortado</item>
+        <item>Hebras cortadas</item>
+        <item>Destemplado</item>
+        <item>Baja altura</item>
+        <item>Con proyección de árboles</item>
+        <item>Con contacto de vegetación</item>
+        <item>Objetos en la red</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_conector_pos">
+        <item>Torcido</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Suelto</item>
+        <item>Fuera de norma</item>
+    </string-array>
+    <string-array name="diagnostic_diagonal_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Oxidado</item>
+        <item>Torcido</item>
+        <item>Cortado</item>
+        <item>Suelto</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_lbptrayo_pos">
+        <item>En terreno particular</item>
+        <item>Con descargas</item>
+        <item>Fuera de norma</item>
+        <item>Con contacto de vegetación</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_regulbcondensa_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Pérdida de aceite</item>
+        <item>Con contacto de vegetación</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_reconect_pos">
+        <item>Con descargas</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Suelto</item>
+        <item>Pérdida de aceite</item>
+        <item>Con contacto de vegetación</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_transform_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Pérdida de aceite</item>
+        <item>Con contacto de vegetación</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_descfusbt_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Suelto</item>
+        <item>Con contacto de vegetación</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_tierras_pos">
+        <item>Cortado</item>
+        <item>Hebras cortadas</item>
+        <item>Suelto</item>
+        <item>Sin protector</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_tirante_pos">
+        <item>Torcido</item>
+        <item>Cortado</item>
+        <item>Suelto</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_espacia_pos">
+        <item>Quebrado</item>
+        <item>Torcido</item>
+        <item>Oxidado</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_equimed_pos">
+        <item>Quebrado</item>
+        <item>Con descargas</item>
+        <item>Oxidado</item>
+        <item>Sucio</item>
+        <item>Fuera de norma</item>
+        <item>En desuso</item>
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_ap_pos">
+        <item>Apagado</item>
+        <item>Encendido con luz día</item>
+    </string-array>
+    <string-array name="diagnostic_letrotulo_pos">
+        <item>Ilegible</item>
+        <item>Torcido</item>
+    </string-array>
+    <string-array name="diagnostic_senaletic_pos">
+        <item>Inexistente</item>
+    </string-array>
+    <string-array name="diagnostic_apoyo_pos">
+        <item>Cortado</item>
+        <item>Baja altura</item>
+        <item>Suelto</item>
+        <item>En desuso</item>
+    </string-array>
+    <string-array name="diagnostic_publici_pos">
+        <item>Objetos en la red</item>
+        <item>En desuso</item>
+    </string-array>
+</resources>

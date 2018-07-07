@@ -69,6 +69,11 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".FormMantActivity"
+            android:label="Menú Mantenimiento"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".StandardActivity"
             android:label="Standard"
             android:parentActivityName=".MainActivity"
@@ -82,8 +87,7 @@
             android:name=".InspActivity"
             android:label="Inspecciones"
             android:parentActivityName=".FormActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".InspLectActivity"
             android:label="Inspección Lecturas"
@@ -102,11 +106,6 @@
         <activity
             android:name=".MicroMedidaActivity"
             android:label="Micromedición"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".TelemedidaActivity"
-            android:label="Telemedidas"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="locked" />
         <activity
@@ -134,18 +133,24 @@
             android:label="Repartos"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="locked" />
-
+        <activity
+            android:name=".MedidorActivity"
+            android:label="Ingreso Medidores"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".MantCatastroActivity"
+            android:label="Ingreso Registro Catastro"
+            android:parentActivityName=".FormMantActivity"
+            android:screenOrientation="locked" />
         <service
             android:name=".RepartoService"
             android:enabled="true"
             android:exported="true" />
-
         <receiver
             android:name=".RepartoReceiver"
             android:enabled="true"
             android:exported="true" />
-
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="cl.gisred.android"

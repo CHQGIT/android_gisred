@@ -367,16 +367,15 @@ public class OtListActivity extends AppCompatActivity {
                             String sOt = "";
                             int iSec = 0;
 
-                            if (feature.getAttributes().containsKey("estado_ot")) {
+                            // Logica temporal para definir tipos de inspecciones,
+                            // luego habrá que incluir algun campo o usar referencia
+                            if (feature.getAttributes().containsKey("tipo_denuncio")) {
+                                sTipo = "WebDenuncio";
+                            } else if (feature.getAttributes().containsKey("estado_ot")) {
                                 sTipo = "Micromedicion";
                             } else if (feature.getAttributes().containsKey("estado_open")) {
                                 sTipo = "Via Open";
                             } else {
-                                //03-07-2018
-                                //TODO: Discriminar si es denuncio o web-denuncio
-                                //usar algun flag o verificar si hay atribuos que los diferencien
-                                //EJEMPLO
-                                //sTipo = (isDenuncio)? "Denuncio" : "WebDenuncio";
                                 sTipo = "Denuncio";
                             }
 

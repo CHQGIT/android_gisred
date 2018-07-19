@@ -226,7 +226,7 @@ public class OtListActivity extends AppCompatActivity {
         } else if (oDato.getTipo().equals("Denuncio")) {
             LySelectOt = LyAddDenuncioOt;
         } else if (oDato.getTipo().equals("WebDenuncio")) {
-            LySelectOt = LyAddDenuncioOt;
+            LySelectOt = LyAddDenuncioWebOt;
         } else {
             LySelectOt = LyAddOpenOt;
         }

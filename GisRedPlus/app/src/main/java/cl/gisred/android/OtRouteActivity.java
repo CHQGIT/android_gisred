@@ -414,7 +414,7 @@ public class OtRouteActivity extends AppCompatActivity {
         myMapView.addLayer(LyAddMicroOt, 23);
         myMapView.addLayer(LyAddOpenOt, 24);
         myMapView.addLayer(LyAddDenuncioOt, 25);
-        myMapView.addLayer(LyAddDenuncioOt, 26);
+        myMapView.addLayer(LyAddWebDenuncioOt, 26);
         myMapView.addLayer(LyAddPoste, 27);
         myMapView.addLayer(LyAddDireccion, 28);
 
@@ -847,6 +847,9 @@ public class OtRouteActivity extends AppCompatActivity {
             updMap.put("OBJECTID", objectMap.get("OBJECTID"));
         } else if (sCapa.equals("Denuncio")) {
             oLyAddOt = LyAddDenuncioOt;
+            updMap.put("OBJECTID", objectMap.get("OBJECTID"));
+        } else if (sCapa.equals("WebDenuncio")) {
+            oLyAddOt = LyAddWebDenuncioOt;
             updMap.put("OBJECTID", objectMap.get("OBJECTID"));
         } else {
             oLyAddOt = LyAddOpenOt;
@@ -3158,6 +3161,9 @@ public class OtRouteActivity extends AppCompatActivity {
             } else if (sCapa.equals("Denuncio")) {
                 whereClause = "OBJECTID = " + params[0];
                 sUrl = LyAddDenuncioOt.getUrl();
+            } else if (sCapa.equals("WebDenuncio")) {
+                whereClause = "OBJECTID = " + params[0];
+                sUrl = LyAddWebDenuncioOt.getUrl();
             } else {
                 whereClause = "ARCGIS.DBO.INSPECCIONES_OPEN.OBJECTID = " + params[0];
                 sUrl = LyOTOPEN.getUrl().concat("/0");

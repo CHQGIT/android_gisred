@@ -444,7 +444,7 @@ public class RegEquipoActivity extends AppCompatActivity {
                 }
             });
 
-            FloatingActionButton oFabDenuncio = (FloatingActionButton) findViewById(R.id.action_denuncio);
+            /*FloatingActionButton oFabDenuncio = (FloatingActionButton) findViewById(R.id.action_denuncio);
             oFabDenuncio.setIconDrawable(drawNo);
             oFabDenuncio.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -453,7 +453,7 @@ public class RegEquipoActivity extends AppCompatActivity {
                     Snackbar.make(v, "No tiene acceso a ésta opción", Snackbar.LENGTH_SHORT).show();
                     menuMicroActions.collapse();
                 }
-            });
+            });*/
 
             if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
 
@@ -883,6 +883,8 @@ public class RegEquipoActivity extends AppCompatActivity {
     }
 
     private void cerrarFormLimit(boolean bSave, View v) {
+        // TODO Usar Layer Indicada
+        bSave = false;
         if (bSave) {
 
             final AtomicReference<String> resp = new AtomicReference<>("");
@@ -974,6 +976,8 @@ public class RegEquipoActivity extends AppCompatActivity {
     }
 
     private void cerrarFormCrear(boolean bSave, View v){
+        // TODO Usar Layer Indicada
+        bSave = false;
         if (bSave) {
 
             final AtomicReference<String> resp = new AtomicReference<>("");
@@ -1829,7 +1833,7 @@ public class RegEquipoActivity extends AppCompatActivity {
         formCrear.setContentView(v);
         idResLayoutSelect = idRes;
 
-        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        /*ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
         btnIdentPoste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1864,7 +1868,7 @@ public class RegEquipoActivity extends AppCompatActivity {
                 bMapTap = true;
                 formCrear.hide();
             }
-        });
+        });*/
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -1882,8 +1886,8 @@ public class RegEquipoActivity extends AppCompatActivity {
             }
         });
 
-        arrayTouchs = new ArrayList<>();
-        setEnabledDialog(false);
+        /*arrayTouchs = new ArrayList<>();
+        setEnabledDialog(false);*/
 
         formCrear.show();
         dialogCur = formCrear;

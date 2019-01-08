@@ -68,6 +68,7 @@ public class OtListActivity extends AppCompatActivity {
     ArcGISFeatureLayer LyAddMicroOt;
     ArcGISFeatureLayer LyAddOpenOt;
     ArcGISFeatureLayer LyAddDenuncioOt;
+    ArcGISFeatureLayer LyAddDenuncioWebOt;
 
     private ArcGISFeatureLayer LySelectOt;
 
@@ -141,6 +142,7 @@ public class OtListActivity extends AppCompatActivity {
         LyAddMicroOt = new ArcGISFeatureLayer(getResources().getString(R.string.srv_micromed_OT), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
         LyAddOpenOt = new ArcGISFeatureLayer(getResources().getString(R.string.srv_viaopen_OT), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
         LyAddDenuncioOt = new ArcGISFeatureLayer(getResources().getString(R.string.srv_denuncio_OT), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
+        LyAddDenuncioWebOt = new ArcGISFeatureLayer(getResources().getString(R.string.srv_denuncio_web_OT), ArcGISFeatureLayer.MODE.ONDEMAND, credenciales);
 
         lstOpciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -223,6 +225,8 @@ public class OtListActivity extends AppCompatActivity {
             LySelectOt = LyAddMicroOt;
         } else if (oDato.getTipo().equals("Denuncio")) {
             LySelectOt = LyAddDenuncioOt;
+        } else if (oDato.getTipo().equals("WebDenuncio")) {
+            LySelectOt = LyAddDenuncioWebOt;
         } else {
             LySelectOt = LyAddOpenOt;
         }
@@ -306,6 +310,7 @@ public class OtListActivity extends AppCompatActivity {
         String sCapa;
         FeatureResult oResultOpen;
         FeatureResult oResultDenuncio;
+        FeatureResult oResultDenuncioWeb;
         ArrayList<FeatureResult> aFeaturesOT;
 
         @Override
@@ -327,11 +332,13 @@ public class OtListActivity extends AppCompatActivity {
 
                 results = getFeaturesOT(params[0], "0");
                 oResultDenuncio = getFeaturesOT(params[0], "1");
-                oResultOpen = getFeaturesOT(params[0], "2");
+                oResultDenuncioWeb = getFeaturesOT(params[0], "2");
+                oResultOpen = getFeaturesOT(params[0], "3");
 
                 aFeaturesOT = new ArrayList<>();
                 aFeaturesOT.add(results);
                 aFeaturesOT.add(oResultDenuncio);
+                aFeaturesOT.add(oResultDenuncioWeb);
                 aFeaturesOT.add(oResultOpen);
 
                 return results;
@@ -360,7 +367,11 @@ public class OtListActivity extends AppCompatActivity {
                             String sOt = "";
                             int iSec = 0;
 
-                            if (feature.getAttributes().containsKey("estado_ot")) {
+                            // Logica temporal para definir tipos de inspecciones,
+                            // luego habrá que incluir algun campo o usar referencia
+                            if (feature.getAttributes().containsKey("tipo_denuncio")) {
+                                sTipo = "WebDenuncio";
+                            } else if (feature.getAttributes().containsKey("estado_ot")) {
                                 sTipo = "Micromedicion";
                             } else if (feature.getAttributes().containsKey("estado_open")) {
                                 sTipo = "Via Open";
@@ -428,8 +439,10 @@ public class OtListActivity extends AppCompatActivity {
 
             if (sCapa.equals("0"))
                 queryTask = new QueryTask(getResources().getString(R.string.srv_micromed_OT), credenciales);
-            else if (sCapa.equals("2"))
+            else if (sCapa.equals("3"))
                 queryTask = new QueryTask(getResources().getString(R.string.srv_viaopen_OT), credenciales);
+            else if (sCapa.equals("2"))
+                queryTask = new QueryTask(getResources().getString(R.string.srv_denuncio_web_OT), credenciales);
             else
                 queryTask = new QueryTask(getResources().getString(R.string.srv_denuncio_OT), credenciales);
 

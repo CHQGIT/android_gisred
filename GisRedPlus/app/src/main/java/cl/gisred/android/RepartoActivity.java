@@ -313,7 +313,7 @@ public class RepartoActivity extends AppCompatActivity {
     }
 
     private void guardarRegistro(String sValue) {
-        if (RepartoClass.valCode(sValue)) {
+        if (RepartoClass.valCode(sValue) && !sValue.isEmpty()) {
             if (insertData(sValue)){
                 iContRep++;
                 iContRepSesion++;
@@ -323,8 +323,11 @@ public class RepartoActivity extends AppCompatActivity {
                 Toast.makeText(RepartoActivity.this, "Error: registro " + sValue+ " no guardado", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(RepartoActivity.this, "Lectura con valor no válido: " + sValue, Toast.LENGTH_SHORT).show();
-            alertFail();
+            if (!sValue.isEmpty()){
+                Toast.makeText(RepartoActivity.this, "Lectura con valor no válido: " + sValue, Toast.LENGTH_SHORT).show();
+                alertFail();
+            }
+
         }
     }
 

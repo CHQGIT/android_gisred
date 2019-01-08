@@ -109,6 +109,11 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="locked" />
         <activity
+            android:name=".RegEquipoActivity"
+            android:label="Registro Equipos"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked" />
+        <activity
             android:name=".CatastroActivity"
             android:label="Catastro AP"
             android:parentActivityName=".MainActivity"

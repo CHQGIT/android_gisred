@@ -48,6 +48,7 @@
     <string name="url_Electrodependientes">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Test/ELECTRODEPENDIENTES/MapServer</string>
     <string name="url_viaOpen">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES_MAP/MapServer</string>
     <string name="url_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/MapServer</string>
+    <string name="url_RegEquipos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/CNR/Analizador_red/MapServer</string>
 
     <!-- Mapabase -->
     <string name="url_Mapabase">https://gisred.chilquinta.cl:6443/Arcgis/rest/services/MapaBase/MapServer</string>
@@ -73,10 +74,12 @@
     <string name="srv_Repartos">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/Reparto/FeatureServer/0</string>
     <!-- OT Inspecciones -->
     <string name="srv_micromed_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/0</string>
-    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
+    <string name="srv_viaopen_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/3</string>
+    <string name="srv_denuncio_web_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/2</string>
     <string name="srv_denuncio_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
     <!-- Mantenciones Catastro -->
     <string name="srv_MantCatastro">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_INSPECCION/FeatureServer/3</string>
+
 
     <string name="btnBuscarMap">Buscar</string>
 

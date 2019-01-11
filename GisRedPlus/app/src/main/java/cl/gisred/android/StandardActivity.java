@@ -738,8 +738,9 @@ public class StandardActivity extends AppCompatActivity {
             myMapView.enableWrapAround(wrapAround);
 
             layerDefs = new HashMap<>();
-            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
-            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+            //layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
+            layerDefs.put(0, "ARCGIS.DBO.ECSE.ano = 2018");
+            layerDefs.put(1, "ARCGIS.DBO.ECSE.ano = 2018");
 
             //Set eventos mapa
             singleTapOnMap();

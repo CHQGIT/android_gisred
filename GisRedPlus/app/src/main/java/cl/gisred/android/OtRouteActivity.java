@@ -1232,8 +1232,8 @@ public class OtRouteActivity extends AppCompatActivity {
             layerDefsOT = new HashMap<>();
             layerDefsOpen = new HashMap<>();
 
-            layerDefsECSE.put(0, "ARCGIS.DBO.ECSE.ano = " + Calendar.getInstance().get(Calendar.YEAR));
-            layerDefsECSE.put(1, "ARCGIS.DBO.ECSE.ano = 2016");
+            layerDefsECSE.put(0, "ARCGIS.DBO.ECSE.ano = 2018");
+            layerDefsECSE.put(1, "ARCGIS.DBO.ECSE.ano = 2018");
 
             layerDefsOT.put(0, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");
             layerDefsOT.put(1, "inspector = '" + Util.getUserWithoutDomain(usuar) + "'");

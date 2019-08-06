@@ -36,7 +36,7 @@ public class FormMantActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("MANTENIMIENTO_REGISTRO_CATASTRO"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("MANTENIMIENTO_REGISTRO_CATASTRO", "MANTENIMIENTO_DISTANCIA_APOYO"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -103,7 +103,13 @@ public class FormMantActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (view.isEnabled()){
-                    Intent oIntent = new Intent(FormMantActivity.this, MantCatastroActivity.class);
+                    Intent oIntent;
+
+                    if (datos[position].getTitulo().contains("CATASTRO")){
+                        oIntent = new Intent(FormMantActivity.this, MantCatastroActivity.class);
+                    } else {
+                        oIntent = new Intent(FormMantActivity.this, MantDistanciaApoyoActivity.class);
+                    }
 
                     bundle.putString("form", datos[position].getTitulo());
                     oIntent.putExtras(bundle);
@@ -143,6 +149,8 @@ public class FormMantActivity extends AppCompatActivity {
         private MenuClass getDataByModule(MenuClass dato) {
             if (dato.getTitulo().contains("CATASTRO")) {
                 dato.setDescripcion("Módulo Registro Catastros");
+            } else if (dato.getTitulo().contains("DISTANCIA")) {
+                dato.setDescripcion("Módulo Registro Distancia Apoyo");
             }
 
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);

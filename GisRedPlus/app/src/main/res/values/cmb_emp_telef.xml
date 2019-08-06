@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emp_telef">
+        <item>Inderterminado</item>
+        <item>Cable de la costa</item>
+        <item>VTR</item>
+        <item>Movistar</item>
+        <item>Entel</item>
+        <item>Claro</item>
+        <item>INET</item>
+        <item>GTD</item>
+    </string-array>
+</resources>

@@ -79,6 +79,7 @@
     <string name="srv_denuncio_OT">https://gisred.chilquinta.cl:6443/arcgis/rest/services/Mobile/INSPECCIONES/FeatureServer/1</string>
     <!-- Mantenciones Catastro -->
     <string name="srv_MantCatastro">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_INSPECCION/FeatureServer/3</string>
+    <string name="srv_MantApoyo">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_APOYOS/FeatureServer/0</string>
 
 
     <string name="btnBuscarMap">Buscar</string>
@@ -90,6 +91,21 @@
     <string name="verif_3">Instalación cliente cuenta con tierra protección</string>
     <string name="verif_4">Tablero cliente cuenta con diferencial</string>
     <string name="verif_5">Tablero cliente cuenta con protección automática</string>
+
+    <!-- Empresas telefonicas -->
+    <string name="emptel_0">Inderterminado</string>
+    <string name="emptel_1">Movistar - Cromado</string>
+    <string name="emptel_2">GTD - Rojo/Azul</string>
+    <string name="emptel_3">CMET - Salmon</string>
+    <string name="emptel_4">Entel - Amarillo</string>
+    <string name="emptel_5">Claro - Azul</string>
+    <string name="emptel_6">VTR - Blanco</string>
+    <string name="emptel_7">VTR - Verde</string>
+    <string name="emptel_8">CDLC - Blanco</string>
+    <string name="emptel_9">Luxor - Negro/Salmon</string>
+    <string name="emptel_10">INET - Negro/Blanco</string>
+    <string name="emptel_11">Armada - Calipso</string>
+    <string name="emptel_12">Municipal - Purpura</string>
 
     <!-- Control Preventivo -->
     <string name="eval_1">Contacto Eléctrico</string>

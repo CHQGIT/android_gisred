@@ -148,6 +148,11 @@
             android:label="Ingreso Registro Catastro"
             android:parentActivityName=".FormMantActivity"
             android:screenOrientation="locked" />
+        <activity
+            android:name=".MantDistanciaApoyoActivity"
+            android:label="Registro Distancia Apoyo"
+            android:parentActivityName=".FormMantActivity"
+            android:screenOrientation="locked" />
         <service
             android:name=".RepartoService"
             android:enabled="true"

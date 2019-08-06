@@ -817,6 +817,18 @@ public class Util {
         return center;
     }
 
+    public Point calculateCenterByPoints(Point oPointIni, Point oPointFin) {
+        Point center = new Point();
+        double valX, valY;
+
+        valX = (oPointIni.getX() + oPointFin.getX()) / 2;
+        valY = (oPointIni.getY() + oPointFin.getY()) / 2;
+
+        center.setXY(valX, valY);
+
+        return center;
+    }
+
     public static String getVersionPackage() {
         return String.format(" v%sc%s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
     }

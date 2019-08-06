@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="false">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <LinearLayout android:id="@+id/llDatosMantencion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS FORMULARIO"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="10dp"/>
+
+            <!--<android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="ltr"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Empresa Telefónica *"/>
+
+                <Spinner android:id="@+id/spinnerElement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+            </android.support.design.widget.CoordinatorLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <cl.gisred.android.classes.GisEditText
+                        android:id="@+id/txtPoste1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:hint="Poste 1 *" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnPoste1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_name"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <cl.gisred.android.classes.GisEditText
+                        android:id="@+id/txtPoste2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:hint="Poste 2 *" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnPoste2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_name"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <cl.gisred.android.classes.GisEditText
+                        android:id="@+id/txtStreet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textShortMessage"
+                        android:hint="Calle *" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnAsocCalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_name"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtAltura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="4"
+                    android:hint="Altura (metros) *"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtComentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Comentario"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Empresa telefónica"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"/>
+
+            <CheckBox android:id="@+id/chkVerif0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_0"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_1"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_2"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_3"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_4"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_5"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_6"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_7"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_8"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_9"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_10"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_11"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox android:id="@+id/chkVerif12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emptel_12"
+                android:elegantTextHeight="true"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+
+        <include android:id="@+id/actionDialog"
+            layout="@layout/botonera_form" />
+
+    </LinearLayout>
+
+</ScrollView>

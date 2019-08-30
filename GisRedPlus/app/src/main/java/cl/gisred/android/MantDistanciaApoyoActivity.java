@@ -541,8 +541,14 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
             if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                 EditText oText = (EditText) view;
+                TextInputLayout oTextInput;
 
-                TextInputLayout oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+                if (oText.getParentForAccessibility().getClass().equals(TextInputLayout.class)){
+                    oTextInput = (TextInputLayout) oText.getParentForAccessibility();
+                } else {
+                    oTextInput = (TextInputLayout) oText.getParent().getParent();
+                }
+
                 if (oTextInput.getHint() != null && oTextInput.getHint().toString().contains("*")) {
                     if (oText.getText().toString().trim().isEmpty()){
                         contRequeridos++;

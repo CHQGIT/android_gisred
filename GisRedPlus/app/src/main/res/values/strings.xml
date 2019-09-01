@@ -80,7 +80,7 @@
     <!-- Mantenciones Catastro -->
     <string name="srv_MantCatastro">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_INSPECCION/FeatureServer/3</string>
     <string name="srv_MantApoyo">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_APOYOS/FeatureServer/0</string>
-
+    <string name="srv_MantFase">https://gisred.chilquinta.cl:6443/arcgis/rest/services/MANTENIMIENTO/MANTENIMIENTO_APOYOS/FeatureServer/1</string>
 
     <string name="btnBuscarMap">Buscar</string>
 

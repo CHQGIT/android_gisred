@@ -36,7 +36,7 @@ public class FormMantActivity extends AppCompatActivity {
     UserCredentials credenciales;
 
     // Variables de acceso
-    ArrayList arrayForms = new ArrayList(Arrays.asList("MANTENIMIENTO_REGISTRO_CATASTRO", "MANTENIMIENTO_DISTANCIA_APOYO"));
+    ArrayList arrayForms = new ArrayList(Arrays.asList("MANTENIMIENTO_REGISTRO_CATASTRO", "MANTENIMIENTO_REGISTRO_FASE", "MANTENIMIENTO_DISTANCIA_APOYO"));
 
     public void setCredenciales(String usuario , String password) {
         credenciales = new UserCredentials();
@@ -107,6 +107,8 @@ public class FormMantActivity extends AppCompatActivity {
 
                     if (datos[position].getTitulo().contains("CATASTRO")){
                         oIntent = new Intent(FormMantActivity.this, MantCatastroActivity.class);
+                    } else if(datos[position].getTitulo().contains("FASE")){
+                        oIntent = new Intent(FormMantActivity.this, MantRegistroFaseActivity.class);
                     } else {
                         oIntent = new Intent(FormMantActivity.this, MantDistanciaApoyoActivity.class);
                     }
@@ -151,6 +153,8 @@ public class FormMantActivity extends AppCompatActivity {
                 dato.setDescripcion("Módulo Registro Catastros");
             } else if (dato.getTitulo().contains("DISTANCIA")) {
                 dato.setDescripcion("Módulo Registro Distancia Apoyo");
+            } else if (dato.getTitulo().contains("FASE")) {
+                dato.setDescripcion("Módulo Registro Fase");
             }
 
             dato.setRes((dato.getEstado()) ? R.mipmap.ic_menu_protocolo_inspeccion : R.mipmap.ic_menu_protocolo_inspeccion_g);

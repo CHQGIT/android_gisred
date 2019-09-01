@@ -34,7 +34,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -95,7 +94,7 @@ import cl.gisred.android.entity.BusqMedClass;
 import cl.gisred.android.entity.CalloutTvClass;
 import cl.gisred.android.util.Util;
 
-public class MantDistanciaApoyoActivity extends AppCompatActivity {
+public class MantRegistroFaseActivity extends AppCompatActivity {
 
     ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();
     MapView myMapView = null;
@@ -136,19 +135,18 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     public String[] arrayUserCosenza = {};
 
     //Arrays Mantencion
-    public String[] arrayElements = {};
-    public String[] arrayDiagnostics = {};
-    public String[] arrayMaterials = {};
-    public String[] arrayCrits = {};
-
-    Spinner spEmpTelefonic;
+    public String[] arrayFases = {};
+    public String[] arrayTipoConex = {};
+    
+    Spinner spFases;
+    Spinner spTipoConex;
 
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
     String din_urlMapaBase, din_urlEquiposPunto, din_urlEquiposLinea, din_urlTramos, din_urlNodos, din_urlLuminarias, din_urlClientes, din_urlConcesiones, din_urlMedidores, din_urlDirecciones, din_urlStx, din_urlInterrupciones, din_urlECSE, din_urlElectroDep;
     //url para feature layers
-    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_mantDistancia;
+    String srv_urlPostes, srv_urlDireccion, srv_urlClientes, srv_urlClientesCnr, srv_urlUnion012, srv_calles, srv_mantFase;
 
     //Set bing Maps
     String BingKey = "Asrn2IMtRwnOdIRPf-7q30XVUrZuOK7K2tzhCACMg7QZbJ4EPsOcLk6mE9-sNvUe";
@@ -157,7 +155,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     final BingMapsLayer mRoadBaseMaps = new BingMapsLayer(BingKey, BingMapsLayer.MapStyle.ROAD);
 
     ArcGISDynamicMapServiceLayer LySED, LySSEE, LySALIDAALIM, LyREDMT, LyREDBT, LyREDAP, LyPOSTES, LyEQUIPOSLINEA, LyEQUIPOSPTO, LyLUMINARIAS, LyCLIENTES, LyMEDIDORES, LyCONCESIONES, LyDIRECCIONES, LyEMPALMES, LyMapabase, LyREDSTX, LyTORRESSTX, LyENCUESTA, LyREEMPLAZO, LyELECTRODEP;
-    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAsocCalle, LyAddMantDistancia;
+    ArcGISFeatureLayer LyAddPoste, LyAddDireccion, LyAddCliente, LyAddClienteCnr, LyAddUnion, LyAsocTramo, LyAsocCalle, LyAddMantFase;
 
     //set Extent inicial
     Polygon mCurrentMapExtent = null;
@@ -166,6 +164,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     final SpatialReference egs = SpatialReference.create(4326);
 
     //Constantes
+    private static final String modIngreso = "INGRESO_CLIENTES";
     private static final String modMantenimiento = "MANTENIMIENTO";
 
     //Sets
@@ -202,7 +201,6 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     private int idResLayoutSelect;
     private Point oUbicacion;
     private Point oUbicacionForm;
-    private Point oUbicacionActual;
 
     private Graphic[] addsUnion = {};
 
@@ -210,21 +208,16 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     Dialog dialogBusq;
     Dialog dialogCur;
     Dialog formMant;
-    boolean bIngCliente = false;
+    boolean bIngCliente = true;
     ArrayList<View> arrayTouchs = null;
     ImageButton btnUbicacion = null;
     FloatingActionsMenu menuMultipleActions;
-    FloatingActionsMenu menuDistanciaActions;
-
+    FloatingActionButton fabShowDialog;
     FloatingActionButton fabShowForm;
     FloatingActionButton fabVerCapas;
     FloatingActionButton fabNavRoute;
 
-    private String rotulo;
-    private String idNodo;
-
-    private String comuna;
-    private String idCalle;
+    private String nis;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -243,7 +236,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "Licencia standard válida", Toast.LENGTH_SHORT).show();
         }
 
-        setContentView(R.layout.activity_mant_distancia);
+        setContentView(R.layout.activity_mant_fase);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.apptool);
         setSupportActionBar(toolbar);
@@ -288,14 +281,14 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "REDMT", din_urlTramos, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDBT", din_urlTramos, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDAP", din_urlTramos, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_LINEA", din_urlEquiposLinea, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_PTO", din_urlEquiposPunto, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "LUMINARIAS", din_urlLuminarias, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "CLIENTES", din_urlClientes, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "CLIENTES", din_urlClientes, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "MEDIDORES", din_urlMedidores, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "CONCESIONES", din_urlConcesiones, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "DIRECCIONES", din_urlDirecciones, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "DIRECCIONES", din_urlDirecciones, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "EMPALMES", din_urlClientes, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
@@ -369,6 +362,11 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         drawNo = new ShapeDrawable(new OvalShape());
         drawNo.getPaint().setColor(getResources().getColor(R.color.black_overlay));
 
+        menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+
+        fabShowDialog = (FloatingActionButton) findViewById(R.id.action_show_dialog);
+        if (fabShowDialog != null) fabShowDialog.setVisibility(View.GONE);
+
         fabShowForm = (FloatingActionButton) findViewById(R.id.action_show_form);
         if (fabShowForm != null) fabShowForm.setVisibility(View.GONE);
 
@@ -383,7 +381,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (myMapView != null && myMapView.getCallout().isShowing()) {
                         Point p = (Point) GeometryEngine.project(myMapView.getCallout().getCoordinates(), wm, egs);
-                        Util.QueryNavigation(MantDistanciaApoyoActivity.this, p);
+                        Util.QueryNavigation(MantRegistroFaseActivity.this, p);
                     }
                 }
             });
@@ -398,20 +396,17 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         }
         if (modulo.replace(" ", "_").equals(modMantenimiento)) {
 
-            setLayersURL(this.getResources().getString(R.string.srv_MantApoyo), "SRV_MANT_APOYO");
+            setLayersURL(this.getResources().getString(R.string.srv_MantFase), "SRV_MANT_FASE");
             setLayersURL(this.getResources().getString(R.string.srv_Postes), "SRV_POSTES");
             setLayersURL(this.getResources().getString(R.string.srv_Direcciones), "SRV_DIRECCIONES");
-            setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
 
-            addLayersToMap(credenciales, "FEATURE", "ADDMANTAPOYO", srv_mantDistancia, null, true);
+            addLayersToMap(credenciales, "FEATURE", "ADDMANTFASE", srv_mantFase, null, true);
             addLayersToMap(credenciales, "FEATURE", "ADDPOSTE", srv_urlPostes, null, true);
-            addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, false);
-            addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
+            addLayersToMap(credenciales, "FEATURE", "ADDADDRESS", srv_urlDireccion, null, true);
 
-            myMapView.addLayer(LyAddMantDistancia, 21);
+            myMapView.addLayer(LyAddMantFase, 21);
             myMapView.addLayer(LyAddPoste, 22);
             myMapView.addLayer(LyAddDireccion, 23);
-            myMapView.addLayer(LyAsocCalle, 24);
 
             arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
             arrayEstado = getResources().getStringArray(R.array.estado_lectura);
@@ -420,9 +415,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             arrayWidgets = bundle.getStringArrayList("widgets");
             arrayModulos = bundle.getStringArrayList("modulos");
 
-            menuDistanciaActions = (FloatingActionsMenu) findViewById(R.id.distancia_actions);
-
-            formMant = new Dialog(MantDistanciaApoyoActivity.this);
+            formMant = new Dialog(MantRegistroFaseActivity.this);
             fabShowForm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -433,31 +426,102 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                 }
             });
 
-            FloatingActionButton oFabReg = (FloatingActionButton) findViewById(R.id.action_form);
-            oFabReg.setIconDrawable(drawOk);
-            oFabReg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    abrirFormMant(v);
-                }
-            });
+            if (arrayModulos != null && arrayModulos.size() > 0 && arrayModulos.contains(empresa + "@" + modIngreso)) {
 
+                arrayTipoPoste = getResources().getStringArray(R.array.tipo_poste);
+                arrayTension = getResources().getStringArray(R.array.tipo_tension);
+                arrayTipoEdif = getResources().getStringArray(R.array.tipo_edificacion);
+                arrayMedidor = getResources().getStringArray(R.array.tipo_medidor);
+                arrayEmpalme = getResources().getStringArray(R.array.tipo_empalme);
+                arrayTecMedidor = getResources().getStringArray(R.array.tec_medidor);
+                arrayTipoCnr = getResources().getStringArray(R.array.tipo_cnr);
+                arrayTipoFase = getResources().getStringArray(R.array.fase_conexion);
+
+                dialogCrear = new Dialog(MantRegistroFaseActivity.this);
+
+                fabShowDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bMapTap = false;
+                        bCallOut = false;
+                        myMapView.getCallout().hide();
+
+                        if (oUbicacion != null) {
+                            btnUbicacion.setColorFilter(Color.BLACK);
+                            setEnabledDialog(true);
+                        }
+                        dialogCrear.show();
+                        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+                            myMapView.removeLayer(mSeleccionLayer);
+                    }
+                });
+
+                fabVerCapas.setVisibility(View.VISIBLE);
+                fabVerCapas.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toogleCapas(v);
+                    }
+                });
+
+                fabVerCapas.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Ver Capas de Ingreso", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+                final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
+                final FloatingActionButton actionC = (FloatingActionButton) findViewById(R.id.action_c);
+                final FloatingActionButton actionD = (FloatingActionButton) findViewById(R.id.action_d);
+
+                setOpcion(actionA, null);
+                setOpcion(actionB, null);
+                setOpcion(actionC, modIngreso + "_TECNO");
+                setOpcion(actionD, modIngreso + "_CNR");
+
+                setLayersURL(this.getResources().getString(R.string.srv_Clientes), "SRV_CLIENTES");
+                setLayersURL(this.getResources().getString(R.string.srv_Union_012), "SRV_UNIONES");
+                setLayersURL(din_urlTramos, "TRAMOS");
+                setLayersURL(this.getResources().getString(R.string.url_Mapabase), "SRV_CALLES");
+                setLayersURL(this.getResources().getString(R.string.srv_ClientesCnr), "SRV_CLIENTESCNR");
+
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTE", srv_urlClientes, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ADDUNION", srv_urlUnion012, null, true);
+                addLayersToMap(credenciales, "FEATURE", "ASOCTRAMO", LyREDBT.getUrl(), null, false);
+                addLayersToMap(credenciales, "FEATURE", "ASOCCALLE", srv_calles, null, false);
+                addLayersToMap(credenciales, "FEATURE", "ADDCLIENTECNR", srv_urlClientesCnr, null, true);
+
+                myMapView.addLayer(LyAddCliente, 24);
+                myMapView.addLayer(LyAddUnion, 25);
+                myMapView.addLayer(LyAsocTramo, 26);
+                myMapView.addLayer(LyAsocCalle, 27);
+                myMapView.addLayer(LyAddClienteCnr, 28);
+
+                setLayerAddToggle(false);
+            } else {
+                bIngCliente = false;
+                menuMultipleActions.setVisibility(View.GONE);
+                //Informar al usuario que carece de permisos para ver y usar la capa de ingreso clientes comun
+            }
         }
     }
 
     private void verifPermisos() {
-        if (ContextCompat.checkSelfPermission(MantDistanciaApoyoActivity.this,
+        if (ContextCompat.checkSelfPermission(MantRegistroFaseActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MantDistanciaApoyoActivity.this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MantRegistroFaseActivity.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             } else {
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(MantDistanciaApoyoActivity.this,
+                ActivityCompat.requestPermissions(MantRegistroFaseActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         Util.REQUEST_ACCESS_FINE_LOCATION);
             }
@@ -516,6 +580,41 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         }
 
         return retVal;
+    }
+
+    private void setOpcion(Object o, String widget) {
+        if (o != null) {
+            if (widget != null) {
+                FloatingActionButton oFab = (FloatingActionButton) o;
+                if (arrayWidgets.contains(empresa + "@" + widget)) {
+                    oFab.setIconDrawable(drawOk);
+                    oFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            abrirDialogCrear(v);
+                        }
+                    });
+                } else {
+                    oFab.setIconDrawable(drawNo);
+                    oFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Snackbar.make(v, "No tiene acceso a ésta opción", Snackbar.LENGTH_SHORT).show();
+                            menuMultipleActions.collapse();
+                        }
+                    });
+                }
+            } else {
+                FloatingActionButton oFab = (FloatingActionButton) o;
+                oFab.setIconDrawable(drawOk);
+                oFab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        abrirDialogCrear(v);
+                    }
+                });
+            }
+        }
     }
 
     private void setEnabledDialog(boolean bEnable) {
@@ -689,7 +788,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         }
     }
 
-    public void getInfoPoste(Point oPoint) {
+    public void getInfoProducto(Point oPoint) {
         if (oPoint != null) {
             IdentifyParameters params = new IdentifyParameters();
             params.setTolerance(20);
@@ -705,7 +804,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             myMapView.getExtent().queryEnvelope(env);
             params.setMapExtent(env);
 
-            IdentifyPostes mTask = new IdentifyPostes(oPoint, LyPOSTES.getUrl(), credenciales);
+            IdentifyClientes mTask = new IdentifyClientes(oPoint, LyCLIENTES.getUrl(), credenciales);
             mTask.execute(params);
         }
     }
@@ -774,106 +873,44 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                 Map<String, Object> objectMap = new HashMap<>();
                 for (View view : vAction.getTouchables()) {
 
-
                     if (view.getClass().equals(GisEditText.class)) {
                         GisEditText oText = (GisEditText) view;
 
                         if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                            if (oText.getId() == R.id.txtPoste1){
-                                objectMap.put("poste1", oText.getIdObjeto());
-                                objectMap.put("rotulo1", oText.getText().toString());
+                            if (oText.getId() == R.id.txtPoste){
+                                objectMap.put("id_poste", oText.getIdObjeto());
+                                objectMap.put("rotulo", oText.getText().toString());
                                 //oUbicacion = oText.getPoint();
-                            } else if (oText.getId() == R.id.txtPoste2) {
-                                objectMap.put("poste2", oText.getIdObjeto());
-                                objectMap.put("rotulo2", oText.getText().toString());
-                            } else if (oText.getId() == R.id.txtStreet) {
-                                objectMap.put("id_calle", oText.getIdObjeto());
-                                objectMap.put("calle", oText.getText().toString());
-                                objectMap.put("comuna", oText.getTipo());
+                            } else if (oText.getId() == R.id.txtDireccion) {
+                                objectMap.put("id_direccion", oText.getIdObjeto());
+                                objectMap.put("direccion", oText.getText().toString());
                             }
                         }
                     } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                         EditText oText = (EditText) view;
 
-                        if (oText.getId() == R.id.txtAltura) {
-                            String oVal = (oText.getText().toString().isEmpty()) ? "0" : oText.getText().toString();
-                            objectMap.put("altura", oVal);
-                        } else if (oText.getId() == R.id.txtComentario) {
-                            if (oText.getText() != null && !oText.getText().toString().isEmpty())
-                                objectMap.put("observacion", oText.getText().toString());
+                        if (oText.getId() == R.id.txtMedidor) {
+                            String oVal = (oText.getText().toString().isEmpty()) ? "" : oText.getText().toString();
+                            objectMap.put("medidor", oVal);
                         }
 
-                    } else if (view.getClass().getGenericSuperclass().equals(CheckBox.class)){
-
-                        CheckBox oCheck = (CheckBox) view;
-                        if (oCheck.isChecked()){
-                            switch (oCheck.getId()){
-                                case R.id.chkVerif0:
-                                    objectMap.put("emp_indeterminado", 1);
-                                    break;
-                                case R.id.chkVerif1:
-                                    objectMap.put("emp_movistar", 1);
-                                    break;
-                                case R.id.chkVerif2:
-                                    objectMap.put("emp_gtd", 1);
-                                    break;
-                                case R.id.chkVerif3:
-                                    objectMap.put("emp_cmet", 1);
-                                    break;
-                                case R.id.chkVerif4:
-                                    objectMap.put("emp_entel", 1);
-                                    break;
-                                case R.id.chkVerif5:
-                                    objectMap.put("emp_claro", 1);
-                                    break;
-                                case R.id.chkVerif6:
-                                    objectMap.put("emp_vtr", 1);
-                                    break;
-                                case R.id.chkVerif7:
-                                    objectMap.put("emp_vtr", 1);
-                                    break;
-                                case R.id.chkVerif8:
-                                    objectMap.put("emp_cdlc", 1);
-                                    break;
-                                case R.id.chkVerif9:
-                                    objectMap.put("emp_luxor", 1);
-                                    break;
-                                case R.id.chkVerif10:
-                                    objectMap.put("emp_inet", 1);
-                                    break;
-                                case R.id.chkVerif11:
-                                    objectMap.put("emp_armada", 1);
-                                    break;
-                                case R.id.chkVerif12:
-                                    objectMap.put("emp_municipal", 1);
-                                    break;
-                            }
-                        }
-
-                    /*} else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
+                    } else if (view.getClass().getGenericSuperclass().equals(Spinner.class)) {
                         Spinner oSpinner = (Spinner) view;
                         String sValue = oSpinner.getSelectedItem().toString();
 
-                        if (oSpinner.getId() == R.id.spinnerElement)
-                            objectMap.put("empresa_teleco", sValue);*/
+                        if (oSpinner.getId() == R.id.spinnerFase)
+                            objectMap.put("fase", sValue);
+                        else if (oSpinner.getId() == R.id.spinnerTipoConex)
+                            objectMap.put("tipo_conexion", sValue);
                     }
                 }
 
-                //objectMap.put("id_padre", idNodo);
-                //objectMap.put("rotulo", rotulo);
+                objectMap.put("nis", nis);
                 objectMap.put("empresa", empresa);
-                objectMap.put("estado", "Nuevo");
 
-                //Adaptar Point a wgs84
-                //Point wgs84Point = GeometryEngine.project(oUbicacionActual.getX(), oUbicacionActual.getY(), SpatialReference.create(3857));
-                Point wgs84Point2 = (Point) GeometryEngine.simplify(mLocation, SpatialReference.createLocal());
-
-                objectMap.put("x", wgs84Point2.getX());
-                objectMap.put("y", wgs84Point2.getY());
-
-                Graphic newFeatureGraphic = new Graphic(oUbicacionActual, null, objectMap);
+                Graphic newFeatureGraphic = new Graphic(oUbicacionForm, null, objectMap);
                 Graphic[] adds = {newFeatureGraphic};
-                LyAddMantDistancia.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+                LyAddMantFase.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
                     @Override
                     public void onCallback(FeatureEditResult[][] featureEditResults) {
                         if (featureEditResults[0] != null) {
@@ -885,7 +922,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
                                     @Override
                                     public void run() {
-                                        Util.showConfirmation(MantDistanciaApoyoActivity.this, resp.get());
+                                        Util.showConfirmation(MantRegistroFaseActivity.this, resp.get());
                                     }
                                 });
                             }
@@ -901,7 +938,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
                             @Override
                             public void run() {
-                                Toast.makeText(MantDistanciaApoyoActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MantRegistroFaseActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -925,12 +962,113 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
 
-        menuDistanciaActions.setVisibility(View.VISIBLE);
-
         fabShowForm.setVisibility(View.GONE);
         formMant.dismiss();
 
-        if (LyAddMantDistancia != null) LyAddMantDistancia.setVisible(true);
+        if (LyAddMantFase != null) LyAddMantFase.setVisible(true);
+    }
+
+    private void cerrarDialogCrear(boolean bSave, @Nullable View viewDialog) {
+        final AtomicReference<String> resp = new AtomicReference<>("");
+
+        if (bSave) {
+            if (!validarVista(viewDialog)) {
+                DialogoConfirmacion oDialog = new DialogoConfirmacion();
+                oDialog.show(getFragmentManager(), "tagAlert");
+                return;
+            } else {
+                switch (idResLayoutSelect) {
+                    case R.layout.dialog_poste:
+                        oLyAddGraphs = LyAddPoste;
+                        break;
+                    case R.layout.dialog_direccion:
+                        oLyAddGraphs = LyAddDireccion;
+                        break;
+                    case R.layout.dialog_cliente:
+                        oLyAddGraphs = LyAddCliente;
+                        break;
+                    case R.layout.dialog_cliente_cnr:
+                        oLyAddGraphs = LyAddClienteCnr;
+                        break;
+                }
+
+                if (oLyAddGraphs != null) {
+                    View oView = getLayoutValidate(viewDialog);
+                    Util oUtil = new Util(oUbicacion);
+
+                    ArrayList<Map<String, Object>> oAttrToSave = oUtil.getAttrAddByView(oView, idResLayoutSelect, empresa);
+
+                    Map<String, Object> attributes = oAttrToSave.get(0);
+                    Graphic newFeatureGraphic = new Graphic(oUbicacion, null, attributes);
+                    Graphic[] adds = {newFeatureGraphic};
+
+                    if (idResLayoutSelect == R.layout.dialog_cliente_cnr || idResLayoutSelect == R.layout.dialog_cliente) {
+                        addsUnion = Util.addAttrUnionPoint(oAttrToSave, oUbicacion);
+                    }
+
+                    oLyAddGraphs.applyEdits(adds, null, null, new CallbackListener<FeatureEditResult[][]>() {
+
+                        @Override
+                        public void onCallback(FeatureEditResult[][] featureEditResults) {
+                            if (featureEditResults[0] != null) {
+                                if (featureEditResults[0][0] != null && featureEditResults[0][0].isSuccess()) {
+
+                                    resp.set("Guardado Correctamente Id: " + featureEditResults[0][0].getObjectId());
+
+                                    if (idResLayoutSelect == R.layout.dialog_cliente_cnr || idResLayoutSelect == R.layout.dialog_cliente)
+                                        LyAddUnion.applyEdits(addsUnion, null, null, callBackUnion());
+
+                                    runOnUiThread(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            Util.showConfirmation(MantRegistroFaseActivity.this, resp.get());
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            resp.set("Error al grabar: " + throwable.getLocalizedMessage());
+                            Log.w("onError", resp.get());
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MantRegistroFaseActivity.this, resp.get(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                    });
+                }
+            }
+        } else {
+            resp.set("Cancelado");
+            Toast.makeText(MantRegistroFaseActivity.this, resp.get(), Toast.LENGTH_LONG).show();
+        }
+
+        bMapTap = false;
+
+        if (mBusquedaLayer != null && myMapView.getLayerByID(mBusquedaLayer.getID()) != null)
+            myMapView.removeLayer(mBusquedaLayer);
+
+        if (mUbicacionLayer != null && myMapView.getLayerByID(mUbicacionLayer.getID()) != null)
+            myMapView.removeLayer(mUbicacionLayer);
+
+        if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
+            myMapView.removeLayer(mSeleccionLayer);
+
+        oUbicacion = null;
+        if (bVerCapas) toogleCapas(fabVerCapas);
+        //setLayerAddToggle(false);
+        if (bIngCliente) menuMultipleActions.setVisibility(View.VISIBLE);
+        fabShowDialog.setVisibility(View.GONE);
+        dialogCrear.dismiss();
+        if (oLyAddGraphs != null) oLyAddGraphs.setVisible(true);
     }
 
     private CallbackListener<FeatureEditResult[][]> callBackUnion() {
@@ -939,7 +1077,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "Aplicando uniones", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "Aplicando uniones", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1035,11 +1173,48 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         dialogBusq.show();
     }
 
+    private void abrirDialogCrear(View view) {
+
+        FloatingActionButton fabTemp = (FloatingActionButton) view;
+        menuMultipleActions.collapse();
+        menuMultipleActions.setVisibility(View.GONE);
+        fabShowDialog.setVisibility(View.VISIBLE);
+
+        switch (view.getId()) {
+            case R.id.action_a:
+                setActionsDialog(R.layout.dialog_poste, fabTemp.getTitle());
+                break;
+            case R.id.action_b:
+                setActionsDialog(R.layout.dialog_direccion, fabTemp.getTitle());
+                break;
+            case R.id.action_c:
+                setActionsDialog(R.layout.dialog_cliente, fabTemp.getTitle());
+                break;
+            case R.id.action_d:
+                setActionsDialog(R.layout.dialog_cliente_cnr, fabTemp.getTitle());
+                break;
+        }
+
+        if (!bVerCapas) toogleCapas(fabVerCapas);
+        //setLayerAddToggle(true);
+    }
+
     private boolean validarForm(View view) {
+        if (oUbicacionForm == null) {
+            return false;
+        }
 
         View vAction = getLayoutValidate(view);
         int iReq = recorrerForm(vAction);
         return (iReq == 0);
+    }
+
+    private boolean validarVista(View view) {
+        if (oUbicacion == null) {
+            return false;
+        }
+        View vAction = getLayoutValidate(view);
+        return (recorrerDialog(vAction) == 0);
     }
 
     public static class DialogoConfirmacion extends DialogFragment {
@@ -1289,9 +1464,9 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         return s;
     }
 
-    public void setActionsFormDist(final int idRes, String sNombre) {
+    public void setDataFormMant(final int idRes, String sNis) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(idRes, null);
+        final View v = inflater.inflate(idRes, null);
 
         final int topeWidth = 650;
         ArrayAdapter<CharSequence> adapter;
@@ -1304,18 +1479,25 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         v.setMinimumWidth(widthScale);
 
-        formMant.setTitle(sNombre);
+        formMant.setTitle("Mantención Cliente");
         formMant.setContentView(v);
-        idResLayoutSelect = idRes;
 
-        arrayElements = getResources().getStringArray(R.array.emp_telef);
+        TextView tvTipo = (TextView) v.findViewById(R.id.tvNisSelected);
+        tvTipo.setText("NIS: " + sNis);
+        
+        arrayFases = getResources().getStringArray(R.array.fase_conexion);
+        arrayTipoConex = getResources().getStringArray(R.array.tipo_conexion_fase);
 
-        /*spEmpTelefonic = (Spinner) v.findViewById(R.id.spinnerElement);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayElements);
-        spEmpTelefonic.setAdapter(adapter);*/
+        spFases = (Spinner) v.findViewById(R.id.spinnerFase);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFases);
+        spFases.setAdapter(adapter);
 
-        ImageButton btnIdentPoste1 = (ImageButton) v.findViewById(R.id.btnPoste1);
-        btnIdentPoste1.setOnClickListener(new View.OnClickListener() {
+        spTipoConex = (Spinner) v.findViewById(R.id.spinnerTipoConex);
+        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoConex);
+        spTipoConex.setAdapter(adapter);
+
+        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
+        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 formMant.hide();
@@ -1328,43 +1510,19 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnIdentPoste2 = (ImageButton) v.findViewById(R.id.btnPoste2);
-        btnIdentPoste2.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnIdentAddress = (ImageButton) v.findViewById(R.id.btnDireccion);
+        btnIdentAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 formMant.hide();
                 bMapTap = true;
                 bCallOut = true;
-                oLySelectAsoc = LyAddPoste;
-                oLyExistAsoc = LyPOSTES;
+                oLySelectAsoc = LyAddDireccion;
+                oLyExistAsoc = LyDIRECCIONES;
                 oLyExistAsoc.setVisible(true);
                 setValueToAsoc(getLayoutContenedor(view));
             }
         });
-
-        ImageButton btnCalle = (ImageButton) v.findViewById(R.id.btnAsocCalle);
-        btnCalle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                formMant.hide();
-                bMapTap = true;
-                bCallOut = true;
-                nIndentify = 1; //1 = valor para calle
-                oLySelectAsoc = LyAsocCalle;
-                setValueToAsoc(getLayoutContenedor(v));
-            }
-        });
-
-        /*
-        btnUbicacion = (ImageButton) v.findViewById(R.id.btnUbicacion);
-        btnUbicacion.setColorFilter(Color.RED);
-        btnUbicacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bMapTap = true;
-                formCrear.hide();
-            }
-        });*/
 
         ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -1382,215 +1540,57 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             }
         });
 
-        /*arrayTouchs = new ArrayList<>();
-        setEnabledDialog(false);*/
-
         formMant.show();
         dialogCur = formMant;
     }
 
-
-    public void setDataFormMant(final int idRes, final String sTipo, String sRotulo) {
+    public void setActionsDialog(final int idRes, String sNombre) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(idRes, null);
+        View v = inflater.inflate(idRes, null);
 
-        final int topeWidth = 650;
-        ArrayAdapter<CharSequence> adapter;
+        v.setMinimumWidth(400);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int widthSize = displayMetrics.widthPixels;
-        int widthScale = (widthSize * 3) / 4;
-        if (topeWidth < widthScale) widthScale = topeWidth;
+        dialogCrear.setTitle(sNombre);
+        dialogCrear.setContentView(v);
+        idResLayoutSelect = idRes;
 
-        v.setMinimumWidth(widthScale);
+        setSpinnerDialog(idRes, v);
 
-        formMant.setTitle("Mantención " + sTipo);
-        formMant.setContentView(v);
-
-        TextView tvTipo = (TextView) v.findViewById(R.id.tvTipoRotulo);
-        tvTipo.setText(sTipo + ": " + sRotulo);
-
-        if (sTipo.equals("Poste"))
-            arrayElements = getResources().getStringArray(R.array.elementos_postes);
-        else
-            arrayElements = getResources().getStringArray(R.array.elementos_camaras);
-
-        /*spElements = (Spinner) v.findViewById(R.id.spinnerElement);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayElements);
-        spElements.setAdapter(adapter);
-
-        spElements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                bindSpinnerMant(sTipo, i, v);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
-    }
-
-    private void bindSpinnerMant(String sTipo, int pos, View v) {
-
-        ArrayAdapter<CharSequence> adapter;
-
-        // Bind genérico
-        arrayCrits = getResources().getStringArray(R.array.crit_gen);
-
-        if (sTipo.equals("Poste")) {
-            switch (pos) {
-                case 0:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_poscrucet);
-                    break;
-                case 1:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_cruceta_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_poscrucet);
-                    break;
-                case 2:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_aislador_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_aisla_pos);
-                    break;
-                case 3:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_conductor_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_conduc_pos);
-                    break;
-                case 4:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_conector_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_conect_pos);
-                    break;
-                case 5:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_diagonal_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 6:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_lbptrayo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 7:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_lbptrayo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 8:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_lbptrayo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 9:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_lbptrayo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 10:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_regulbcondensa_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 11:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_regulbcondensa_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 12:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_reconect_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 13:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_transform_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 14:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_descfusbt_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 15:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_tierras_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 16:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_tierras_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 17:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_tirante_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 18:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_espacia_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 19:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_equimed_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 20:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_ap_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    arrayCrits = getResources().getStringArray(R.array.crit_ap);
-                    break;
-                case 21:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_letrotulo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 22:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_letrotulo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 23:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_senaletic_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 24:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_apoyo_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 25:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_publici_pos);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-            }
-
+        if (idRes != R.layout.dialog_poste) {
+            setButtonAsociacion(v);
         }
-        else {
-            switch (pos) {
-                case 0:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_cam);
-                    break;
-                case 1:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_gen_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 2:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_gen_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 3:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_gen_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 4:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_gen_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
-                case 5:
-                    arrayDiagnostics = getResources().getStringArray(R.array.diagnostic_gen_cam);
-                    arrayMaterials = getResources().getStringArray(R.array.mat_gen_na);
-                    break;
+
+        btnUbicacion = (ImageButton) v.findViewById(R.id.btnUbicacion);
+        btnUbicacion.setColorFilter(Color.RED);
+        btnUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bMapTap = true;
+                dialogCrear.hide();
             }
-        }
-/*
-        spDiagnostic = (Spinner) v.findViewById(R.id.spinnerDiagnostic);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayDiagnostics);
-        spDiagnostic.setAdapter(adapter);
+        });
 
-        spFases = (Spinner) v.findViewById(R.id.spinnerMaterial);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayFases);
-        spFases.setAdapter(adapter);
+        ImageButton btnClose = (ImageButton) v.findViewById(R.id.btnCancelar);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarDialogCrear(false, null);
+            }
+        });
 
-        spTipoConex = (Spinner) v.findViewById(R.id.spinnerCriticidad);
-        adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoConex);
-        spTipoConex.setAdapter(adapter);*/
+        ImageButton btnOk = (ImageButton) v.findViewById(R.id.btnConfirmar);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrarDialogCrear(true, v);
+            }
+        });
 
+        arrayTouchs = new ArrayList<>();
+        setEnabledDialog(false);
+
+        dialogCrear.show();
+        dialogCur = dialogCrear;
     }
 
     private void setSpinnerDialog(int idLayout, View v) {
@@ -1713,6 +1713,21 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                 setValueToAsoc(getLayoutContenedor(v));
             }
         });
+
+        if (idResLayoutSelect == R.layout.dialog_cliente_cnr) {
+            ImageButton btnAsocTramo = (ImageButton) v.findViewById(R.id.btnAsocTramo);
+            btnAsocTramo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogCrear.hide();
+                    bMapTap = true;
+                    bCallOut = true;
+                    nIndentify = 2; //2 = valor para tramo
+                    oLySelectAsoc = LyAsocTramo;
+                    setValueToAsoc(getLayoutContenedor(v));
+                }
+            });
+        }
     }
 
     public void verifNisQuery(String txtBusqueda, String nomCampo, String dirUrl, View v) {
@@ -1753,7 +1768,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
     }
 
     public void choiceMaps(int pos) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MantDistanciaApoyoActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MantRegistroFaseActivity.this);
 
         // set the dialog title
         builder.setTitle("Mapas")
@@ -1801,7 +1816,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MantDistanciaApoyoActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MantRegistroFaseActivity.this);
 
         builder.setTitle("Capas")
 
@@ -1842,9 +1857,21 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
     public void setLayerAddToggle(boolean visible) {
         LyAddPoste.setVisible(visible);
-        //LyAddDireccion.setVisible(visible);
-        LyAddMantDistancia.setVisible(visible);
-        LyAsocCalle.setVisible(visible);
+        LyAddDireccion.setVisible(visible);
+        LyAddMantFase.setVisible(visible);
+
+        if (bIngCliente) {
+            LyAddCliente.setVisible(visible);
+            LyAddUnion.setVisible(visible);
+            LyAddClienteCnr.setVisible(visible);
+            LyAsocTramo.setVisible(false);
+            LyAsocCalle.setVisible(false);
+        }
+
+        if (fabShowDialog.getVisibility() == View.VISIBLE) {
+            if (idResLayoutSelect == R.layout.dialog_cliente_cnr) LyAsocTramo.setVisible(visible);
+            if (idResLayoutSelect == R.layout.dialog_direccion) LyAsocCalle.setVisible(visible);
+        }
     }
 
     public void setLayerOff() {
@@ -1910,14 +1937,23 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             case "SRV_DIRECCIONES":
                 srv_urlDireccion = layerURL;
                 break;
+            case "SRV_CLIENTES":
+                srv_urlClientes = layerURL;
+                break;
+            case "SRV_CLIENTESCNR":
+                srv_urlClientesCnr = layerURL;
+                break;
+            case "SRV_UNIONES":
+                srv_urlUnion012 = layerURL;
+                break;
             case "SRV_CALLES":
                 srv_calles = layerURL;
                 break;
-            case "SRV_MANT_APOYO":
-                srv_mantDistancia = layerURL;
+            case "SRV_MANT_FASE":
+                srv_mantFase = layerURL;
                 break;
             default:
-                Toast.makeText(MantDistanciaApoyoActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "Problemas inicializando layers url", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -1937,7 +1973,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                     } else if (mode.equals("SELECTION")) {
                         // LyAlimentadores = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.SELECTION, credencial);
                     } else {
-                        Toast.makeText(MantDistanciaApoyoActivity.this, "FeatureLayer debe tener un modo.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MantRegistroFaseActivity.this, "FeatureLayer debe tener un modo.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     break;
@@ -1953,25 +1989,48 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                     LyAddDireccion.setMinScale(4500);
                     LyAddDireccion.setVisible(visibilidad);
                     break;
+                case "ADDCLIENTE":
+                    LyAddCliente = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddCliente.setDefinitionExpression(String.format("EMPRESA = '%s' AND ESTADO IS null", empresa));
+                    LyAddCliente.setMinScale(6000);
+                    LyAddCliente.setVisible(visibilidad);
+                    break;
+                case "ADDCLIENTECNR":
+                    LyAddClienteCnr = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddClienteCnr.setDefinitionExpression(String.format("EMPRESA = '%s' AND ESTADO IS null", empresa));
+                    LyAddClienteCnr.setMinScale(6000);
+                    LyAddClienteCnr.setVisible(visibilidad);
+                    break;
+                case "ADDUNION":
+                    LyAddUnion = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddUnion.setDefinitionExpression(String.format("EMPRESA = '%s'", empresa));
+                    LyAddUnion.setMinScale(4500);
+                    LyAddUnion.setVisible(visibilidad);
+                    break;
+                case "ASOCTRAMO":
+                    LyAsocTramo = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAsocTramo.setMinScale(6000);
+                    LyAsocTramo.setVisible(visibilidad);
+                    break;
                 case "ASOCCALLE":
                     LyAsocCalle = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
                     //LyAsocCalle.setDefinitionExpression("where ESTADO IS null");
                     LyAsocCalle.setMinScale(6000);
                     LyAsocCalle.setVisible(visibilidad);
                     break;
-                case "ADDMANTAPOYO":
-                    LyAddMantDistancia = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
-                    LyAddMantDistancia.setMinScale(8000);
-                    LyAddMantDistancia.setVisible(visibilidad);
+                case "ADDMANTFASE":
+                    LyAddMantFase = new ArcGISFeatureLayer(url, ArcGISFeatureLayer.MODE.ONDEMAND, credencial);
+                    LyAddMantFase.setMinScale(8000);
+                    LyAddMantFase.setVisible(visibilidad);
                     break;
                 default:
-                    Toast.makeText(MantDistanciaApoyoActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MantRegistroFaseActivity.this, "Problemas agregando layers url", Toast.LENGTH_SHORT).show();
                     break;
             }
 
         } else {
             if (mode != null) {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "Layer dinámico no tiene mode, debe ser null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "Layer dinámico no tiene mode, debe ser null", Toast.LENGTH_SHORT).show();
             } else {
                 switch (nombreCapa) {
                     case "SED":
@@ -2123,7 +2182,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                         LyELECTRODEP.setVisible(visibilidad);
                         break;
                     default:
-                        Toast.makeText(MantDistanciaApoyoActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MantRegistroFaseActivity.this, "Problemas agregando layers dinámicos.", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -2184,7 +2243,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                                     Util oUtil = new Util();
                                     CalloutTvClass oCall = oUtil.getCalloutValues(attr);
 
-                                    GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                                    GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
                                     tv.setText(oCall.getVista());
                                     tv.setHint(oCall.getValor());
                                     tv.setIdObjeto(oCall.getIdObjeto());
@@ -2347,7 +2406,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
                 myMapView.addLayer(oLyViewGraphs);
 
-                getInfoPoste(oPoint);
+                getInfoProducto(oPoint);
 
                 return false;
             }
@@ -2453,8 +2512,8 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(MantDistanciaApoyoActivity.this);
-            progress = ProgressDialog.show(MantDistanciaApoyoActivity.this, "",
+            progress = new ProgressDialog(MantRegistroFaseActivity.this);
+            progress = ProgressDialog.show(MantRegistroFaseActivity.this, "",
                     "Verificando NIS.");
         }
 
@@ -2511,11 +2570,11 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
                     myMapView.zoomin(true);
                 } else {
-                    Toast.makeText(MantDistanciaApoyoActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MantRegistroFaseActivity.this, "NIS no registrado", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "Falló la verificación, intente nuevamente", Toast.LENGTH_SHORT).show();
             }
             progress.dismiss();
         }
@@ -2531,8 +2590,8 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(MantDistanciaApoyoActivity.this);
-            progress = ProgressDialog.show(MantDistanciaApoyoActivity.this, "",
+            progress = new ProgressDialog(MantRegistroFaseActivity.this);
+            progress = ProgressDialog.show(MantRegistroFaseActivity.this, "",
                     "Espere por favor... Obteniendo resultados.");
         }
 
@@ -2663,7 +2722,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                             }
 
                             AdaptBusqMedidor adaptador;
-                            adaptador = new AdaptBusqMedidor(MantDistanciaApoyoActivity.this, datosBusqMed);
+                            adaptador = new AdaptBusqMedidor(MantRegistroFaseActivity.this, datosBusqMed);
 
                             lstBusqMedidores.setAdapter(adaptador);
 
@@ -2686,7 +2745,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                                 StringBuilder outStr;
                                 Util oUtil = new Util();
                                 outStr = oUtil.getStringByAttrClass(0, fNis.getAttributes());
-                                GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                                GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
                                 tv.setText(outStr.toString());
                                 tv.setPoint((Point) fNis.getGeometry());
                                 tv.setTextColor(Color.WHITE);
@@ -2741,7 +2800,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
 
                             AdaptBusqEquipo adaptador;
-                            adaptador = new AdaptBusqEquipo(MantDistanciaApoyoActivity.this, datosBusqEquipo);
+                            adaptador = new AdaptBusqEquipo(MantRegistroFaseActivity.this, datosBusqEquipo);
 
                             lstBusqEquipos.setAdapter(adaptador);
 
@@ -2763,7 +2822,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                                     StringBuilder outStr;
                                     Util oUtil = new Util();
                                     outStr = oUtil.getStringByAttrClass(SpiBusqueda, fEquipo.getAttributes());
-                                    GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                                    GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
 
                                     if (fEquipo.getGeometry().getClass() != Point.class) {
                                         if (fEquipo.getGeometry().getClass() == Polyline.class) {
@@ -2849,7 +2908,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                             StringBuilder outStr;
                             Util oUtil = new Util();
                             outStr = oUtil.getStringByAttrClass(SpiBusqueda, feature.getAttributes());
-                            GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                            GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
                             tv.setText(outStr.toString());
                             tv.setPoint((Point) feature.getGeometry());
                             tv.setTextColor(Color.WHITE);
@@ -2877,13 +2936,13 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
                 myMapView.zoomin(true);
             } else {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "No se encontraron resultados", Toast.LENGTH_SHORT).show();
             }
             progress.dismiss();
         }
     }
 
-    private class IdentifyPostes extends AsyncTask<IdentifyParameters, Void, IdentifyResult[]> {
+    private class IdentifyClientes extends AsyncTask<IdentifyParameters, Void, IdentifyResult[]> {
 
         private IdentifyResult[] oResult;
         UserCredentials oCredentials;
@@ -2891,7 +2950,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
         String sUrl;
         ProgressDialog progress;
 
-        public IdentifyPostes(Point mLocation, String mUrl, UserCredentials mCred) {
+        public IdentifyClientes(Point mLocation, String mUrl, UserCredentials mCred) {
             oPoint = mLocation;
             sUrl = mUrl;
             oCredentials = mCred;
@@ -2899,7 +2958,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = ProgressDialog.show(MantDistanciaApoyoActivity.this, "Consultando datos", "Espere un momento ...");
+            progress = ProgressDialog.show(MantRegistroFaseActivity.this, "Consultando datos", "Espere un momento ...");
             progress.setCancelable(true);
             progress.setCanceledOnTouchOutside(true);
         }
@@ -2921,53 +2980,37 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(IdentifyResult[] identifyResults) {
-            rotulo = "";
-            idNodo = "0";
+            nis = "";
 
             if (identifyResults != null && identifyResults.length > 0) {
                 for (IdentifyResult identifyResult : identifyResults) {
 
                     // Rescata los valores a insertar
-                    rotulo = identifyResult.getAttributes().get("rotulo").toString();
-                    idNodo = identifyResult.getAttributes().get("id_nodo").toString();
+                    nis = identifyResult.getAttributes().get("nis").toString();
 
                     oUbicacionForm = (Point) identifyResult.getGeometry();
 
-                    // Revisa si es tipo camara o poste
-                    if (identifyResult.getAttributes().get("tipo_nodo").equals("ele!poste")) {
-
-                        // Levanta formulario poste
-                        //abrirFormMant("Poste", rotulo);
-                        break;
-                    }
-                    else if (identifyResult.getAttributes().get("tipo_nodo").equals("ele!camara")) {
-
-                        // Levanta formulario camara
-                        //abrirFormMant("Camara", rotulo);
-                        break;
-                    }
+                    abrirFormMant(nis);
+                    break;
                 }
             } else {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
             }
 
             progress.dismiss();
         }
     }
 
-    private void abrirFormMant(View view) {
+    private void abrirFormMant(String sNis) {
 
-        FloatingActionButton fabTemp = (FloatingActionButton) view;
         if (bIngCliente) {
             menuMultipleActions.collapse();
             menuMultipleActions.setVisibility(View.GONE);
         }
 
-        menuDistanciaActions.collapse();
-        menuDistanciaActions.setVisibility(View.GONE);
         fabShowForm.setVisibility(View.VISIBLE);
 
-        setActionsFormDist(R.layout.form_mant_distancia, fabTemp.getTitle());
+        setDataFormMant(R.layout.form_mant_fase, sNis);
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
     }
@@ -3033,7 +3076,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progress = ProgressDialog.show(MantDistanciaApoyoActivity.this, "Identificando sector", "Espere un momento ...");
+            progress = ProgressDialog.show(MantRegistroFaseActivity.this, "Identificando sector", "Espere un momento ...");
             progress.setCancelable(true);
             progress.setCanceledOnTouchOutside(true);
         }
@@ -3096,7 +3139,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                             Log.w("identifyResult layer " + identifyResult.getLayerName() + " " + identifyResult.getLayerId(), " size Attr: " + identifyResult.getAttributes().size());
                             outStr = oUtil.getStringByClassAttr(identifyResult);
 
-                            GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                            GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
                             tv.setText(outStr.toString());
                             tv.setTextColor(Color.WHITE);
 
@@ -3128,7 +3171,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                             Map<String, Object> attr = identifyResult.getAttributes();
                             CalloutTvClass oCall = oUtil.getCalloutValues(attr);
 
-                            GisTextView tv = new GisTextView(MantDistanciaApoyoActivity.this);
+                            GisTextView tv = new GisTextView(MantRegistroFaseActivity.this);
                             tv.setText(oCall.getVista());
                             tv.setHint(oCall.getValor());
                             tv.setIdObjeto(oCall.getIdObjeto());
@@ -3183,28 +3226,16 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                         if (identifyResult.getAttributes().get(sAttr) != null) {
                             Log.w("IdentifyResults", identifyResult.getAttributes().get(sAttr).toString());
                             txt = identifyResult.getAttributes().get(sAttr).toString();
-
-                            if (identifyResult.getAttributes().get("comuna") != null)
-                                comuna = identifyResult.getAttributes().get("comuna").toString();
-
-                            if (identifyResult.getAttributes().get("OBJECTID") != null)
-                                idCalle = (identifyResult.getAttributes().get("OBJECTID").toString());
-
-                            break;
                         }
                     }
 
                     oTxtAsoc.setText(txt);
 
-                    //adaptacion req BD
-                    oTxtAsoc.setIdObjeto(Integer.valueOf(idCalle));
-                    oTxtAsoc.setTipo(comuna);
-
                     bCallOut = false;
                     bMapTap = false;
                     myMapView.getCallout().hide();
                     oLySelectAsoc.clearSelection();
-                    formMant.show();
+                    dialogCrear.show();
 
                     if (mSeleccionLayer != null && myMapView.getLayerByID(mSeleccionLayer.getID()) != null)
                         myMapView.removeLayer(mSeleccionLayer);
@@ -3212,7 +3243,7 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
                     nIndentify = 0;
                 }
             } else {
-                Toast.makeText(MantDistanciaApoyoActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MantRegistroFaseActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
             }
 
             progress.dismiss();
@@ -3256,7 +3287,6 @@ public class MantDistanciaApoyoActivity extends AppCompatActivity {
             boolean zoomToMe = (mLocation == null);
             mLocation = new Point(loc.getLongitude(), loc.getLatitude());
             Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
-            oUbicacionActual = p;
             if (zoomToMe) {
                 myMapView.zoomToResolution(p, 5.0);
             } else {

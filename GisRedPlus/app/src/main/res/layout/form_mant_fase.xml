@@ -24,12 +24,25 @@
                 android:padding="10dp"/>
 
             <TextView
-                android:id="@+id/tvNisSelected"
+                android:id="@+id/tvTipoRotulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="NIS: 123456"
+                android:text="Ejemplo: 123456"
                 android:padding="10dp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText android:id="@+id/txtNis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:hint="NIS *"/>
+
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -40,41 +53,9 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="10"
-                    android:hint="Medidor"/>
+                    android:hint="Medidor *"/>
 
             </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5">
-
-                    <cl.gisred.android.classes.GisEditText
-                        android:id="@+id/txtPoste"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:editable="false"
-                        android:hint="Poste *" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageButton
-                    android:id="@+id/btnPoste"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_name"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_gravity="end"
-                    android:layout_weight="1"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="none"
                         android:editable="false"
-                        android:hint="Dirección *" />
+                        android:hint="Dirección" />
 
                 </android.support.design.widget.TextInputLayout>
 

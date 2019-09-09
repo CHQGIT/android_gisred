@@ -141,6 +141,12 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
     Spinner spFases;
     Spinner spTipoConex;
 
+    EditText txtNis;
+    EditText txtMedidor;
+
+    TextInputLayout tilNis;
+    TextInputLayout tilMedidor;
+
     public boolean fool[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     //url para dinamyc layers
@@ -217,7 +223,8 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
     FloatingActionButton fabVerCapas;
     FloatingActionButton fabNavRoute;
 
-    private String nis;
+    private String rotulo;
+    private String idNodo;
 
     private static final String CLIENT_ID = "ZWIfL6Tqb4kRdgZ4";
 
@@ -281,14 +288,14 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
         addLayersToMap(credenciales, "DYNAMIC", "REDMT", din_urlTramos, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDBT", din_urlTramos, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDAP", din_urlTramos, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, false);
+        addLayersToMap(credenciales, "DYNAMIC", "POSTES", din_urlNodos, null, true);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_LINEA", din_urlEquiposLinea, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "EQUIPOS_PTO", din_urlEquiposPunto, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "LUMINARIAS", din_urlLuminarias, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "CLIENTES", din_urlClientes, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "CLIENTES", din_urlClientes, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "MEDIDORES", din_urlMedidores, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "CONCESIONES", din_urlConcesiones, null, false);
-        addLayersToMap(credenciales, "DYNAMIC", "DIRECCIONES", din_urlDirecciones, null, true);
+        addLayersToMap(credenciales, "DYNAMIC", "DIRECCIONES", din_urlDirecciones, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "EMPALMES", din_urlClientes, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "REDSTX", din_urlStx, null, false);
         addLayersToMap(credenciales, "DYNAMIC", "TORRESSTX", din_urlStx, null, false);
@@ -788,7 +795,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
         }
     }
 
-    public void getInfoProducto(Point oPoint) {
+    public void getInfoPoste(Point oPoint) {
         if (oPoint != null) {
             IdentifyParameters params = new IdentifyParameters();
             params.setTolerance(20);
@@ -804,7 +811,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
             myMapView.getExtent().queryEnvelope(env);
             params.setMapExtent(env);
 
-            IdentifyClientes mTask = new IdentifyClientes(oPoint, LyCLIENTES.getUrl(), credenciales);
+            IdentifyClientes mTask = new IdentifyClientes(oPoint, LyPOSTES.getUrl(), credenciales);
             mTask.execute(params);
         }
     }
@@ -877,11 +884,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
                         GisEditText oText = (GisEditText) view;
 
                         if (oText.getText() != null && !oText.getText().toString().isEmpty()) {
-                            if (oText.getId() == R.id.txtPoste){
-                                objectMap.put("id_poste", oText.getIdObjeto());
-                                objectMap.put("rotulo", oText.getText().toString());
-                                //oUbicacion = oText.getPoint();
-                            } else if (oText.getId() == R.id.txtDireccion) {
+                            if (oText.getId() == R.id.txtDireccion) {
                                 objectMap.put("id_direccion", oText.getIdObjeto());
                                 objectMap.put("direccion", oText.getText().toString());
                             }
@@ -889,7 +892,10 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
                     } else if (view.getClass().getGenericSuperclass().equals(EditText.class)) {
                         EditText oText = (EditText) view;
 
-                        if (oText.getId() == R.id.txtMedidor) {
+                        if (oText.getId() == R.id.txtNis) {
+                            String oVal = (oText.getText().toString().isEmpty()) ? "" : oText.getText().toString();
+                            objectMap.put("nis", oVal);
+                        } else if (oText.getId() == R.id.txtMedidor) {
                             String oVal = (oText.getText().toString().isEmpty()) ? "" : oText.getText().toString();
                             objectMap.put("medidor", oVal);
                         }
@@ -905,7 +911,8 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
                     }
                 }
 
-                objectMap.put("nis", nis);
+                objectMap.put("id_poste", idNodo);
+                objectMap.put("rotulo", rotulo);
                 objectMap.put("empresa", empresa);
 
                 Graphic newFeatureGraphic = new Graphic(oUbicacionForm, null, objectMap);
@@ -1464,7 +1471,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
         return s;
     }
 
-    public void setDataFormMant(final int idRes, String sNis) {
+    public void setDataFormMant(final int idRes, final String sTipo, String sRotulo) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(idRes, null);
 
@@ -1479,11 +1486,11 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
 
         v.setMinimumWidth(widthScale);
 
-        formMant.setTitle("Mantención Cliente");
+        formMant.setTitle("Mantención " + sTipo);
         formMant.setContentView(v);
 
-        TextView tvTipo = (TextView) v.findViewById(R.id.tvNisSelected);
-        tvTipo.setText("NIS: " + sNis);
+        TextView tvTipo = (TextView) v.findViewById(R.id.tvTipoRotulo);
+        tvTipo.setText(sTipo + ": " + sRotulo);
         
         arrayFases = getResources().getStringArray(R.array.fase_conexion);
         arrayTipoConex = getResources().getStringArray(R.array.tipo_conexion_fase);
@@ -1496,17 +1503,50 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<CharSequence>(this, R.layout.support_simple_spinner_dropdown_item, arrayTipoConex);
         spTipoConex.setAdapter(adapter);
 
-        ImageButton btnIdentPoste = (ImageButton) v.findViewById(R.id.btnPoste);
-        btnIdentPoste.setOnClickListener(new View.OnClickListener() {
+        txtNis = (EditText) v.findViewById(R.id.txtNis);
+        txtMedidor = (EditText) v.findViewById(R.id.txtMedidor);
+
+        tilNis = (txtNis.getParentForAccessibility() != null && (txtNis.getParentForAccessibility().getClass().equals(TextInputLayout.class)))?
+                (TextInputLayout) txtNis.getParentForAccessibility() : (TextInputLayout) txtNis.getParent().getParent();
+
+        tilMedidor = (txtMedidor.getParentForAccessibility() != null && (txtMedidor.getParentForAccessibility().getClass().equals(TextInputLayout.class)))?
+                (TextInputLayout) txtMedidor.getParentForAccessibility() : (TextInputLayout) txtMedidor.getParent().getParent();
+
+        txtNis.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View view) {
-                formMant.hide();
-                bMapTap = true;
-                bCallOut = true;
-                oLySelectAsoc = LyAddPoste;
-                oLyExistAsoc = LyPOSTES;
-                oLyExistAsoc.setVisible(true);
-                setValueToAsoc(getLayoutContenedor(view));
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!txtNis.getText().toString().trim().isEmpty()){
+
+                    if (tilMedidor.getHint() != null && tilMedidor.getHint().toString().contains("*")){
+                        tilMedidor.setHint(tilMedidor.getHint().toString().replace("*",""));
+                    }
+
+                } else if (txtNis.getText().toString().trim().isEmpty()){
+
+                    if (tilMedidor.getHint() != null && !tilMedidor.getHint().toString().contains("*")){
+                        tilMedidor.setHint(tilMedidor.getHint().toString().concat("*"));
+                    }
+
+                }
+            }
+        });
+
+        txtMedidor.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!txtMedidor.getText().toString().trim().isEmpty()){
+
+                    if (tilNis.getHint() != null && tilNis.getHint().toString().contains("*")){
+                        tilNis.setHint(tilNis.getHint().toString().replace("*",""));
+                    }
+
+                } else if (txtMedidor.getText().toString().trim().isEmpty()){
+
+                    if (tilNis.getHint() != null && !tilNis.getHint().toString().contains("*")){
+                        tilNis.setHint(tilNis.getHint().toString().concat("*"));
+                    }
+
+                }
             }
         });
 
@@ -2406,7 +2446,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
 
                 myMapView.addLayer(oLyViewGraphs);
 
-                getInfoProducto(oPoint);
+                getInfoPoste(oPoint);
 
                 return false;
             }
@@ -2980,18 +3020,31 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(IdentifyResult[] identifyResults) {
-            nis = "";
+            rotulo = "";
+            idNodo = "0";
 
             if (identifyResults != null && identifyResults.length > 0) {
                 for (IdentifyResult identifyResult : identifyResults) {
 
                     // Rescata los valores a insertar
-                    nis = identifyResult.getAttributes().get("nis").toString();
+                    rotulo = identifyResult.getAttributes().get("rotulo").toString();
+                    idNodo = identifyResult.getAttributes().get("id_nodo").toString();
 
                     oUbicacionForm = (Point) identifyResult.getGeometry();
 
-                    abrirFormMant(nis);
-                    break;
+                    // Revisa si es tipo camara o poste
+                    if (identifyResult.getAttributes().get("tipo_nodo").equals("ele!poste")) {
+
+                        // Levanta formulario poste
+                        abrirFormMant("Poste", rotulo);
+                        break;
+                    }
+                    else if (identifyResult.getAttributes().get("tipo_nodo").equals("ele!camara")) {
+
+                        // Levanta formulario camara
+                        abrirFormMant("Camara", rotulo);
+                        break;
+                    }
                 }
             } else {
                 Toast.makeText(MantRegistroFaseActivity.this, "No hay datos", Toast.LENGTH_SHORT).show();
@@ -3001,7 +3054,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
         }
     }
 
-    private void abrirFormMant(String sNis) {
+    private void abrirFormMant(String sTipo, String sRotulo) {
 
         if (bIngCliente) {
             menuMultipleActions.collapse();
@@ -3010,7 +3063,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
 
         fabShowForm.setVisibility(View.VISIBLE);
 
-        setDataFormMant(R.layout.form_mant_fase, sNis);
+        setDataFormMant(R.layout.form_mant_fase, sTipo, sRotulo);
 
         if (!bVerCapas) toogleCapas(fabVerCapas);
     }

@@ -893,7 +893,7 @@ public class MantRegistroFaseActivity extends AppCompatActivity {
                         EditText oText = (EditText) view;
 
                         if (oText.getId() == R.id.txtNis) {
-                            String oVal = (oText.getText().toString().isEmpty()) ? "" : oText.getText().toString();
+                            String oVal = (oText.getText().toString().isEmpty()) ? "0" : oText.getText().toString();
                             objectMap.put("nis", oVal);
                         } else if (oText.getId() == R.id.txtMedidor) {
                             String oVal = (oText.getText().toString().isEmpty()) ? "" : oText.getText().toString();
